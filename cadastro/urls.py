@@ -8,5 +8,9 @@ urlpatterns = [
     # Rota Clientes
     path("cliente/", views.cadastro_cliente, name="cadastro_cliente"),
     path("cliente/excluir/<int:pk>/", views.excluir_cliente, name="excluir_cliente"),
+
+    # Rota para Intervenções
+    path('intervencao/', views.cadastro_intervencao, name='cadastro_intervencao'),
+    path('intervencao/excluir/<int:pk>/', views.excluir_intervencao, name='excluir_intervencao'),
 ]
 

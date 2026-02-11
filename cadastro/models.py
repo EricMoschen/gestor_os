@@ -66,11 +66,41 @@ class Cliente(models.Model):
 
 
 
+# ======================================================================
+# Cadastro de Intervenções 
+# ======================================================================
+class Intervencao(models.Model):
+    id = models.BigAutoField(primary_key=True)
+
+    codigo = models.PositiveIntegerField(
+        unique=True,
+        verbose_name="Código"
+    )
+
+    descricao = models.CharField(
+        max_length=200,
+        verbose_name="Descrição"
+    )
+
+    class Meta:
+        db_table = "intervencao"
+        verbose_name = "Intervenção"
+        verbose_name_plural = "Intervenções"
+        ordering = ["codigo"]
+        indexes = [
+            models.Index(fields=["descricao"]),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.codigo} - {self.descricao}"
 
 
 
 
 
+# =======================
+# fins de testes
+# =======================
 class AberturaOS(models.Model):
 
     cliente = models.ForeignKey(
@@ -79,4 +109,10 @@ class AberturaOS(models.Model):
         related_name="ordens_servico",
         null=True,
         blank=True
+    )
+    
+    intervencao = models.ForeignKey(
+        Intervencao,
+        on_delete=models.PROTECT,
+        related_name="aberturaos"
     )

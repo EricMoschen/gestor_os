@@ -1,5 +1,5 @@
 from django import forms
-from .models import  CentroCusto
+from .models import  CentroCusto, Intervencao
 
 class CentroCustoForm(forms.ModelForm):
     class Meta:
@@ -12,3 +12,15 @@ class CentroCustoForm(forms.ModelForm):
         self.fields['centro_pai'].queryset = CentroCusto.objects.filter(centro_pai__isnull=True)
         self.fields['centro_pai'].label = "Centro de Custo Pai (opcional)"
         self.fields['centro_pai'].required = False
+
+
+
+
+# =====================================================
+# Formulário para cadastro de Clientes
+# =====================================================
+
+class IntervencaoForm(forms.ModelForm):
+    class Meta:
+        model = Intervencao
+        fields = '__all__'

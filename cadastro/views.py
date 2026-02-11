@@ -4,14 +4,19 @@ from django.core.exceptions import ValidationError
 
 from cadastro.forms import CentroCustoForm
 from cadastro.models import Cliente
+from cadastro.models import Intervencao
 
 from cadastro.selectors.centro_custo_selectors import listar_centros_raiz
 from cadastro.selectors.cliente_selectors import listar_clientes_com_os
+from cadastro.selectors.intervencao_selectors import listar_intervencoes_com_os
 
 from cadastro.services.centro_custo_service import criar_centro_custo
 from cadastro.services.cliente_service import salvar_cliente, remover_cliente
+from cadastro.services.intervencao_service import salvar_intervencao, remover_intervencao
 
 from cadastro.utils.centro_custo_tree import montar_hierarquia
+
+from django.contrib import messages
 
 
 # =================================================================================
@@ -94,3 +99,61 @@ def excluir_cliente(request, pk):
         return redirect("cadastro_cliente")
 
     return redirect("cadastro_cliente")
+
+
+
+# =================================================================================
+# Intervenções
+# =================================================================================
+
+
+# =====================================================
+# Cadastro de Intervenções
+# =====================================================
+def cadastro_intervencao(request):
+
+    if request.method == "POST":
+
+        intervencao_id = request.POST.get("intervencao_id")
+        descricao = request.POST.get("descricao")
+
+        if not descricao:
+            messages.error(request, "Descrição é obrigatória.")
+            return redirect("cadastro_intervencao")
+
+        try:
+            salvar_intervencao(
+                intervencao_id=intervencao_id,
+                descricao=descricao
+            )
+            messages.success(request, "Intervenção salva com sucesso.")
+
+        except Exception as e:
+            messages.error(request, str(e))
+
+        return redirect("cadastro_intervencao")
+
+    intervencoes = listar_intervencoes_com_os()
+
+    return render(
+        request,
+        "cadastro_intervencao/cadastro_intervencao.html",
+        {"intervencoes": intervencoes}
+    )
+
+
+# =====================================================
+# Exclusão de Intervenção
+# =====================================================
+def excluir_intervencao(request, pk):
+
+    intervencao = get_object_or_404(Intervencao, pk=pk)
+
+    try:
+        remover_intervencao(intervencao)
+        messages.success(request, "Intervenção removida.")
+
+    except Exception as e:
+        messages.error(request, str(e))
+
+    return redirect("cadastro_intervencao")
