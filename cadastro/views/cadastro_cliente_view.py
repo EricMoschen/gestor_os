@@ -12,7 +12,6 @@ from cadastro.services.cliente_service import salvar_cliente, remover_cliente
 # CLIENTES
 # =============================================================================
 
-@login_required
 def cadastro_cliente(request):
     if request.method == "POST":
         cliente_id = request.POST.get("cliente_id") or None
@@ -46,7 +45,7 @@ def cadastro_cliente(request):
     return render(request, "cadastro_cliente/cadastro_cliente.html", context)
 
 
-@login_required
+
 def excluir_cliente(request, pk):
     cliente = get_object_or_404(Cliente, pk=pk)
 

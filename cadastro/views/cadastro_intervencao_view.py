@@ -11,7 +11,7 @@ from cadastro.services.intervencao_service import salvar_intervencao, remover_in
 # INTERVENÇÕES
 # =============================================================================
 
-@login_required
+
 def cadastro_intervencao(request):
     if request.method == "POST":
         intervencao_id = request.POST.get("intervencao_id")

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock head %}
+
+{% block body %}
+<div class="dashboard-container">
+
+    <h1 class="dashboard-title">Painel de Cadastros</h1>
+
+    <div class="dashboard-grid">
+
+        {% for card in cards %}
+        <a href="{% url card.url %}" class="dashboard-card {{ card.color }}">
+            <h2 class="card-title">{{ card.title }}</h2>
+        </a>
+        {% endfor %}
+
+    </div>
+
+</div>
+{% endblock body %}

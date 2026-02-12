@@ -1,5 +1,5 @@
 from django.db import models
-from cadastro.models import Colaborador
+from cadastro.models import Colaborador, Intervencao, Cliente
 
 
 class ApontamentoHoras(models.Model):
@@ -7,3 +7,13 @@ class ApontamentoHoras(models.Model):
         Colaborador,
         on_delete=models.CASCADE
     )
+    intervencao = models.ForeignKey(
+        Intervencao,
+        on_delete=models.PROTECT,
+        related_name="aberturas"
+    )
+    cliente = models.ForeignKey(
+    Cliente,
+    on_delete=models.PROTECT,
+    related_name="ordens_servico"
+)
