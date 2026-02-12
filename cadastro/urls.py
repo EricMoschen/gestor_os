@@ -12,5 +12,11 @@ urlpatterns = [
     # Rota para Intervenções
     path('intervencao/', views.cadastro_intervencao, name='cadastro_intervencao'),
     path('intervencao/excluir/<int:pk>/', views.excluir_intervencao, name='excluir_intervencao'),
+
+    # Rota para Cadastro de Colaboradores    
+    path('colaborador/', views.cadastro_colaborador, name='cadastro_colaborador'),
+    path('editar/<int:pk>/', views.editar_colaborador, name='editar_colaborador'),
+    path('excluir/<int:pk>/', views.excluir_colaborador, name='excluir_colaborador'),
+
 ]
 
