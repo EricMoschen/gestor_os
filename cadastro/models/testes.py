@@ -15,5 +15,5 @@ class ApontamentoHoras(models.Model):
     cliente = models.ForeignKey(
     Cliente,
     on_delete=models.PROTECT,
-    related_name="ordens_servico"
+    related_name="ordens_servic"
 )

@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/abertura_os.css' %}">
+{% endblock head %}
+
+{% block body %}
+<div class="container">
+
+  <!-- Mensagens do Django -->
+  {% if messages %}
+    <div class="messages">
+      {% for message in messages %}
+        <div class="alert {{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Painel esquerdo -->
+  <div class="panel abrir-os">
+
+    <form method="post"
+          action="{% if modo_edicao %}{% url 'editar_os' os_id %}{% else %}{% url 'abrir_os' %}{% endif %}">
+
+      {% csrf_token %}
+
+      <!-- Número OS -->
+      <div class="form-group">
+        <label>Número da OS</label>
+        <input type="text"
+               id="numero_os"
+               value="{{ proximo_numero }}"
+               readonly
+               class="input-field">
+      </div>
+
+      <!-- Centro de custo -->
+      <div class="form-group">
+        <label>Centro de Custo</label>
+
+        <div class="dropdown-container">
+          <div id="dropdownSelected" class="dropdown-selected" tabindex="0">
+            {{ selected_centro_label|default:"Selecione um centro de custo" }}
+          </div>
+
+          <div id="dropdownList" class="dropdown-list hidden">
+            {% for pai in pais_centro_custo %}
+              <div class="dropdown-group">
+                <div class="dropdown-item parent"
+                     data-cod="{{ pai.cod_centro }}"
+                     data-label="{{ pai.descricao }}">
+                  <span class="arrow">▶</span>
+                  <span class="text">{{ pai.descricao }}</span>
+                </div>
+                <div class="dropdown-children hidden" id="children-{{ pai.cod_centro }}">
+                  {% for filho in pai.subcentros.all %}
+                    <div class="dropdown-item child"
+                         data-cod="{{ filho.cod_centro }}"
+                         data-label="{{ filho.descricao }}">
+                      • {{ filho.descricao }}
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+          <input type="hidden" name="centro_custo" id="centro_custo"
+                 value="{{ form.instance.centro_custo.pk|default:'' }}">
+        </div>
+      </div>
+
+      <!-- Campos dinâmicos -->
+      {% for field in form %}
+        {% if field.name != "centro_custo" %}
+          <div class="form-group">
+            {{ field.label_tag }}
+            {{ field }}
+            {% if field.errors %}
+              <div class="field-error">{{ field.errors }}</div>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      <!-- Botões -->
+      <div class="form-actions">
+        <button type="submit" class="save-btn">
+          {% if modo_edicao %}💾 Atualizar OS{% else %}💾 Abrir OS{% endif %}
+        </button>
+
+        {% if modo_edicao %}
+          <a href="{% url 'excluir_os' os_id %}" class="delete-btn">🗑️ Excluir OS</a>
+          <a href="{% url 'abrir_os' %}" class="cancel-btn">↩️ Cancelar</a>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+
+  <!-- Painel direito -->
+  <div class="panel tabela-os">
+    <h2>Ordens de Serviço</h2>
+    <div class="os-table-container">
+      {% if ordens %}
+        <table class="os-table">
+          <thead>
+            <tr>
+              <th>Nº OS</th>
+              <th>Descrição</th>
+              <th>Cliente</th>
+              <th>Situação</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for o in ordens %}
+              <tr
+                data-os-id="{{ o.pk }}"
+                data-numero-os="{{ o.numero_os }}"
+                data-descricao-os="{{ o.descricao_os }}"
+                data-cliente="{{ o.cliente.pk|default:'' }}"
+                data-motivo-intervencao="{{ o.motivo_intervencao.pk|default:'' }}"
+                data-ssm="{{ o.ssm }}"
+                data-situacao="{{ o.situacao }}"
+                data-centro-custo="{{ o.centro_custo.cod_centro }}"
+                data-centro-label="{{ o.centro_custo.descricao }}">
+                <td>{{ o.numero_os }}</td>
+                <td>{{ o.descricao_os }}</td>
+                <td>{{ o.cliente }}</td>
+                <td>{{ o.get_situacao_display }}</td>
+                <td>
+                  <button type="button" class="edit-btn">✏️</button>
+                  <a href="{% url 'imprimir_os' o.pk %}" target="_blank">🖨️</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>Nenhuma OS cadastrada.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+  window.PROXIMO_NUMERO_OS = "{{ proximo_numero }}";
+  window.URL_ABRIR_OS = "{% url 'abrir_os' %}";
+</script>
+
+<script src="{% static 'js/abertura_os.js' %}"></script>
+{% endblock %}

@@ -24,6 +24,11 @@ def dashboard(request):
             "url": "cadastro_colaborador",
             "color": "color-blue",
         },
+        {
+            "title": "Abrir OS",
+            "url": "abrir_os",
+            "color": "color-blue",
+        },
     ]
 
     return render(request, "dashboard.html", {"cards": cards})
