@@ -1,94 +1,181 @@
+/* ================= CONFIGURAÇÃO DE PÁGINA ================= */
+
 @page {
-            size: A4;
-            margin: 2cm;
+    size: A4;
+    margin: 2cm;
 
-            @bottom-right {
-                content: "Página " counter(page) " de " counter(pages);
-                font-size: 10px;
-                color: #666;
-            }
-        }
+    @bottom-right {
+        content: "Página " counter(page) " de " counter(pages);
+        font-size: 9px;
+        color: #777;
+    }
+}
 
-        body {
-            font-family: Helvetica, Arial, sans-serif;
-            font-size: 11px;
-            color: #222;
-        }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
+/* ================= RESET E BASE ================= */
 
-        .header .empresa {
-            font-size: 10px;
-        }
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    line-height: 1.4;
+    color: #222;
+}
 
-        .header .titulo h1 {
-            margin: 0;
-            font-size: 20px;
-        }
 
-        .info-os {
-            margin-top: 10px;
-            border: 1px solid #ccc;
-            padding: 8px;
-        }
+/* ================= CABEÇALHO ================= */
 
-        .card {
-            margin-top: 20px;
-            page-break-inside: avoid;
-        }
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-        .card h3 {
-            background: #f0f0f0;
-            padding: 6px;
-            margin-bottom: 0;
-        }
+    border-bottom: 2px solid #000;
+    padding-bottom: 12px;
+    margin-bottom: 22px;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+.header .empresa {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    font-size: 10px;
+}
 
-        th {
-            background: #e5e5e5;
-            font-weight: bold;
-        }
+.logo {
+    height: 55px;
+}
 
-        th,
-        td {
-            border: 1px solid #bbb;
-            padding: 5px;
-            text-align: center;
-        }
+.empresa-info {
+    display: flex;
+    flex-direction: column;
+}
 
-        .total-colab {
-            text-align: right;
-            font-weight: bold;
-            margin-top: 5px;
-        }
+.header .titulo {
+    text-align: right;
+}
 
-        .total-geral {
-            margin-top: 30px;
-            padding: 10px;
-            border: 2px solid #000;
-            text-align: right;
-            font-size: 14px;
-            font-weight: bold;
-        }
+.header .titulo h1 {
+    margin: 0;
+    font-size: 20px;
+    letter-spacing: 0.5px;
+}
 
-        .assinatura {
-            margin-top: 60px;
-            display: flex;
-            justify-content: space-between;
-        }
+.header .titulo span {
+    font-size: 10px;
+    color: #555;
+}
 
-        .ass-box {
-            width: 40%;
-            text-align: center;
-            border-top: 1px solid #000;
-            padding-top: 5px;
-            font-size: 10px;
-        }
+
+/* ================= BLOCO OS ================= */
+
+.info-os {
+    border: 1px solid #cfcfcf;
+    padding: 10px 12px;
+    margin-bottom: 22px;
+    background: #fafafa;
+}
+
+.info-linha {
+    margin-bottom: 4px;
+}
+
+.info-linha strong {
+    display: inline-block;
+    width: 85px;
+}
+
+
+/* ================= CARD COLABORADOR ================= */
+
+.card {
+    margin-bottom: 26px;
+    page-break-inside: avoid;
+}
+
+.card h3,
+.colaborador {
+    background: #f2f2f2;
+    padding: 7px 10px;
+    margin: 0;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    font-size: 12px;
+}
+
+
+/* ================= TABELAS ================= */
+
+table,
+.tabela {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10.5px;
+}
+
+thead {
+    display: table-header-group;
+}
+
+th {
+    background: #e8e8e8;
+    font-weight: bold;
+    padding: 6px;
+    border: 1px solid #bbb;
+}
+
+td {
+    padding: 6px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+tbody tr:nth-child(even) {
+    background: #fafafa;
+}
+
+.vazio {
+    text-align: center;
+    font-style: italic;
+    color: #666;
+}
+
+
+/* ================= TOTAIS ================= */
+
+.total-colaborador,
+.total-colab {
+    text-align: right;
+    font-weight: bold;
+    margin-top: 6px;
+    font-size: 11px;
+}
+
+.total-geral,
+.resumo {
+    margin-top: 28px;
+    padding: 10px 14px;
+    border: 2px solid #000;
+    text-align: right;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+
+/* ================= ASSINATURAS ================= */
+
+.assinatura,
+.assinaturas {
+    margin-top: 70px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.ass-box,
+.assinatura-box {
+    width: 42%;
+    text-align: center;
+    border-top: 1px solid #000;
+    padding-top: 6px;
+    font-size: 10px;
+    letter-spacing: 0.4px;
+}
