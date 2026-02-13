@@ -56,3 +56,16 @@
 .color-green  { background-color: #22c55e; }  /* Verde */
 .color-orange { background-color: #f97316; }  /* Laranja */
 .color-red    { background-color: #ef4444; }  /* Vermelho */
+
+
+.categoria-bloco {
+    margin-bottom: 40px;
+}
+
+.categoria-titulo {
+    margin-bottom: 15px;
+    font-size: 22px;
+    border-left: 5px solid #4A3AFF;
+    padding-left: 10px;
+}
+

@@ -3,13 +3,15 @@
 
 {% block head %}
 <link rel="stylesheet" href="{% static 'css/cadastro_cliente.css' %}">
-{% endblock head %}
+{% endblock %}
 
 {% block body %}
-<div class="container">
 
-    <!-- Painel esquerdo -->
-    <div class="left-panel">
+<div class="page-wrapper">
+
+    <!-- FORM -->
+    <div class="card form-card">
+
         <h2>Cadastro de Clientes</h2>
 
         <form method="POST" id="clienteForm">
@@ -17,14 +19,25 @@
 
             <input type="hidden" name="cliente_id" id="cliente_id">
 
-            <label for="id_codigo">Código do Cliente</label>
-            <input type="text" name="codigo" id="id_codigo" required>
+            <div class="form-group">
+                <label>Código do Cliente</label>
+                <input type="text" name="codigo" id="id_codigo" required>
+            </div>
 
-            <label for="id_nome">Nome do Cliente</label>
-            <input type="text" name="nome" id="id_nome" required>
+            <div class="form-group">
+                <label>Nome do Cliente</label>
+                <input type="text" name="nome" id="id_nome" required>
+            </div>
 
-            <button type="submit" id="submitBtn">Cadastrar</button>
-            <button type="button" id="btnCancelar">Cancelar</button>
+            <div class="button-group">
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    Salvar
+                </button>
+
+                <button type="button" class="btn-secondary" id="btnCancelar">
+                    Cancelar
+                </button>
+            </div>
         </form>
 
         {% if mensagem_erro %}
@@ -35,29 +48,28 @@
 
     </div>
 
-    <!-- Painel direito -->
-    <div class="right-panel">
+    <!-- LISTA -->
+    <div class="card table-card">
 
-        <div class="table-header">
-            <h2>Clientes Cadastrados</h2>
-        </div>
+        <h2>Clientes Cadastrados</h2>
 
-        <div class="table-container">
+        <div class="table-scroll">
+
             {% if clientes %}
             <table class="client-table">
+
                 <thead>
                     <tr>
                         <th>Código</th>
                         <th>Nome</th>
-                        <th>Editar</th>
-                        <th>Excluir</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </thead>
 
                 <tbody>
                     {% for cliente in clientes %}
                     <tr>
-
                         <td>{{ cliente.codigo }}</td>
                         <td>{{ cliente.nome }}</td>
 
@@ -85,37 +97,50 @@
                                 </a>
                             {% endif %}
                         </td>
-
                     </tr>
                     {% endfor %}
                 </tbody>
 
             </table>
             {% else %}
-                <p>Nenhum cliente cadastrado ainda.</p>
+                <p class="empty-msg">Nenhum cliente cadastrado</p>
             {% endif %}
+
         </div>
 
     </div>
 
 </div>
 
-<!-- Modal exclusão -->
+
+<!-- MODAL -->
 <div id="deleteModal" class="modal">
+
     <div class="modal-content">
+
         <span class="close">&times;</span>
 
         <p>
-            Tem certeza que deseja excluir:
-            <strong id="modalNome"></strong>?
+            Deseja excluir <strong id="modalNome"></strong>?
         </p>
 
         <form id="deleteForm" method="POST">
             {% csrf_token %}
-            <button type="submit" class="confirm-btn">Sim, excluir</button>
-            <button type="button" class="cancel-btn">Cancelar</button>
+
+            <div class="modal-buttons">
+                <button type="submit" class="btn-danger">
+                    Excluir
+                </button>
+
+                <button type="button" class="btn-secondary">
+                    Cancelar
+                </button>
+            </div>
+
         </form>
+
     </div>
+
 </div>
 
 <script src="{% static 'js/cadastro_clientes.js' %}"></script>

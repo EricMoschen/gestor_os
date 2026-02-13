@@ -3,170 +3,165 @@
 
 {% block head %}
 <link rel="stylesheet" href="{% static 'css/cadastro_colaboradores.css' %}">
-{% endblock head %}
+{% endblock %}
 
 {% block body %}
-<div class="container">
 
-    <!-- ================= MENSAGENS ================= -->
-    {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="alert {{ message.tags }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
+<div class="page-wrapper">
 
+    <!-- ================= FORM ================= -->
+    <div class="card form-card">
 
-    <!-- ================= FORMULÁRIO ================= -->
-    <div class="left-panel">
         <h2>
             {% if editando %}
                 Editar Colaborador
             {% else %}
-                Cadastrar Colaborador
+                Novo Colaborador
             {% endif %}
         </h2>
 
-        <form method="POST" novalidate>
+        <form method="POST">
             {% csrf_token %}
-            {{ form.non_field_errors }}
 
-            {% if editando %}
-                {{ form.instance.id }}
-            {% endif %}
+            <div class="form-grid">
 
-            <div class="form-group">
-                <label for="id_matricula">Número da Matrícula</label>
-                {{ form.matricula }}
-                {{ form.matricula.errors }}
+                <div class="form-group">
+                    <label>Matrícula</label>
+                    {{ form.matricula }}
+                </div>
+
+                <div class="form-group">
+                    <label>Nome</label>
+                    {{ form.nome }}
+                </div>
+
+                <div class="form-group">
+                    <label>Função</label>
+                    {{ form.funcao }}
+                </div>
+
+                <div class="form-group">
+                    <label>Valor Hora</label>
+                    {{ form.valor_hora }}
+                </div>
+
+                <div class="form-group">
+                    <label>Turno</label>
+                    {{ form.turno }}
+                </div>
+
             </div>
 
-            <div class="form-group">
-                <label for="id_nome">Nome</label>
-                {{ form.nome }}
-                {{ form.nome.errors }}
-            </div>
+            <!-- Horários -->
+            <div id="horarios-personalizados" class="schedule-card">
 
-            <div class="form-group">
-                <label for="id_funcao">Função</label>
-                {{ form.funcao }}
-                {{ form.funcao.errors }}
-            </div>
-
-            <div class="form-group">
-                <label for="id_valor_hora">Valor da Hora (R$)</label>
-                {{ form.valor_hora }}
-                {{ form.valor_hora.errors }}
-            </div>
-
-            <div class="form-group">
-                <label for="id_turno">Turno</label>
-                {{ form.turno }}
-                {{ form.turno.errors }}
-            </div>
-
-            <!-- ================= HORÁRIOS PERSONALIZADOS ================= -->
-            <div id="horarios-personalizados">
                 <h4>Horários Personalizados</h4>
 
-                <div class="form-group">
-                    <label for="id_hr_entrada_am">Entrada (Manhã)</label>
-                    {{ form.hr_entrada_am }}
+                <div class="schedule-grid">
+
+                    <div class="form-group">
+                        <label>Entrada Manhã</label>
+                        {{ form.hr_entrada_am }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Saída Manhã</label>
+                        {{ form.hr_saida_am }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Entrada Tarde</label>
+                        {{ form.hr_entrada_pm }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Saída Tarde</label>
+                        {{ form.hr_saida_pm }}
+                    </div>
+
                 </div>
 
-                <div class="form-group">
-                    <label for="id_hr_saida_am">Saída (Manhã)</label>
-                    {{ form.hr_saida_am }}
-                </div>
-
-                <div class="form-group">
-                    <label for="id_hr_entrada_pm">Entrada (Tarde)</label>
-                    {{ form.hr_entrada_pm }}
-                </div>
-
-                <div class="form-group">
-                    <label for="id_hr_saida_pm">Saída (Tarde)</label>
-                    {{ form.hr_saida_pm }}
-                </div>
             </div>
 
-            <button type="submit" class="submit-btn">
-                {% if editando %}
-                    Salvar Alterações
-                {% else %}
-                    Cadastrar
-                {% endif %}
-            </button>
+            <div class="button-group">
 
-            {% if editando %}
-                <a href="{% url 'cadastro_colaborador' %}" class="cancel-edit-btn">
+                <button type="submit" class="btn-primary">
+                    {% if editando %}Salvar{% else %}Cadastrar{% endif %}
+                </button>
+
+                {% if editando %}
+                <a href="{% url 'cadastro_colaborador' %}" class="btn-secondary">
                     Cancelar
                 </a>
-            {% endif %}
+                {% endif %}
+
+            </div>
+
         </form>
     </div>
 
 
-    <!-- ================= LISTAGEM ================= -->
-    <div class="right-panel">
-        <h2>Colaboradores Cadastrados</h2>
+    <!-- ================= LISTA ================= -->
+    <div class="card table-card">
 
-        {% if colaboradores %}
-        <table class="client-table">
-            <thead>
-                <tr>
-                    <th>Matrícula</th>
-                    <th>Nome</th>
-                    <th>Função</th>
-                    <th>Valor/Hora</th>
-                    <th>Turno</th>
-                    <th>Editar</th>
-                    <th>Excluir</th>
-                </tr>
-            </thead>
+        <h2>Colaboradores</h2>
 
-            <tbody>
-                {% for colaborador in colaboradores %}
-                <tr>
-                    <td>{{ colaborador.matricula }}</td>
-                    <td>{{ colaborador.nome }}</td>
-                    <td>{{ colaborador.funcao }}</td>
-                    <td>R$ {{ colaborador.valor_hora|floatformat:2 }}</td>
-                    <td>{{ colaborador.turno }}</td>
+        <div class="table-scroll">
 
-                    <td>
-                        <a href="{% url 'editar_colaborador' colaborador.pk %}" class="edit-btn">
-                            ✏️
-                        </a>
-                    </td>
+            {% if colaboradores %}
+            <table class="data-table">
 
-                    <td>
-                        {% if colaborador.os_count|default:0 > 0 %}
-                            <span class="em-uso">
-                                Em uso ({{ colaborador.os_count }})
-                            </span>
-                        {% else %}
-                            <button 
-                                type="button"
-                                class="delete-btn"
-                                data-id="{{ colaborador.id }}"
-                                data-nome="{{ colaborador.nome }}"
-                            >
-                                🗑️
-                            </button>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                <thead>
+                    <tr>
+                        <th>Matrícula</th>
+                        <th>Nome</th>
+                        <th>Função</th>
+                        <th>Valor</th>
+                        <th>Turno</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
 
-        {% else %}
-            <p>Nenhum colaborador cadastrado.</p>
-        {% endif %}
+                <tbody>
+                    {% for colaborador in colaboradores %}
+                    <tr>
+                        <td>{{ colaborador.matricula }}</td>
+                        <td>{{ colaborador.nome }}</td>
+                        <td>{{ colaborador.funcao }}</td>
+                        <td>R$ {{ colaborador.valor_hora|floatformat:2 }}</td>
+                        <td>{{ colaborador.turno }}</td>
+
+                        <td>
+                            <a href="{% url 'editar_colaborador' colaborador.pk %}" class="edit-btn">
+                                ✏️
+                            </a>
+                        </td>
+
+                        <td>
+                            {% if colaborador.os_count|default:0 > 0 %}
+                                <span class="em-uso">
+                                    Em uso ({{ colaborador.os_count }})
+                                </span>
+                            {% else %}
+                                <button class="delete-btn"
+                                        data-id="{{ colaborador.id }}"
+                                        data-nome="{{ colaborador.nome }}">
+                                    🗑️
+                                </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+            {% else %}
+                <p class="empty-msg">Nenhum colaborador cadastrado</p>
+            {% endif %}
+
+        </div>
+
     </div>
 
 </div>
@@ -174,22 +169,25 @@
 
 <!-- ================= MODAL ================= -->
 <div id="deleteModal" class="modal">
+
     <div class="modal-content">
 
-        <span class="close">&times;</span>
-
         <p>
-            Tem certeza que deseja excluir:
-            <strong id="modalNome"></strong> ?
+            Excluir <strong id="modalNome"></strong>?
         </p>
 
         <form id="deleteForm" method="POST">
             {% csrf_token %}
-            <button type="submit" class="confirm-btn">Sim, excluir</button>
-            <button type="button" class="cancel-btn">Cancelar</button>
+
+            <div class="modal-buttons">
+                <button class="btn-danger">Excluir</button>
+                <button type="button" class="btn-secondary">Cancelar</button>
+            </div>
+
         </form>
 
     </div>
+
 </div>
 
 <script src="{% static 'js/cadastro_colaborador.js' %}"></script>

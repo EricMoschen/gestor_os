@@ -1,133 +1,263 @@
-.container {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 30px;
-  flex-wrap: wrap;
+/* =====================================
+   DESIGN TOKENS
+===================================== */
+
+:root {
+
+    --bg-main: #0f172a;
+    --bg-card: #1e293b;
+    --bg-hover: #334155;
+
+    --border: #334155;
+
+    --primary: #6366f1;
+    --success: #22c55e;
+    --danger: #ef4444;
+
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+
+    --radius: 14px;
+    --transition: .25s ease;
 }
 
-.panel.apontamento {
-  flex: 1;
-  background: #1e293b;
-  padding: 20px;
-  border-radius: 12px;
-  color: #f1f5f9;
-  min-height: 400px;
+/* =====================================
+   LAYOUT
+===================================== */
+
+.layout {
+    max-width: 1600px;
+    margin: auto;
+    padding: 24px;
+
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 24px;
 }
 
-.panel.tabela-os {
-  flex: 2;
-  max-height: 600px;
-  display: flex;
-  flex-direction: column;
-  background: #1e293b;
-  border-radius: 12px;
-  padding: 20px;
-  color: #f1f5f9;
+/* =====================================
+   CARD
+===================================== */
+
+.card {
+    background: var(--bg-card);
+    padding: 24px;
+    border-radius: var(--radius);
+    box-shadow: 0 12px 30px rgba(0,0,0,.35);
+
+    display: flex;
+    flex-direction: column;
 }
 
-.form-group { margin-bottom: 15px; }
-
-.input-field {
-  width: 100%;
-  padding: 8px 10px;
-  border-radius: 6px;
-  border: 1px solid #334155;
-  background: #1e293b;
-  color: #f1f5f9;
-  box-sizing: border-box;
-}
-.input-field:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+.card__header {
+    margin-bottom: 18px;
 }
 
-.save-btn {
-  background: #22c55e;
-  color: #fff;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: .3s;
-}
-.save-btn:hover { background: #16a34a; }
+/* =====================================
+   ALERTAS
+===================================== */
 
-.delete-btn {
-  background: #ef4444;
-  color: #fff;
-  padding: 10px 15px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: .3s;
-  margin-left: 10px;
-}
-.delete-btn:hover { background: #dc2626; }
-
-.os-table-container {
-  flex: 1;
-  overflow-y: auto;
-}
-.os-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #1e293b;
-  color: #f1f5f9;
-}
-.os-table thead {
-  background: #334155;
-  position: sticky;
-  top: 0;
-}
-.os-table th, .os-table td {
-  padding: 12px 15px;
-  text-align: left;
-}
-.os-table tbody tr {
-  border-bottom: 1px solid #334155;
-  transition: .3s;
-}
-.os-table tbody tr:hover { background: #3b475a; }
-
-.filtro-container { margin-bottom: 15px; }
-
-@media(max-width:768px) {
-  .container { flex-direction: column; }
-  .panel.tabela-os { max-height: 400px; }
+.alerts {
+    grid-column: 1 / -1;
 }
 
-.os-table-container::-webkit-scrollbar { width: 8px; }
-.os-table-container::-webkit-scrollbar-thumb {
-  background: #3b475a;
-  border-radius: 4px;
+.alert {
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
 }
-.os-table-container::-webkit-scrollbar-track { background: #1e293b; }
 
+/* =====================================
+   FORM
+===================================== */
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form__group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* INPUT */
+
+.input,
+textarea {
+
+    padding: 11px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-main);
+    color: var(--text-main);
+
+    transition: var(--transition);
+}
+
+.input:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(99,102,241,0.3);
+}
+
+/* =====================================
+   BOTÕES
+===================================== */
+
+.btn {
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.btn--success {
+    background: var(--success);
+    color: white;
+}
+
+.btn--success:hover {
+    background: #16a34a;
+}
+
+.btn--danger {
+    background: var(--danger);
+    color: white;
+}
+
+.btn--danger:hover {
+    background: #dc2626;
+}
+
+/* =====================================
+   ACTIONS
+===================================== */
+
+.form__actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* =====================================
+   FILTRO
+===================================== */
+
+.filter {
+    margin-bottom: 16px;
+}
+
+/* =====================================
+   TABELA
+===================================== */
+
+.table-wrapper {
+    overflow: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 14px;
+    border-bottom: 1px solid var(--border);
+}
+
+.table thead {
+    background: var(--bg-hover);
+    position: sticky;
+    top: 0;
+}
+
+.table tbody tr:hover {
+    background: rgba(99,102,241,0.08);
+}
+
+/* =====================================
+   STATUS
+===================================== */
+
+.status {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: .8rem;
+    font-weight: 600;
+}
+
+.status--finalizada {
+    background: rgba(34,197,94,.2);
+    color: #4ade80;
+}
+
+.status--aberta {
+    background: rgba(99,102,241,.2);
+    color: #818cf8;
+}
+
+/* =====================================
+   LOADING
+===================================== */
 
 .input-loading {
-  position: relative;
+    position: relative;
 }
 
 .loading-spinner {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  border: 3px solid #ccc;
-  border-top: 3px solid #4f46e5;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  display: none;
+
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    width: 16px;
+    height: 16px;
+
+    border: 3px solid #ccc;
+    border-top: 3px solid var(--primary);
+    border-radius: 50%;
+
+    animation: spin .8s linear infinite;
+    display: none;
 }
 
 @keyframes spin {
-  100% {
-    transform: translateY(-50%) rotate(360deg);
-  }
+    to { transform: translateY(-50%) rotate(360deg); }
+}
+
+/* =====================================
+   RESPONSIVO
+===================================== */
+
+@media (max-width: 1100px) {
+
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .layout {
+        padding: 16px;
+    }
+
+    .form__actions {
+        flex-direction: column;
+    }
+
+    .table th,
+    .table td {
+        font-size: .85rem;
+        padding: 10px;
+    }
 }

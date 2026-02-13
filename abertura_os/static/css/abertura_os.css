@@ -1,253 +1,272 @@
-/* ==============================================
-   LAYOUT GERAL
-============================================== */
-.container {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 10px;
-    flex-wrap: wrap; /* permite empilhar em telas menores */
+/* =====================================
+   DESIGN TOKENS
+===================================== */
+
+:root {
+
+    --bg-main: #0f172a;
+    --bg-card: #1e293b;
+    --bg-hover: #334155;
+
+    --border: #334155;
+
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+
+    --danger: #ef4444;
+    --danger-hover: #dc2626;
+
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+
+    --radius: 14px;
+    --transition: .25s ease;
 }
 
-/* ==============================================
-   PAINÉIS: ABRIR/EDITAR OS E TABELA DE OS
-============================================== */
-.panel.abrir-os {
-    flex: 1; /* menor largura */
-    background: #1e293b;
-    padding: 15px;
-    border-radius: 12px;
-    color: #f1f5f9;
-    min-height: 100vh;
-   
+/* =====================================
+   BASE
+===================================== */
+
+body {
+    background: var(--bg-main);
+    color: var(--text-main);
+    font-family: system-ui, sans-serif;
 }
 
-.panel.tabela-os {
-    flex: 2; /* ocupa mais espaço */
-    max-height: 600px;
+/* =====================================
+   LAYOUT
+===================================== */
+
+.layout {
+    max-width: 1600px;
+    margin: auto;
+    padding: 24px;
+
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 24px;
+}
+
+/* =====================================
+   CARDS
+===================================== */
+
+.card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+
     display: flex;
     flex-direction: column;
-    background: #1e293b;
-    border-radius: 12px;
-    padding: 20px;
-    color: #f1f5f9;
 }
 
-/* ==============================================
+.card__header {
+    margin-bottom: 18px;
+}
+
+/* =====================================
+   ALERTAS
+===================================== */
+
+.alerts {
+    grid-column: 1 / -1;
+}
+
+.alert {
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+/* =====================================
    FORMULÁRIO
-============================================== */
-.form-group {
-    margin-bottom: 15px;
+===================================== */
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
-.input-field,
+.form__group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form__error {
+    color: #f87171;
+    font-size: .85rem;
+}
+
+/* Inputs */
+
+.input,
 input,
 textarea,
-select {
-    width: 100%;
-    padding: 8px 10px;
-    border-radius: 6px;
-    border: 1px solid #334155;
-    background: #1e293b;
-    color: #f1f5f9;
-    box-sizing: border-box;
+select,
+.dropdown__selected {
+
+    padding: 11px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-main);
+    color: var(--text-main);
+
+    transition: var(--transition);
 }
 
-.input-field:focus,
+input:focus,
+textarea:focus,
 select:focus {
+
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(99,102,241,0.3);
 }
 
-/* ==============================================
+/* =====================================
    BOTÕES
-============================================== */
-.save-btn {
-    background: #3b82f6;
-    color: #fff;
-    padding: 10px 15px;
+===================================== */
+
+.btn {
+    padding: 12px;
+    border-radius: 8px;
     border: none;
-    border-radius: 8px;
     cursor: pointer;
-    font-size: 1rem;
-    transition: .3s;
-    margin-top: 10px;
-}
-
-.save-btn:hover {
-    background: #2563eb;
-}
-
-.delete-btn {
-    background: #ef4444;
-    color: #fff;
-    padding: 10px 15px;
-    border-radius: 8px;
-    text-decoration: none;
-    margin-left: 10px;
-    transition: .3s;
-    display: none; /* aparece apenas em edição */
-}
-
-.delete-btn:hover {
-    background: #dc2626;
-}
-
-/* ==============================================
-   TABELA DE ORDENS DE SERVIÇO
-============================================== */
-.os-table-container {
-    flex: 1;
-    overflow-y: auto;
-}
-
-.os-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #1e293b;
-    color: #f1f5f9;
-}
-
-.os-table thead {
-    background: #334155;
-    position: sticky;
-    top: 0;
-    z-index: 2;
-}
-
-.os-table th,
-.os-table td {
-    padding: 12px 15px;
-    text-align: left;
-    width: 20%;
-}
-
-.os-table tbody tr {
-    border-bottom: 1px solid #334155;
-    transition: .3s;
-}
-
-.os-table tbody tr:hover {
-    background: #3b475a;
-}
-
-.edit-btn {
-    text-decoration: none;
-    color: #3b82f6;
-    font-size: 1.1rem;
-    transition: .3s;
-}
-
-.edit-btn:hover {
-    color: #2563eb;
-}
-
-.field-error {
-    color: #f87171;
-    font-size: .875rem;
-    margin-top: 4px;
-}
-
-/* ==============================================
-   DROPDOWN CENTRO DE CUSTO
-============================================== */
-.dropdown-container {
-    position: relative;
-    width: 100%;
-}
-
-.dropdown-selected {
-    background: #1e293b;
-    color: #f1f5f9;
-    padding: 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    border: 1px solid #334155;
-}
-
-.dropdown-list {
-    position: absolute;
-    top: calc(100% + 8px);
-    width: 100%;
-    background: #1e293b;
-    border: 1px solid #334155;
-    border-radius: 6px;
-    max-height: 280px;
-    overflow-y: auto;
-    z-index: 999;
-    box-shadow: 0 6px 18px rgba(2, 6, 23, 0.6);
-}
-
-.dropdown-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 10px;
-    cursor: pointer;
-    color: #f1f5f9;
-}
-
-.dropdown-item .text {
-    flex: 1;
-    margin-left: 6px;
-}
-
-.dropdown-item.parent {
     font-weight: 600;
+    transition: var(--transition);
+    text-align: center;
 }
 
-.dropdown-item.child {
-    padding-left: 18px;
-    font-weight: 400;
+.btn--primary {
+    background: var(--primary);
+    color: white;
 }
 
-.dropdown-item:hover {
-    background: #334155;
+.btn--primary:hover {
+    background: var(--primary-hover);
 }
 
-.dropdown-children {
-    padding-left: 6px;
-    background: #243046;
+.btn--secondary {
+    background: var(--bg-hover);
+    color: white;
+}
+
+.btn--danger {
+    background: var(--danger);
+    color: white;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+/* =====================================
+   ACTIONS
+===================================== */
+
+.form__actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* =====================================
+   DROPDOWN
+===================================== */
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown__list {
+    position: absolute;
+    width: 100%;
+    top: calc(100% + 6px);
+    background: var(--bg-card);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    max-height: 260px;
+    overflow-y: auto;
+    z-index: 20;
+}
+
+.dropdown__item {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.dropdown__item:hover {
+    background: var(--bg-hover);
+}
+
+.dropdown__item--child {
+    padding-left: 20px;
 }
 
 .hidden {
     display: none;
 }
 
-.arrow {
-    width: 16px;
-    display: inline-block;
+/* =====================================
+   TABELA
+===================================== */
+
+.table-wrapper {
+    overflow: auto;
 }
 
-/* ==============================================
-   RESPONSIVO
-============================================== */
-@media(max-width:768px) {
-    .container {
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 14px;
+    border-bottom: 1px solid var(--border);
+}
+
+.table thead {
+    background: var(--bg-hover);
+    position: sticky;
+    top: 0;
+}
+
+.table tbody tr:hover {
+    background: rgba(99,102,241,0.08);
+}
+
+/* =====================================
+   RESPONSIVIDADE
+===================================== */
+
+@media (max-width: 1100px) {
+
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .layout {
+        padding: 16px;
+    }
+
+    .form__actions {
         flex-direction: column;
     }
 
-    .panel.tabela-os {
-        max-height: 400px;
+    .table th,
+    .table td {
+        font-size: .85rem;
+        padding: 10px;
     }
 }
-
-/* ==============================================
-   SCROLL PERSONALIZADO DA TABELA
-============================================== */
-.os-table-container::-webkit-scrollbar {
-    width: 8px;
-}
-
-.os-table-container::-webkit-scrollbar-thumb {
-    background: #3b475a;
-    border-radius: 4px;
-}
-
-.os-table-container::-webkit-scrollbar-track {
-    background: #1e293b;
-}
-
-
-

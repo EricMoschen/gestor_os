@@ -6,53 +6,74 @@
 {% endblock head %}
 
 {% block body %}
-<div class="container">
 
-    <!-- Painel esquerdo: Formulário -->
-    <div class="left-panel">
-        <h2 class="text-xl font-bold mb-4">Cadastrar Centro de Custo</h2>
+<div class="page-wrapper">
+
+    <!-- FORM -->
+    <div class="card form-card">
+
+        <h2>Cadastrar Centro de Custo</h2>
+
         <form action="{% url 'cadastrar_centro_custo' %}" method="POST">
             {% csrf_token %}
-            <div class="mb-3">
-                <label class="block mb-1">Código do Centro de Custo</label>
+
+            <div class="form-group">
+                <label>Código do Centro de Custo</label>
                 {{ form.cod_centro }}
             </div>
-            <div class="mb-3">
-                <label class="block mb-1">Descrição do Centro de Custo</label>
+
+            <div class="form-group">
+                <label>Descrição do Centro de Custo</label>
                 {{ form.descricao }}
             </div>
-            <div class="mb-3">
-                <label class="block mb-1">Centro Pai (opcional)</label>
+
+            <div class="form-group">
+                <label>Centro Pai (opcional)</label>
                 {{ form.centro_pai }}
             </div>
-            <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded text-white font-semibold">Cadastrar</button>
+
+            <button type="submit" class="btn-primary">
+                Cadastrar
+            </button>
+
         </form>
 
     </div>
 
-    <!-- Painel direito: Lista hierárquica -->
-    <div class="right-panel">
-        <h2 class="text-xl font-bold mb-4">Centros de Custo Cadastrados</h2>
+    <!-- LISTA -->
+    <div class="card tree-card">
 
-        {% for item in hierarquia %}
+        <h2>Centros de Custo</h2>
+
+        <div class="tree-scroll">
+
+            {% for item in hierarquia %}
             <ul class="tree">
                 <li>
                     {% if item.filhos %}
-                        <span class="tree-toggle font-bold"> <a href="#">{{ item.centro.descricao }} - {{ item.centro.cod_centro }}</a> </span>
+                        <span class="tree-toggle">
+                            {{ item.centro.descricao }} - {{ item.centro.cod_centro }}
+                        </span>
+
                         <ul class="nested">
                             {% include 'cadastro_centro_custo/subcentros.html' with subcentros=item.filhos %}
                         </ul>
+
                     {% else %}
-                       {{ item.centro.descricao }} - {{ item.centro.cod_centro }} 
-                    {% endif %} 
+                        <span class="tree-leaf">
+                            {{ item.centro.descricao }} - {{ item.centro.cod_centro }}
+                        </span>
+                    {% endif %}
                 </li>
             </ul>
-        {% endfor %}
+            {% endfor %}
+
+        </div>
+
     </div>
 
 </div>
 
-<!-- Script da árvore colapsável -->
 <script src="{% static 'js/alternar_arvore_centro_custo.js' %}"></script>
 
 {% endblock %}

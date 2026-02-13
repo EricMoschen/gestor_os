@@ -10,15 +10,24 @@
 
     <h1 class="dashboard-title">Painel de Cadastros</h1>
 
-    <div class="dashboard-grid">
+    {% for categoria in categorias %}
+    <div class="categoria-bloco">
 
-        {% for card in cards %}
-        <a href="{% url card.url %}" class="dashboard-card {{ card.color }}">
-            <h2 class="card-title">{{ card.title }}</h2>
-        </a>
-        {% endfor %}
+        <h2 class="categoria-titulo">{{ categoria.nome }}</h2>
+
+        <div class="dashboard-grid">
+            {% for card in categoria.cards %}
+            <a href="{% url card.url %}" class="dashboard-card {{ card.color }}">
+                <h2 class="card-title">{{ card.title }}</h2>
+            </a>
+            {% endfor %}
+        </div>
 
     </div>
+    {% endfor %}
+
+</div>
+
 
 </div>
 {% endblock body %}

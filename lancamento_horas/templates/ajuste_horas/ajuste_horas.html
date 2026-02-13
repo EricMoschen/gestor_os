@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/ajuste_horas.css' %}">
+{% endblock %}
+
+{% block body %}
+
+<main class="layout">
+
+    <!-- HEADER -->
+    <section class="page-header">
+        <h1>Ajuste de Horários</h1>
+        <p>Painel de supervisão para revisão e correção de apontamentos.</p>
+    </section>
+
+    <!-- KPIs -->
+    <section class="kpi-grid">
+
+        <article class="kpi-card">
+            <span>Total</span>
+            <strong>{{ kpis.total }}</strong>
+        </article>
+
+        <article class="kpi-card kpi-card--warning">
+            <span>Em aberto</span>
+            <strong>{{ kpis.em_aberto }}</strong>
+        </article>
+
+        <article class="kpi-card kpi-card--success">
+            <span>Encerrados</span>
+            <strong>{{ kpis.encerrados }}</strong>
+        </article>
+
+        <article class="kpi-card kpi-card--info">
+            <span>Colaboradores ativos</span>
+            <strong>{{ kpis.colaboradores_ativos }}</strong>
+        </article>
+
+    </section>
+
+    <!-- ALERTAS -->
+    {% if messages %}
+    <section class="alerts">
+        {% for message in messages %}
+        <div class="alert alert--{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </section>
+    {% endif %}
+
+    <!-- CARD TABELA -->
+    <section class="card">
+
+        <header class="card__header">
+            <h2>Apontamentos</h2>
+        </header>
+
+        <!-- FILTROS -->
+        <div class="filter-grid">
+
+            <input
+                id="filtro-geral"
+                class="input"
+                placeholder="Filtrar por matrícula, colaborador, OS ou status">
+
+            <select id="filtro-status" class="input">
+                <option value="">Todos</option>
+                <option value="aberto">Em aberto</option>
+                <option value="encerrado">Encerrado</option>
+            </select>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table class="table">
+
+                <thead>
+                    <tr>
+                        <th>Matrícula</th>
+                        <th>Colaborador</th>
+                        <th>OS</th>
+                        <th>Início</th>
+                        <th>Fim</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody id="lista-apontamentos">
+
+                    {% for ap in apontamentos %}
+                    <tr
+                        data-id="{{ ap.id }}"
+                        data-matricula="{{ ap.colaborador.matricula|lower }}"
+                        data-colaborador="{{ ap.colaborador.nome|lower }}"
+                        data-os="{{ ap.ordem_servico.numero_os|lower }}"
+                        data-status="{% if ap.data_fim %}encerrado{% else %}aberto{% endif %}"
+                        data-inicio="{{ ap.data_inicio|date:'Y-m-d\\TH:i' }}"
+                        data-fim="{% if ap.data_fim %}{{ ap.data_fim|date:'Y-m-d\\TH:i' }}{% endif %}"
+                    >
+
+                        <td>{{ ap.colaborador.matricula }}</td>
+                        <td>{{ ap.colaborador.nome }}</td>
+                        <td>{{ ap.ordem_servico.numero_os }}</td>
+                        <td>{{ ap.data_inicio|date:"d/m/Y H:i" }}</td>
+                        <td>{% if ap.data_fim %}{{ ap.data_fim|date:"d/m/Y H:i" }}{% else %}—{% endif %}</td>
+
+                        <td>
+                            <span class="status
+                                {% if ap.data_fim %}
+                                    status--success
+                                {% else %}
+                                    status--warning
+                                {% endif %}
+                            ">
+                                {% if ap.data_fim %}Encerrado{% else %}Em aberto{% endif %}
+                            </span>
+                        </td>
+
+                        <td>
+                            <button class="btn btn--primary" data-open-modal>
+                                Ajustar
+                            </button>
+                        </td>
+
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="empty">
+                            Nenhum apontamento encontrado.
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- MODAL -->
+<div class="modal" id="modal-ajuste">
+
+    <div class="modal__card">
+
+        <h2>Ajustar apontamento</h2>
+
+        <form method="post" action="{% url 'lancamento_horas:ajuste_horas' %}">
+            {% csrf_token %}
+
+            <input type="hidden" name="apontamento_id" id="apontamento-id">
+
+            <div class="form__group">
+                <label>Data/Hora início</label>
+                <input type="datetime-local" id="data-inicio" name="data_inicio" class="input" required>
+            </div>
+
+            <div class="form__group">
+                <label>Data/Hora fim</label>
+                <input type="datetime-local" id="data-fim" name="data_fim" class="input">
+            </div>
+
+            <div class="modal__actions">
+                <button type="button" class="btn btn--secondary" id="cancelar-modal">
+                    Cancelar
+                </button>
+
+                <button type="submit" class="btn btn--primary">
+                    Salvar
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script src="{% static 'js/ajuste_horas.js' %}"></script>
+
+{% endblock %}

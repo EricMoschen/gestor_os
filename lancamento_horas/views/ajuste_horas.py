@@ -2,13 +2,16 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
+from datetime import datetime
+
 
 from ..models.apontamento_horas import ApontamentoHoras
+from lancamento_horas.services.apontamento_horas_service import ApontamentoHorasService
 
 
 
 
-def ajuste_horas_supervisor(request):
+def ajuste_horas(request):
     if request.method == "POST":
         apontamento = get_object_or_404(ApontamentoHoras, pk=request.POST.get("apontamento_id"))
 
@@ -17,13 +20,13 @@ def ajuste_horas_supervisor(request):
 
         if not inicio_raw:
             messages.error(request, "Preencha a data/hora de início.")
-            return redirect("ajuste_horas_supervisor")
+            return redirect("lancamento_horas:ajuste_horas")
 
         try:
             inicio = timezone.make_aware(datetime.fromisoformat(inicio_raw))
         except ValueError:
             messages.error(request, "Data de início inválida.")
-            return redirect("ajuste_horas_supervisor")
+            return redirect("lancamento_horas:ajuste_horas")
 
         fim = None
         if fim_raw:
@@ -31,18 +34,18 @@ def ajuste_horas_supervisor(request):
                 fim = timezone.make_aware(datetime.fromisoformat(fim_raw))
             except ValueError:
                 messages.error(request, "Data de fim inválida.")
-                return redirect("ajuste_horas_supervisor")
+                return redirect("lancamento_horas:ajuste_horas")
             if fim <= inicio:
                 messages.error(request, "Horário de fim deve ser maior que início.")
-                return redirect("ajuste_horas_supervisor")
+                return redirect("lancamento_horas:ajuste_horas")
 
         apontamento.data_inicio = inicio
         apontamento.data_fim = fim
-        apontamento.tipo_dia = ApontamentoHoras.classificar_tipo_dia(inicio.date())
+        apontamento.tipo_dia = ApontamentoHorasService.classificar_tipo_dia(inicio.date())
         apontamento.save(update_fields=["data_inicio", "data_fim", "tipo_dia"])
 
         messages.success(request, f"Apontamento da OS {apontamento.ordem_servico.numero_os} atualizado.")
-        return redirect("ajuste_horas_supervisor")
+        return redirect("lancamento_horas:ajuste_horas")
 
     apontamentos = ApontamentoHoras.objects.select_related("colaborador", "ordem_servico").order_by("-data_inicio")
     context = {

@@ -3,53 +3,74 @@ from django.contrib.auth.decorators import login_required
 
 def dashboard(request):
 
-    cards = [
+    categorias = [
+
         {
-            "title": "Centro de Custos",
-            "url": "cadastrar_centro_custo",
-            "color": "color-purple",
+            "nome": "Ordens de Serviço",
+            "cards": [
+                {
+                    "title": "Abrir OS",
+                    "url": "abrir_os",
+                    "color": "color-purple",
+                },
+                {
+                    "title": "Apontar Horas",
+                    "url": "lancamento_horas:apontar_horas",
+                    "color": "color-purple",
+                },
+                {
+                    "title": "Ajustar Horas",
+                    "url": "lancamento_horas:ajuste_horas",
+                    "color": "color-purple",
+                },
+                {
+                    "title": "Finalizar OS",
+                    "url": "finalizar_os",
+                    "color": "color-purple",
+                },
+            ]
         },
+
         {
-            "title": "Clientes",
-            "url": "cadastro_cliente",
-            "color": "color-yellow",
+            "nome": "Cadastros",
+            "cards": [
+                {
+                    "title": "Centro de Custos",
+                    "url": "cadastrar_centro_custo",
+                    "color": "color-pink",
+                },
+                {
+                    "title": "Clientes",
+                    "url": "cadastro_cliente",
+                    "color": "color-pink",
+                },
+                {
+                    "title": "Intervenção",
+                    "url": "cadastro_intervencao",
+                    "color": "color-pink",
+                },
+                {
+                    "title": "Colaborador",
+                    "url": "cadastro_colaborador",
+                    "color": "color-pink",
+                },
+            ]
         },
-        {
-            "title": "Intervenção",
-            "url": "cadastro_intervencao",
-            "color": "color-blue",
-        },
-        {
-            "title": "Colaborador",
-            "url": "cadastro_colaborador",
-            "color": "color-blue",
-        },
-        {
-            "title": "Abrir OS",
-            "url": "abrir_os",
-            "color": "color-blue",
-        },
-        {
-            "title": "Apontar Horas",
-            "url": "lancamento_horas:apontar_horas",
-            "color": "color-blue",
-        },
-        {
-            "title": "Ajustar Horas",
-            "url": "lancamento_horas:ajuste_horas_supervisor",
-            "color": "color-blue",
-        },
-        {
-            "title": "Finalizar OS",
-            "url": "finalizar_os",
-            "color": "color-blue",
-        },
-        {
-            "title": "Relatórios",
-            "url": "relatorio_os",
-            "color": "color-blue",
-        },
+
         
+
+        {
+            "nome": "Relatórios",
+            "cards": [
+                {
+                    "title": "Relatórios",
+                    "url": "relatorio_os",
+                    "color": "color-red",
+                }
+            ]
+        }
     ]
 
-    return render(request, "dashboard.html", {"cards": cards})
+
+    return render(request, "dashboard.html", {"categorias": categorias})
+
