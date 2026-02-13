@@ -1,0 +1,29 @@
+@media print {
+    .no-print { display: none; }
+}
+
+table th, table td {
+    border: 2px solid #3a3a3a;
+}
+
+thead th {
+    background-color: #9ca3af;
+    font-weight: 700;
+    color: #111827;
+}
+
+.col-normal-title { background: #15803d; color: #fff; }
+.col-50-title     { background: #ca8a04; color: #fff; }
+.col-100-title    { background: #b91c1c; color: #fff; }
+.col-total-title  { background: #6b7280; color: #fff; }
+
+.col-normal { background: #dcfce7; }
+.col-50     { background: #fef9c3; }
+.col-100    { background: #fee2e2; }
+
+.box-total {
+    padding: 10px 16px;
+    border: 2px solid #333;
+    border-radius: 10px;
+    font-weight: bold;
+}

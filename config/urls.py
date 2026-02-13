@@ -9,4 +9,5 @@ urlpatterns = [
     path("cadastro/", include("cadastro.urls")),
     path("abertura_os/", include("abertura_os.urls")),
     path("lancamento_horas/", include("lancamento_horas.urls")),
+    path("relatorios/", include("relatorios.urls")),
 ]

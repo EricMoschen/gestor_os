@@ -1,0 +1,94 @@
+@page {
+            size: A4;
+            margin: 2cm;
+
+            @bottom-right {
+                content: "Página " counter(page) " de " counter(pages);
+                font-size: 10px;
+                color: #666;
+            }
+        }
+
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 11px;
+            color: #222;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .header .empresa {
+            font-size: 10px;
+        }
+
+        .header .titulo h1 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .info-os {
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+
+        .card {
+            margin-top: 20px;
+            page-break-inside: avoid;
+        }
+
+        .card h3 {
+            background: #f0f0f0;
+            padding: 6px;
+            margin-bottom: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #e5e5e5;
+            font-weight: bold;
+        }
+
+        th,
+        td {
+            border: 1px solid #bbb;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .total-colab {
+            text-align: right;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .total-geral {
+            margin-top: 30px;
+            padding: 10px;
+            border: 2px solid #000;
+            text-align: right;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .assinatura {
+            margin-top: 60px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .ass-box {
+            width: 40%;
+            text-align: center;
+            border-top: 1px solid #000;
+            padding-top: 5px;
+            font-size: 10px;
+        }

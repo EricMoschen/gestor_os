@@ -44,6 +44,11 @@ def dashboard(request):
             "url": "finalizar_os",
             "color": "color-blue",
         },
+        {
+            "title": "Relatórios",
+            "url": "relatorio_os",
+            "color": "color-blue",
+        },
         
     ]
 
