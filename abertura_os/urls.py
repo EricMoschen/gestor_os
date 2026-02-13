@@ -7,6 +7,7 @@ urlpatterns = [
     path("editar/<int:pk>/", views.editar_os, name="editar_os"),
     path("excluir/<int:pk>/", views.excluir_os, name="excluir_os"),
     path("ajax/subcentros/", views.get_subcentros_ajax, name="get_subcentros"),
+    path("finalizar_os/", views.finalizar_os_view, name="finalizar_os"),
     
 ]
 

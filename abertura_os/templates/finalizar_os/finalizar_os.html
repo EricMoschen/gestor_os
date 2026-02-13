@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/finalizar_os.css' %}">
+{% endblock head %}
+
+{% block body %}
+<div class="container">
+
+    <!-- Painel esquerdo: Finalizar OS -->
+    <div class="panel finalizar-os">
+
+        <form method="post" action="{% url 'finalizar_os' %}" id="finalizarForm">
+            {% csrf_token %}
+
+            <!-- Número da OS -->
+            <div class="form-group">
+                <label for="numero_os">Número da OS</label>
+                <input type="text" id="numero_os" name="numero_os" class="input-field" required>
+            </div>
+
+            <!-- Dados da OS -->
+            <div id="dados-os">
+
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <textarea id="descricao_os" class="input-field" readonly rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Situação Atual</label>
+                    <input type="text" id="situacao_os" class="input-field" readonly>
+                </div>
+
+                <!-- Observações -->
+                <div class="form-group">
+                    <label for="observacoes">Observações</label>
+                    <textarea name="observacoes" id="observacoes" class="input-field" rows="4" required></textarea>
+                    <p class="field-error" id="erroObservacoes" style="display:none;">É obrigatório informar uma
+                        observação.</p>
+                </div>
+
+                {% if erro %}
+                <p class="field-error">{{ erro }}</p>
+                {% endif %}
+
+                <input type="hidden" name="numero_os_hidden" id="numero_os_hidden">
+
+                <!-- Botão finalizar -->
+                <button type="submit" class="save-btn">✅ Finalizar OS</button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <!-- Painel direito: Lista de OS -->
+    <div class="panel tabela-os">
+        <h2>Ordens em Aberto</h2>
+
+        <!-- Campo de busca -->
+        <input type="text" id="buscarTabela" class="input-field search-input"
+            placeholder="Buscar por número, descrição, cliente ou situação...">
+
+        <div class="os-table-container">
+            {% if ordens %}
+            <table class="os-table" id="tabelaOs">
+                <thead>
+                    <tr>
+                        <th>Nº OS</th>
+                        <th>Descrição</th>
+                        <th>Centro Custo</th>
+                        <th>Cliente</th>
+                        <th>Situação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for o in ordens %}
+                    <tr class="linha-os {% if o.situacao == 'FI' %}os-finalizada{% else %}os-aberta{% endif %}"
+                        data-numero="{{ o.numero_os }}" data-descricao="{{ o.descricao_os }}"
+                        data-situacao="{{ o.get_situacao_display }}">
+                        <td>{{ o.numero_os }}</td>
+                        <td>{{ o.descricao_os }}</td>
+                        <td>{{ o.centro_custo.descricao }}</td>
+                        <td>{{ o.cliente }}</td>
+                        <td>
+                            <span class="
+    px-2 py-1 rounded text-sm font-semibold
+    {% if o.situacao == 'FI' %} bg-red-100 text-red-700
+    {% elif o.situacao == 'AB' %} bg-green-100 text-green-700
+    {% endif %}
+  ">
+                                {{ o.get_situacao_display }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>Nenhuma OS encontrada.</p>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+<script src="{% static 'js/finalizar_os.js' %}"></script>
+{% endblock %}

@@ -29,6 +29,22 @@ def dashboard(request):
             "url": "abrir_os",
             "color": "color-blue",
         },
+        {
+            "title": "Apontar Horas",
+            "url": "lancamento_horas:apontar_horas",
+            "color": "color-blue",
+        },
+        {
+            "title": "Ajustar Horas",
+            "url": "lancamento_horas:ajuste_horas_supervisor",
+            "color": "color-blue",
+        },
+        {
+            "title": "Finalizar OS",
+            "url": "finalizar_os",
+            "color": "color-blue",
+        },
+        
     ]
 
     return render(request, "dashboard.html", {"cards": cards})
