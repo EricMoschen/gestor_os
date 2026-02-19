@@ -149,8 +149,9 @@
                                 </span>
                             {% else %}
                                 <button class="delete-btn"
-                                        data-id="{{ colaborador.id }}"
-                                        data-nome="{{ colaborador.nome }}">
+                                 data-url="{% url 'excluir_colaborador' colaborador.id %}"
+                                 data-nome="{{ colaborador.nome }}">
+                               
                                     🗑️
                                 </button>
                             {% endif %}
@@ -185,7 +186,7 @@
 
             <div class="modal-buttons">
                 <button class="btn-danger">Excluir</button>
-                <button type="button" class="btn-secondary">Cancelar</button>
+                <button type="button" class="btn-secondary close">Cancelar</button>
             </div>
 
         </form>

@@ -1,4 +1,15 @@
 from django.db import models
+from django.db.models import UniqueConstraint
+from django.db.models.functions import Lower
+
+
+class Meta:
+    constraints = [
+        UniqueConstraint(
+            Lower("descricao"),
+            name="intervencao_descricao_unique_ci"
+        )
+    ]
 
 
 class Intervencao(models.Model):
@@ -11,6 +22,7 @@ class Intervencao(models.Model):
 
     descricao = models.CharField(
         max_length=200,
+        unique=True,
         verbose_name="Descrição"
     )
 

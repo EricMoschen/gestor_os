@@ -1,152 +1,110 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block head %}
-<link rel="stylesheet" href="{% static 'css/cadastro_cliente.css' %}">
+  <link rel="stylesheet" href="{% static 'css/cadastro_cliente.css' %}" />
 {% endblock %}
 
 {% block body %}
+  <div class="page-wrapper">
+    <!-- Botão voltar para Dashboard -->
+    {% block button_voltar %}
+      {% include 'components/_btn_voltar.html' %}
+    {% endblock %}
 
-<div class="page-wrapper">
-  <!-- Botão voltar para Dashboard -->
-  {% block button_voltar %}
-    {% include 'components/_btn_voltar.html' %}
-  {% endblock %}
-  
     <!-- FORM -->
     <div class="card form-card">
+      <h2>Cadastro de Clientes</h2>
 
-        <h2>Cadastro de Clientes</h2>
+      <form method="POST" id="clienteForm">
+        {% csrf_token %}
 
-        <form method="POST" id="clienteForm">
-            {% csrf_token %}
+        <input type="hidden" name="cliente_id" id="cliente_id" />
 
-            <input type="hidden" name="cliente_id" id="cliente_id">
-
-            <div class="form-group">
-                <label>Código do Cliente</label>
-                <input type="text" name="codigo" id="id_codigo" required>
-            </div>
-
-            <div class="form-group">
-                <label>Nome do Cliente</label>
-                <input type="text" name="nome" id="id_nome" required>
-            </div>
-
-            <div class="button-group">
-                <button type="submit" class="btn-primary" id="submitBtn">
-                    Salvar
-                </button>
-
-                <button type="button" class="btn-secondary" id="btnCancelar">
-                    Cancelar
-                </button>
-            </div>
-        </form>
-
-        {% if mensagem_erro %}
-        <div class="erro-msg">
-            {{ mensagem_erro|safe }}
+        <div class="form-group">
+          <label>Código do Cliente</label>
+          <input type="text" name="codigo" id="id_codigo" required />
         </div>
-        {% endif %}
 
+        <div class="form-group">
+          <label>Nome do Cliente</label>
+          <input type="text" name="nome" id="id_nome" required />
+        </div>
+
+        <div class="button-group">
+          <button type="submit" class="btn-primary" id="submitBtn">Salvar</button>
+
+          <button type="button" class="btn-secondary" id="btnCancelar">Cancelar</button>
+        </div>
+      </form>
+
+      {% if mensagem_erro %}
+        <div class="erro-msg">{{ mensagem_erro|safe }}</div>
+      {% endif %}
     </div>
 
     <!-- LISTA -->
     <div class="card table-card">
+      <h2>Clientes Cadastrados</h2>
 
-        <h2>Clientes Cadastrados</h2>
+      <div class="table-scroll">
+        {% if clientes %}
+          <table class="client-table">
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Nome</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
 
-        <div class="table-scroll">
+            <tbody>
+              {% for cliente in clientes %}
+                <tr>
+                  <td>{{ cliente.codigo }}</td>
+                  <td>{{ cliente.nome }}</td>
 
-            {% if clientes %}
-            <table class="client-table">
+                  <td>
+                    <a href="#" class="edit-btn" data-id="{{ cliente.id }}" data-codigo="{{ cliente.codigo }}" data-nome="{{ cliente.nome }}">✏️</a>
+                  </td>
 
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Nome</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for cliente in clientes %}
-                    <tr>
-                        <td>{{ cliente.codigo }}</td>
-                        <td>{{ cliente.nome }}</td>
-
-                        <td>
-                            <a href="#"
-                               class="edit-btn"
-                               data-id="{{ cliente.id }}"
-                               data-codigo="{{ cliente.codigo }}"
-                               data-nome="{{ cliente.nome }}">
-                               ✏️
-                            </a>
-                        </td>
-
-                        <td>
-                            {% if cliente.os_count > 0 %}
-                                <span class="em-uso">
-                                    Em uso ({{ cliente.os_count }})
-                                </span>
-                            {% else %}
-                                <a href="#"
-                                   class="delete-btn"
-                                   data-id="{{ cliente.id }}"
-                                   data-nome="{{ cliente.nome }}">
-                                   🗑️
-                                </a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-
-            </table>
-            {% else %}
-                <p class="empty-msg">Nenhum cliente cadastrado</p>
-            {% endif %}
-
-        </div>
-
+                  <td>
+                    {% if cliente.os_count > 0 %}
+                      <span class="em-uso">Em uso ({{ cliente.os_count }})</span>
+                    {% else %}
+                      <a href="#" class="delete-btn" data-id="{{ cliente.id }}" data-nome="{{ cliente.nome }}">🗑️</a>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p class="empty-msg">Nenhum cliente cadastrado</p>
+        {% endif %}
+      </div>
     </div>
+  </div>
 
-</div>
-
-
-<!-- MODAL -->
-<div id="deleteModal" class="modal">
-
+  <!-- MODAL -->
+  <div id="deleteModal" class="modal">
     <div class="modal-content">
+      <p>
+        Deseja excluir <strong id="modalNome"></strong>?
+      </p>
 
-        <span class="close">&times;</span>
+      <form id="deleteForm" method="POST">
+        {% csrf_token %}
 
-        <p>
-            Deseja excluir <strong id="modalNome"></strong>?
-        </p>
+        <div class="modal-buttons">
+          <button type="submit" class="btn-danger ">Excluir</button>
 
-        <form id="deleteForm" method="POST">
-            {% csrf_token %}
-
-            <div class="modal-buttons">
-                <button type="submit" class="btn-danger">
-                    Excluir
-                </button>
-
-                <button type="button" class="btn-secondary">
-                    Cancelar
-                </button>
-            </div>
-
-        </form>
-
+          <button type="button" class="btn-secondary close">Cancelar</button>
+        </div>
+      </form>
     </div>
+  </div>
 
-</div>
-
-<script src="{% static 'js/cadastro_clientes.js' %}"></script>
-
+  <script src="{% static 'js/cadastro_clientes.js' %}"></script>
 {% endblock %}

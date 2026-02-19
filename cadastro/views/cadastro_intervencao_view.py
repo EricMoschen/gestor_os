@@ -46,12 +46,12 @@ def cadastro_intervencao(request):
     )
 
 
-@login_required
+
 def excluir_intervencao(request, pk):
     intervencao = get_object_or_404(Intervencao, pk=pk)
 
     try:
-        remover_intervencao(intervencao)
+        intervencao.delete()
         messages.success(request, "Intervenção removida.")
 
     except Exception as e:

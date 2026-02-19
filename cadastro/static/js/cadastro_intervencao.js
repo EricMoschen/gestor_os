@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const descricaoInput = document.getElementById('descricaoInput');
-    const intervIdInput = document.getElementById('intervId');
+    const codigoInput = document.getElementById('codigo');
+    const intervIdInput = document.getElementById('intervencao_id');
     const submitBtn = document.getElementById('submitBtn');
     const cancelBtn = document.getElementById('cancelBtn');
 
@@ -9,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', e => {
             e.preventDefault();
             intervIdInput.value = btn.dataset.id;
+            codigoInput.value = btn.dataset.codigo;  
             descricaoInput.value = btn.dataset.descricao;
             submitBtn.textContent = 'Salvar Alterações';
             cancelBtn.style.display = 'inline-block';
@@ -19,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Cancelar edição
     cancelBtn.addEventListener('click', () => {
         intervIdInput.value = '';
+        codigoInput.value = '';
         descricaoInput.value = '';
         submitBtn.textContent = 'Cadastrar';
         cancelBtn.style.display = 'none';
@@ -40,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    closeBtn.onclick = () => modal.style.display = "none";
+    
     modalCancelBtn.onclick = () => modal.style.display = "none";
     window.onclick = e => { if (e.target == modal) modal.style.display = "none"; }
 });

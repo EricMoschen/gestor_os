@@ -101,6 +101,9 @@ body {
     border: none;
     color: white;
     cursor: pointer;
+
+    align-items: center;
+    justify-content: center;
 }
 
 

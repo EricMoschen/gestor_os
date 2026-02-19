@@ -1,106 +1,158 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
+    ClientePage.init();
+});
 
-    // ===========================
-    //  MODAL DE EXCLUSÃO
-    // ===========================
+const ClientePage = (() => {
 
-    const modal = document.getElementById("deleteModal");
-    const modalNome = document.getElementById("modalNome");
-    const deleteForm = document.getElementById("deleteForm");
-    const closeBtn = document.querySelector(".close");
-    const cancelBtn = document.querySelector(".cancel-btn");
+    // ==========================
+    // ELEMENTOS
+    // ==========================
 
-    document.querySelectorAll(".delete-btn").forEach(btn => {
-        btn.addEventListener("click", e => {
-            e.preventDefault();
+    const elements = {
+        modal: document.getElementById("deleteModal"),
+        modalNome: document.getElementById("modalNome"),
+        deleteForm: document.getElementById("deleteForm"),
+        closeBtn: document.querySelector(".close"),
+        cancelModalBtn: document.querySelector(".cancel-modal"),
+        deleteButtons: document.querySelectorAll(".delete-btn"),
 
-            const id = btn.dataset.id;
-            const nome = btn.dataset.nome;
+        editButtons: document.querySelectorAll(".edit-btn"),
+        idField: document.getElementById("cliente_id"),
+        codField: document.getElementById("id_codigo"),
+        nomeField: document.getElementById("id_nome"),
+        submitBtn: document.getElementById("submitBtn"),
+        btnCancelar: document.getElementById("btnCancelar"),
 
-            modalNome.textContent = nome;
-            deleteForm.action = `/cadastro/cliente/excluir/${id}/`;
-
-            modal.style.display = "block";
-        });
-    });
-
-    closeBtn.onclick = () => modal.style.display = "none";
-    cancelBtn.onclick = () => modal.style.display = "none";
-
-    window.onclick = e => {
-        if (e.target === modal) modal.style.display = "none";
+        mensagemErro: document.querySelector(".erro-msg")
     };
 
 
-    // ===========================
-    //  EDITAR CLIENTE
-    // ===========================
+    // ==========================
+    // MODAL
+    // ==========================
 
-    const editButtons = document.querySelectorAll(".edit-btn");
-    const idField = document.getElementById("cliente_id");
-    const codField = document.getElementById("id_cod_cliente");
-    const nomeField = document.getElementById("id_nome_cliente");
-    const submitBtn = document.getElementById("submitBtn");
-    const btnCancelar = document.getElementById("btnCancelar");
-    const mensagemErro = document.getElementById("erro-msg")
+    function initModal() {
+        if (!elements.modal) return;
 
-    editButtons.forEach(btn => {
-        btn.addEventListener("click", function (e) {
-            e.preventDefault();
+        elements.deleteButtons.forEach(btn => {
+            btn.addEventListener("click", e => {
+                e.preventDefault();
 
-            const id = this.dataset.id;
-            const cod = this.dataset.cod;
-            const nome = this.dataset.nome;
+                const { id, nome } = btn.dataset;
 
-            idField.value = id;
-            codField.value = cod;
-            nomeField.value = nome;
+                elements.modalNome.textContent = nome;
+                elements.deleteForm.action = `/cadastro/cliente/excluir/${id}/`;
 
-            submitBtn.textContent = "Salvar";
-            btnCancelar.style.display = "flex";
-
-            nomeField.focus();
+                elements.modal.style.display = "block";
+            });
         });
-    });
 
-    // ===========================
-    //  BOTÃO CANCELAR
-    // ===========================
-
-    btnCancelar.addEventListener("click", () => {
-
-        idField.value = "";
-        codField.value = "";
-        nomeField.value = "";
-
-        submitBtn.textContent = "Cadastrar";
-        btnCancelar.style.display = "none";
-
-        if (mensagemErro) {
-            mensagemErro.style.display = "none";
-            mensagemErro.textContent = "";
+        if (elements.closeBtn) {
+            elements.closeBtn.onclick = closeModal;
         }
-    });
 
-    // ===========================
-    //  AO CARREGAR A PÁGINA APÓS SALVAR
-    // ===========================
+        if (elements.cancelModalBtn) {
+            elements.cancelModalBtn.onclick = closeModal;
+        }
 
-    if (!idField.value) {
-        btnCancelar.style.display = "none";
-        if (mensagemErro) mensagemErro.style.display = "none";
+        window.addEventListener("click", e => {
+            if (e.target === elements.modal) closeModal();
+        });
     }
 
-    // ===========================
-    //  MENSAGEM DE ERRO SOME EM 10s
-    // ===========================
+    function closeModal() {
+        elements.modal.style.display = "none";
+    }
 
-    if (mensagemErro && mensagemErro.textContent.trim() !== "") {
-        mensagemErro.style.display = "block";
+
+    // ==========================
+    // EDITAR CLIENTE
+    // ==========================
+
+    function initEdit() {
+        elements.editButtons.forEach(btn => {
+            btn.addEventListener("click", e => {
+                e.preventDefault();
+
+                const { id, codigo, nome } = btn.dataset;
+
+                elements.idField.value = id;
+                elements.codField.value = codigo;
+                elements.nomeField.value = nome;
+
+                elements.submitBtn.textContent = "Salvar Alterações";
+                elements.btnCancelar.style.display = "flex";
+
+                elements.nomeField.focus();
+            });
+        });
+    }
+
+
+    // ==========================
+    // RESET FORM
+    // ==========================
+
+    function initFormReset() {
+        if (!elements.btnCancelar) return;
+
+        elements.btnCancelar.addEventListener("click", () => {
+            resetForm();
+        });
+
+        if (!elements.idField.value) {
+            elements.btnCancelar.style.display = "none";
+        }
+    }
+
+    function resetForm() {
+        elements.idField.value = "";
+        elements.codField.value = "";
+        elements.nomeField.value = "";
+
+        elements.submitBtn.textContent = "Salvar";
+        elements.btnCancelar.style.display = "none";
+
+        if (elements.mensagemErro) {
+            elements.mensagemErro.style.display = "none";
+            elements.mensagemErro.textContent = "";
+        }
+    }
+
+
+    // ==========================
+    // MENSAGEM DE ERRO
+    // ==========================
+
+    function initErrorMessage() {
+        if (!elements.mensagemErro) return;
+
+        const hasMessage = elements.mensagemErro.textContent.trim() !== "";
+
+        if (!hasMessage) {
+            elements.mensagemErro.style.display = "none";
+            return;
+        }
+
+        elements.mensagemErro.style.display = "block";
 
         setTimeout(() => {
-            mensagemErro.style.display = "none";
-        }, 6000); // 10 segundos
+            elements.mensagemErro.style.display = "none";
+        }, 8000);
     }
 
-});
+
+    // ==========================
+    // INIT GERAL
+    // ==========================
+
+    function init() {
+        initModal();
+        initEdit();
+        initFormReset();
+        initErrorMessage();
+    }
+
+    return { init };
+
+})();

@@ -1,8 +1,8 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block head %}
-<link rel="stylesheet" href="{% static 'css/cadastro_intervencoes.css' %}">
+  <link rel="stylesheet" href="{% static 'css/cadastro_intervencoes.css' %}" />
 {% endblock %}
 
 {% block body %}
@@ -10,130 +10,96 @@
   {% block button_voltar %}
     {% include 'components/_btn_voltar.html' %}
   {% endblock %}
-  
-<div class="page-wrapper">
 
+  <div class="page-wrapper">
     <!-- FORM -->
     <div class="card form-card">
+      <h2>Cadastro de Intervenções</h2>
 
-        <h2>Cadastro de Intervenções</h2>
+      <form method="POST" id="intervForm">
+        {% csrf_token %}
 
-        <form method="POST" id="intervForm">
-            {% csrf_token %}
+        <input type="hidden" name="intervencao_id" id="intervencao_id" />
 
-            <input type="hidden" name="intervencao_id" id="intervencao_id">
+        <div class="form-group">
+          <label>Código</label>
+          <input type="number" name="codigo" id="codigo" readonly />
+        </div>
 
-            <div class="form-group">
-                <label>Código</label>
-                <input type="number" name="codigo" required>
-            </div>
+        <div class="form-group">
+          <label>Descrição</label>
+          <input type="text" name="descricao" id="descricaoInput" maxlength="200" required />
+        </div>
 
-            <div class="form-group">
-                <label>Descrição</label>
-                <input type="text" name="descricao" maxlength="200" required>
-            </div>
+        <div class="button-group">
+          <button type="submit" class="btn-primary" id="submitBtn">Cadastrar</button>
 
-            <div class="button-group">
-                <button type="submit" class="btn-primary" id="submitBtn">
-                    Cadastrar
-                </button>
-
-                <button type="button" class="btn-secondary" id="cancelBtn">
-                    Cancelar
-                </button>
-            </div>
-
-        </form>
-
+          <button type="button" class="btn-secondary" id="cancelBtn">Cancelar</button>
+        </div>
+      </form>
     </div>
 
     <!-- LISTA -->
     <div class="card table-card">
+      <h2>Intervenções</h2>
 
-        <h2>Intervenções</h2>
+      <div class="table-scroll">
+        {% if intervencoes %}
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Descrição</th>
+                <th></th>
+                <th>Status</th>
+              </tr>
+            </thead>
 
-        <div class="table-scroll">
+            <tbody>
+              {% for interv in intervencoes %}
+                <tr>
+                  <td>{{ interv.codigo }}</td>
+                  <td>{{ interv.descricao }}</td>
 
-            {% if intervencoes %}
-            <table class="data-table">
+                  <td>
+                    <button class="edit-btn" data-id="{{ interv.id }}" data-codigo="{{ interv.codigo }}" data-descricao="{{ interv.descricao }}">✏️</button>
+                  </td>
 
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Descrição</th>
-                        <th></th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for interv in intervencoes %}
-                    <tr>
-                        <td>{{ interv.codigo }}</td>
-                        <td>{{ interv.descricao }}</td>
-
-                        <td>
-                            <button class="edit-btn"
-                                data-id="{{ interv.id }}"
-                                data-codigo="{{ interv.codigo }}"
-                                data-descricao="{{ interv.descricao }}">
-                                ✏️
-                            </button>
-                        </td>
-
-                        <td>
-                            {% if interv.os_count > 0 %}
-                                <span class="em-uso">
-                                    Em uso ({{ interv.os_count }})
-                                </span>
-                            {% else %}
-                                <button class="delete-btn"
-                                    data-id="{{ interv.id }}"
-                                    data-nome="{{ interv.descricao }}">
-                                    🗑️
-                                </button>
-                            {% endif %}
-                        </td>
-
-                    </tr>
-                    {% endfor %}
-                </tbody>
-
-            </table>
-            {% else %}
-                <p class="empty-msg">Nenhuma intervenção cadastrada</p>
-            {% endif %}
-
-        </div>
-
+                  <td>
+                    {% if interv.os_count > 0 %}
+                      <span class="em-uso">Em uso ({{ interv.os_count }})</span>
+                    {% else %}
+                      <button class="delete-btn" data-id="{{ interv.id }}" data-nome="{{ interv.descricao }}">🗑️</button>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p class="empty-msg">Nenhuma intervenção cadastrada</p>
+        {% endif %}
+      </div>
     </div>
+  </div>
 
-</div>
-
-
-<!-- MODAL -->
-<div id="deleteModal" class="modal">
-
+  <!-- MODAL -->
+  <div id="deleteModal" class="modal">
     <div class="modal-content">
+      <p>
+        Excluir <strong id="modalNome"></strong>?
+      </p>
 
-        <p>
-            Excluir <strong id="modalNome"></strong>?
-        </p>
+      <form id="deleteForm" method="POST">
+        {% csrf_token %}
 
-        <form id="deleteForm" method="POST">
-            {% csrf_token %}
-
-            <div class="modal-buttons">
-                <button class="btn-danger">Excluir</button>
-                <button type="button" class="btn-secondary">Cancelar</button>
-            </div>
-
-        </form>
-
+        <div class="modal-buttons">
+          <button class="btn-danger">Excluir</button>
+          <button type="button" class="btn-secondary cancel-btn">Cancelar</button>
+        </div>
+      </form>
     </div>
+  </div>
 
-</div>
-
-<script src="{% static 'js/cadastro_intervencao.js' %}"></script>
-
+  <script src="{% static 'js/cadastro_intervencao.js' %}"></script>
 {% endblock %}

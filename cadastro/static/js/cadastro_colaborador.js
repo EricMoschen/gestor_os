@@ -3,23 +3,30 @@
 const modal = document.getElementById("deleteModal");
 const modalNome = document.getElementById("modalNome");
 const deleteForm = document.getElementById("deleteForm");
-const closeBtn = document.querySelector(".close");
-const cancelBtn = document.querySelector(".cancel-btn");
 
 document.querySelectorAll(".delete-btn").forEach(btn => {
     btn.addEventListener("click", e => {
         e.preventDefault();
-        const id = btn.getAttribute("data-id");
-        const nome = btn.getAttribute("data-nome");
-        modalNome.textContent = nome;
-        deleteForm.action = `/cadastro/colaborador/excluir/${id}/`;
+
+        modalNome.textContent = btn.dataset.nome;
+        deleteForm.action = btn.dataset.url;
+
         modal.style.display = "block";
     });
 });
 
-closeBtn.onclick = () => modal.style.display = "none";
-cancelBtn.onclick = () => modal.style.display = "none";
-window.onclick = e => { if (e.target == modal) modal.style.display = "none"; }
+document.querySelectorAll(".close").forEach(btn => {
+    btn.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+});
+
+window.addEventListener("click", e => {
+    if (e.target === modal) {
+        modal.style.display = "none";
+    }
+});
+
 
 // Mostrar/ocultar horários personalizados dependendo do turno
 const turnoSelect = document.getElementById('id_turno');

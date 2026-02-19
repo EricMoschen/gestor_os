@@ -6,7 +6,7 @@ def salvar_colaborador(form):
         return form.save()
 
 
-def excluir_colaborador(colaborador):
+def deletar_colaborador(colaborador):
     with transaction.atomic():
         nome = colaborador.nome
         colaborador.delete()

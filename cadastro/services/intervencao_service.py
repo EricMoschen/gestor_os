@@ -5,6 +5,7 @@ from cadastro.models import Intervencao
 
 
 @transaction.atomic
+@transaction.atomic
 def salvar_intervencao(*, intervencao_id=None, descricao):
 
     descricao = descricao.strip()
@@ -12,33 +13,22 @@ def salvar_intervencao(*, intervencao_id=None, descricao):
     if not descricao:
         raise ValidationError("Descrição inválida.")
 
-    # ========================
-    # EDITAR
-    # ========================
     if intervencao_id:
-        interv = Intervencao.objects.select_for_update().get(
-            codigo=intervencao_id
-        )
-
+        interv = Intervencao.objects.select_for_update().get(pk=intervencao_id)
         interv.descricao = descricao
         interv.save()
-
         return interv
 
-    # ========================
-    # CRIAR
-    # ========================
     max_codigo = (
-        Intervencao.objects.select_for_update()
-        .aggregate(max_codigo=Max("codigo"))
-        ["max_codigo"]
-        or 0
+        Intervencao.objects.aggregate(max_codigo=Max("codigo"))
+        ["max_codigo"] or 0
     )
 
     return Intervencao.objects.create(
         codigo=max_codigo + 1,
         descricao=descricao
     )
+
     
 def remover_intervencao(intervencao):
 

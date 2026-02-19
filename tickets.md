@@ -3,6 +3,10 @@
 ## 🔴 Bugs
 
 - [ ] Corrigir a opção de edição do app Cadastro
+      - [ ] Centro de Custo
+      - [x] Clientes
+      - [x] Intervenção
+      - [x] Colaborador
 - [ ] Corrigir o Orçamento Clientes para puxar:
       - Valor da função
       - Total de horas por OS
