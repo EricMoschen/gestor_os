@@ -6,6 +6,11 @@
 {% endblock head %}
 
 {% block body %}
+  <!-- Botão voltar para Dashboard -->
+  {% block button_voltar %}
+    {% include 'components/_btn_voltar.html' %}
+  {% endblock %}
+  
 <div class="container">
 
     <h2 class="titulo">Relatório de Horas por Ordem de Serviço</h2>

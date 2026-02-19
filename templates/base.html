@@ -1,29 +1,27 @@
-
 {% load static %}
 
 <!DOCTYPE html>
 <html lang="pt-br" class="h-full bg-slate-900 text-white">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Gestor OS</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestor OS</title>
 
-        <!-- Tailwind CSS via CDN -->
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link rel="icon" href="{% static 'favicon.ico' %}"
-            type="image/x-icon" />
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon" />
 
-        <!-- Estilos e scripts adicionais -->
-        {% block head %}{% endblock head %}
-    </head>
-    <body class="h-full min-h-screen antialiased">
-        
-        
-        <!-- Bloco principal de conteúdo -->
-        {% block body %}{% endblock body %}
+    <!-- Estilos e scripts adicionais -->
+    {% block head %}
 
-        <!-- Scripts globais -->
-        
-    </body>
+    {% endblock %}
+  </head>
+  <body class="h-full min-h-screen antialiased">
+    <!-- Bloco principal de conteúdo -->
+    {% block body %}
 
+    {% endblock %}
+
+    <!-- Scripts globais -->
+  </body>
 </html>

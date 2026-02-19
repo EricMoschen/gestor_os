@@ -7,7 +7,11 @@
 
 {% block body %}
 <div class="container">
-
+  <!-- Botão voltar para Dashboard -->
+  {% block button_voltar %}
+    {% include 'components/_btn_voltar.html' %}
+  {% endblock %}
+  
     <!-- Painel esquerdo: Finalizar OS -->
     <div class="panel finalizar-os">
 

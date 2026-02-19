@@ -8,7 +8,11 @@
 {% block body %}
 
 <div class="page-wrapper">
-
+  <!-- Botão voltar para Dashboard -->
+  {% block button_voltar %}
+    {% include 'components/_btn_voltar.html' %}
+  {% endblock %}
+  
     <!-- FORM -->
     <div class="card form-card">
 

@@ -1,0 +1,9 @@
+<!-- Botão voltar para Dashboard -->
+
+{% block button_voltar %}
+  <a href="{% url 'dashboard' %}" class="fixed top-6 right-6 z-50 inline-flex items-center gap-2 px-4 py-2 bg-purple-800/25 text-purple-300 backdrop-blur-lg border border-purple-600/30 rounded-2xl shadow-md opacity-70 hover:opacity-100 hover:bg-purple-700 hover:text-white hover:shadow-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500/50">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-5 h-5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+    </svg>Voltar
+  </a>
+{% endblock %}
