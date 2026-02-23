@@ -18,5 +18,9 @@ urlpatterns = [
     path('editar/<int:pk>/', views.editar_colaborador, name='editar_colaborador'),
     path('excluir/<int:pk>/', views.excluir_colaborador, name='excluir_colaborador'),
 
+    # Rota para Cadastro de Funções
+    path("funcoes/", views.cadastro_funcao, name="cadastro_funcao"),
+    path("funcoes/editar/<int:id>/", views.editar_funcao, name="editar_funcao"),
+    path("funcoes/excluir/<int:id>/", views.excluir_funcao, name="excluir_funcao"),
 ]
 

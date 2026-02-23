@@ -5,6 +5,7 @@ class Funcao_colab(models.Model):
     
     descricao =  models.CharField(
         max_length=255,
+        unique = True,
         verbose_name= 'Descricao da Função'
         )
     
@@ -15,3 +16,5 @@ class Funcao_colab(models.Model):
         verbose_name='Valor_Hora'
     )
     
+    def __str__(self):
+        return self.descricao

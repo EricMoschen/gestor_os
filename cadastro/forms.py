@@ -53,7 +53,7 @@ class ColaboradorForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Nome completo do colaborador'
             }),
-            'funcao': forms.Select(attrs={   # ← aqui é Select, não TextInput
+            'funcao': forms.Select(attrs={   
                 'class': 'form-control'
             }),
             'turno': forms.Select(attrs={
