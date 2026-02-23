@@ -17,12 +17,11 @@
 
 ## 🟡 Melhorias
 
-
 - [ ] Modificar o Orçamento Horas para o mesmo layout do Orçamento Cliente
-- [ ] Alterar estrutura:
-      - Remover valor da hora do cadastro de colaborador
-      - Criar cadastro de Função com valor/hora
-      - Relacionar apenas a Função ao Colaborador
+- [] Alterar estrutura:
+      - [x]Remover valor da hora do cadastro de colaborador
+      - [ ]Criar cadastro de Função com valor/hora
+      - [x] Relacionar apenas a Função ao Colaborador
 - [ ] Na funcionalidade de Ajuste de Horas, adicionar campo para incluir lançamento
 - [ ] Atualizar layout do finalizar OS
 

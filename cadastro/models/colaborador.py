@@ -1,4 +1,5 @@
 from django.db import models
+from .funcao_colab import Funcao_colab
 from cadastro.models.choices import TurnoChoices
 from cadastro.services.horario_service import HorarioService
 from cadastro.validators.colaborador_validator import validar_horarios_outros
@@ -17,16 +18,12 @@ class Colaborador(models.Model):
         verbose_name='Nome'
     )
 
-    funcao = models.CharField(
-        max_length=150,
-        verbose_name='Função'
-    )
-
-    valor_hora = models.DecimalField(
-        max_digits=7,
-        decimal_places=2,
-        default=0.00,
-        verbose_name='Valor Hora'
+    funcao = models.ForeignKey(
+        Funcao_colab,
+        on_delete=models.PROTECT,
+        related_name="Função_Colaborador",
+        null=True,
+        blank=True
     )
 
     turno = models.CharField(

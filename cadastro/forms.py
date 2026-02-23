@@ -40,8 +40,9 @@ class ColaboradorForm(forms.ModelForm):
     class Meta:
         model = Colaborador
         fields = [
-            'matricula', 'nome', 'funcao', 'valor_hora', 'turno',
-            'hr_entrada_am', 'hr_saida_am', 'hr_entrada_pm', 'hr_saida_pm'
+            'matricula', 'nome', 'funcao', 'turno',
+            'hr_entrada_am', 'hr_saida_am',
+            'hr_entrada_pm', 'hr_saida_pm'
         ]
         widgets = {
             'matricula': forms.TextInput(attrs={
@@ -52,20 +53,29 @@ class ColaboradorForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Nome completo do colaborador'
             }),
-            'funcao': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Função ou cargo'
+            'funcao': forms.Select(attrs={   # ← aqui é Select, não TextInput
+                'class': 'form-control'
             }),
-            'valor_hora': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'step': '0.01',
-                'placeholder': 'Ex: 12.50'
+            'turno': forms.Select(attrs={
+                'class': 'form-select',
+                'id': 'id_turno'
             }),
-            'turno': forms.Select(attrs={'class': 'form-select', 'id': 'id_turno'}),
-            'hr_entrada_am': forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
-            'hr_saida_am': forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
-            'hr_entrada_pm': forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
-            'hr_saida_pm': forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
+            'hr_entrada_am': forms.TimeInput(attrs={
+                'class': 'form-control',
+                'type': 'time'
+            }),
+            'hr_saida_am': forms.TimeInput(attrs={
+                'class': 'form-control',
+                'type': 'time'
+            }),
+            'hr_entrada_pm': forms.TimeInput(attrs={
+                'class': 'form-control',
+                'type': 'time'
+            }),
+            'hr_saida_pm': forms.TimeInput(attrs={
+                'class': 'form-control',
+                'type': 'time'
+            }),
         }
 
     def clean(self):
