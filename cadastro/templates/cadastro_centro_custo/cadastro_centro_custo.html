@@ -6,20 +6,19 @@
 {% endblock head %}
 
 {% block body %}
-  <!-- Botão voltar para Dashboard -->
-  {% block button_voltar %}
-    {% include 'components/_btn_voltar.html' %}
-  {% endblock %}
-  
+<!-- Botão voltar -->
+{% block button_voltar %}
+{% include 'components/_btn_voltar.html' %}
+{% endblock %}
+
 <div class="page-wrapper">
 
-    <!-- FORM -->
+    <!-- FORMULÁRIO -->
     <div class="card form-card">
-
         <h2>Cadastrar Centro de Custo</h2>
-
         <form action="{% url 'cadastrar_centro_custo' %}" method="POST">
             {% csrf_token %}
+            <input type="hidden" name="centro_id" id="centro_id">
 
             <div class="form-group">
                 <label>Código do Centro de Custo</label>
@@ -36,48 +35,44 @@
                 {{ form.centro_pai }}
             </div>
 
-            <button type="submit" class="btn-primary">
-                Cadastrar
-            </button>
-
+            <button type="submit" class="btn-primary" id="submitBtn">Cadastrar</button>
+            <button type="button" class="btn-secondary" id="btnCancelar">Cancelar</button>
+            <button type="button" class="btn-secondary" id="btnCancelar">Ex</button>
+            
         </form>
-
     </div>
 
-    <!-- LISTA -->
+    <!-- ÁRVORE DE CENTROS -->
     <div class="card tree-card">
-
         <h2>Centros de Custo</h2>
-
         <div class="tree-scroll">
-
             {% for item in hierarquia %}
             <ul class="tree">
                 <li>
                     {% if item.filhos %}
-                        <span class="tree-toggle">
+                    <span class="tree-toggle">
+                        
+                        <span class="editable" data-id="{{ item.centro.id }}" data-cod="{{ item.centro.cod_centro }}"
+                            data-descricao="{{ item.centro.descricao }}">
                             {{ item.centro.descricao }} - {{ item.centro.cod_centro }}
                         </span>
-
-                        <ul class="nested">
-                            {% include 'cadastro_centro_custo/subcentros.html' with subcentros=item.filhos %}
-                        </ul>
-
+                    </span>
+                    <ul class="nested" style="display:none;">
+                        {% include 'cadastro_centro_custo/subcentros.html' with subcentros=item.filhos %}
+                    </ul>
                     {% else %}
-                        <span class="tree-leaf">
-                            {{ item.centro.descricao }} - {{ item.centro.cod_centro }}
-                        </span>
+                    <span class="editable" data-id="{{ item.centro.id }}" data-cod="{{ item.centro.cod_centro }}"
+                        data-descricao="{{ item.centro.descricao }}">
+                        {{ item.centro.descricao }} - {{ item.centro.cod_centro }}
+                    </span>
                     {% endif %}
                 </li>
             </ul>
             {% endfor %}
-
         </div>
-
     </div>
 
 </div>
 
 <script src="{% static 'js/alternar_arvore_centro_custo.js' %}"></script>
-
 {% endblock %}

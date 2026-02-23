@@ -1,7 +1,7 @@
 from .colaborador_create_list_view import cadastro_colaborador
 from .colaborador_update_view import editar_colaborador
 from .colaborador_delete_view import excluir_colaborador
-from .centro_custo_view import cadastrar_centro_custo
+from .centro_custo_view import cadastrar_centro_custo, editar_centro_custo, excluir_centro_custo
 from .cadastro_cliente_view import cadastro_cliente, excluir_cliente
 from .cadastro_intervencao_view import cadastro_intervencao, excluir_intervencao
 from .cadastro_funcao import cadastro_funcao, editar_funcao, excluir_funcao

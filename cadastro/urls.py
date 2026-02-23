@@ -4,6 +4,8 @@ from . import views
 urlpatterns = [
     # Rota Centro de Custos
     path("centro-custo/", views.cadastrar_centro_custo, name="cadastrar_centro_custo"),
+    path("centro-custo/editar/<int:id>/", views.editar_centro_custo, name="editar_centro_custo"),
+    path("centro-custo/excluir/<int:id>/", views.excluir_centro_custo, name="excluir_centro_custo"),
 
     # Rota Clientes
     path("cliente/", views.cadastro_cliente, name="cadastro_cliente"),

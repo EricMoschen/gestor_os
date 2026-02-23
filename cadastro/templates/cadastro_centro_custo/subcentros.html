@@ -1,14 +1,23 @@
 <ul>
-    {% for item in subcentros %}
-        <li>
-            {% if item.filhos %}
-                <span class="tree-toggle font-bold">{{ item.centro.descricao }} - {{ item.centro.cod_centro }} </span>
-                <ul class="nested">
-                    {% include 'cadastro/subcentros.html' with subcentros=item.filhos %} 
-                </ul>
-            {% else %}
-              <a href="#"> {{ item.centro.descricao }} - {{ item.centro.cod_centro }}</a>
-            {% endif %}
-        </li>
+    {% for sub in subcentros %}
+    <li>
+        {% if sub.filhos %}
+        <span class="tree-toggle">
+            <button class="toggle-btn">▶</button>
+            <span class="editable" data-id="{{ sub.centro.id }}" data-cod="{{ sub.centro.cod_centro }}"
+                data-descricao="{{ sub.centro.descricao }}">
+                {{ sub.centro.descricao }} - {{ sub.centro.cod_centro }}
+            </span>
+        </span>
+        <ul class="nested" style="display:none;">
+            {% include 'cadastro_centro_custo/subcentros.html' with subcentros=sub.filhos %}
+        </ul>
+        {% else %}
+        <span class="editable" data-id="{{ sub.centro.id }}" data-cod="{{ sub.centro.cod_centro }}"
+            data-descricao="{{ sub.centro.descricao }}">
+            {{ sub.centro.descricao }} - {{ sub.centro.cod_centro }}
+        </span>
+        {% endif %}
+    </li>
     {% endfor %}
 </ul>
