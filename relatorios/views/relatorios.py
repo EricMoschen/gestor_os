@@ -15,9 +15,6 @@ from abertura_os.models import AberturaOS
 from lancamento_horas.models import ApontamentoHoras
 
 
-
-
-
 def relatorio_os(request):
     context = construir_contexto_relatorio_os(request)
     return render(request, "relatorios/menu_relatorios.html", context)
@@ -26,6 +23,10 @@ def relatorio_os(request):
 
 def orcamento_pdf(request):
     context = construir_contexto_relatorio_os(request)
+    context.update({
+        "numero_orcamento":str(gerar_proximo_orcamento()).zfill(4),
+       "data_emissao": timezone.now().strftime("%d/%m/%y"), 
+    })
     return render(request, "relatorios/orcamento_horas_pdf.html", context)
 
 

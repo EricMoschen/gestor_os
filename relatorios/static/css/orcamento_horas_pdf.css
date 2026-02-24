@@ -1,181 +1,71 @@
-/* ================= CONFIGURAÇÃO DE PÁGINA ================= */
-
-@page {
-    size: A4;
-    margin: 2cm;
-
-    @bottom-right {
-        content: "Página " counter(page) " de " counter(pages);
-        font-size: 9px;
-        color: #777;
-    }
+body{
+    font-size:12px;
 }
 
-
-/* ================= RESET E BASE ================= */
-
-body {
-    font-family: Helvetica, Arial, sans-serif;
-    font-size: 11px;
-    line-height: 1.4;
-    color: #222;
+table th{
+    background-color:#1f2937;
+    color: white;
+    font-weight: 600;
 }
 
-
-/* ================= CABEÇALHO ================= */
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    border-bottom: 2px solid #000;
-    padding-bottom: 12px;
-    margin-bottom: 22px;
+table td,
+table th {
+    border: 1px solid #d1d5db;
 }
 
-.header .empresa {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    font-size: 10px;
+.col-normal-title {
+    background: #15803d;
+    color: #fff;
 }
 
-.logo {
-    height: 55px;
+.col-50-title {
+    background: #ca8a04;
+    color: #fff;
 }
 
-.empresa-info {
-    display: flex;
-    flex-direction: column;
+.col-100-title {
+    background: #6b7280;
+    color: #fff;
 }
 
-.header .titulo {
-    text-align: right;
+.col-normal {
+    background: #dcfce7;
 }
 
-.header .titulo h1 {
-    margin: 0;
-    font-size: 20px;
-    letter-spacing: 0.5px;
+.col-50{
+    background: #fef9c3;
 }
 
-.header .titulo span {
-    font-size: 10px;
-    color: #555;
+.col-100{
+    background: #fee2e2;
 }
 
-
-/* ================= BLOCO OS ================= */
-
-.info-os {
-    border: 1px solid #cfcfcf;
-    padding: 10px 12px;
-    margin-bottom: 22px;
-    background: #fafafa;
-}
-
-.info-linha {
-    margin-bottom: 4px;
-}
-
-.info-linha strong {
-    display: inline-block;
-    width: 85px;
-}
-
-
-/* ================= CARD COLABORADOR ================= */
-
-.card {
-    margin-bottom: 26px;
-    page-break-inside: avoid;
-}
-
-.card h3,
-.colaborador {
-    background: #f2f2f2;
-    padding: 7px 10px;
-    margin: 0;
-    border: 1px solid #ddd;
-    border-bottom: none;
-    font-size: 12px;
-}
-
-
-/* ================= TABELAS ================= */
-
-table,
-.tabela {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 10.5px;
-}
-
-thead {
-    display: table-header-group;
-}
-
-th {
-    background: #e8e8e8;
-    font-weight: bold;
-    padding: 6px;
-    border: 1px solid #bbb;
-}
-
-td {
-    padding: 6px;
-    border: 1px solid #ccc;
-    text-align: center;
-}
-
-tbody tr:nth-child(even) {
-    background: #fafafa;
-}
-
-.vazio {
-    text-align: center;
-    font-style: italic;
-    color: #666;
-}
-
-
-/* ================= TOTAIS ================= */
-
-.total-colaborador,
-.total-colab {
-    text-align: right;
-    font-weight: bold;
-    margin-top: 6px;
-    font-size: 11px;
-}
-
-.total-geral,
-.resumo {
-    margin-top: 28px;
-    padding: 10px 14px;
-    border: 2px solid #000;
-    text-align: right;
+.section-title{
     font-size: 14px;
     font-weight: bold;
+    margin-bottom: 6px;
+    color: #1f2937;
+    border-bottom:  2px solid #e5e7eb;
+    padding-bottom: 4px;
 }
 
-
-/* ================= ASSINATURAS ================= */
-
-.assinatura,
-.assinaturas {
-    margin-top: 70px;
-    display: flex;
-    justify-content: space-between;
+.info-box p {
+    margin-bottom: 2px;
 }
-
-.ass-box,
-.assinatura-box {
-    width: 42%;
+.box-total{
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    min-width: 150px;
     text-align: center;
-    border-top: 1px solid #000;
-    padding-top: 6px;
-    font-size: 10px;
-    letter-spacing: 0.4px;
+}
+
+.no-print{
+    display: none;
+}
+
+@media screen {
+    .no-print{
+        display: block;
+    }
 }
