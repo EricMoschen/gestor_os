@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>Orçamento OS {{ os_detalhes.numero_os }}</title>
+<title>Orçamento OS {{ os_detalhes.numero_os|default:'--' }}</title>
 
 <link rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
@@ -34,7 +34,7 @@
         <p class="text-xl font-bold">
             Orçamento Nº {{ numero_orcamento|default:"—" }}
         </p>
-        <p><b>Data:</b> {{ now|date:"d/m/Y" }}</p>
+        <p><b>Data:</b> {{data_emissao|default:"--"}}</p>
     </div>
 
 </div>
@@ -79,8 +79,8 @@
 {% for item in relatorio %}
 <tr>
 
-    <td class="p-2">{{ item.nome }}</td>
-    <td class="p-2">Valor hora&</td>
+    <td class="p-2">{{ item.funcao }}</td>
+    <td class="p-2">{{item.valor_hora_fmt}}</td>
     <td class="p-2 col-normal text-center">
         {{ item.horas_normais_fmt }}
     </td>

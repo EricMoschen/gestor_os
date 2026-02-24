@@ -11,6 +11,7 @@ def processar_relatorio(apontamentos):
     colaboradores = defaultdict(lambda: {
         "matricula": "",
         "nome": "",
+        "valor_hora":None,
         "normais": 0,
         "extra50": 0,
         "extra100": 0,
@@ -23,6 +24,7 @@ def processar_relatorio(apontamentos):
         col = colaboradores[ap.colaborador.id]
         col["matricula"] = ap.colaborador.matricula
         col["nome"] = ap.colaborador.nome
+        col["valor_hora"] = getattr(getattr(ap.colaborador,"funcao", None),"valor_hora", None)
         col["normais"] += normais
         col["extra50"] += extra50
         col["extra100"] += extra100
@@ -40,6 +42,7 @@ def processar_relatorio(apontamentos):
         relatorio.append({
             "matricula": c["matricula"],
             "nome": c["nome"],
+            "valor_hora_fmt": f"R$ {c['valor_hora']:.2f}" if c["valor_hora"] is not None else "--",
             "horas_normais_fmt": formatar_horas(c["normais"]),
             "horas_50_fmt": formatar_horas(c["extra50"]),
             "horas_100_fmt": formatar_horas(c["extra100"]),

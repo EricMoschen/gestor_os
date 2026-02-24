@@ -12,6 +12,8 @@
       - Total de horas por OS
       - Total de horas por função
       - Manter os intervalos de horas
+- [ ] Virificar o apontamento de Horas
+- [ ] Verificar a abertura de OS
 
 ---
 

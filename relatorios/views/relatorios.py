@@ -3,13 +3,16 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponse
 from django.template.loader import render_to_string
 from django.utils import timezone
+from django.utils.dateparse import parse_date
+from datetime import datetime, time
 from importlib.util import find_spec
 from importlib import import_module
 
 
-from ..utils.relatorio import (construir_contexto_relatorio_os,montar_dados_log_os)
+from ..utils.relatorio import (construir_contexto_relatorio_os,processar_relatorio)
 from ..utils.orcamento import gerar_proximo_orcamento
 from abertura_os.models import AberturaOS
+from lancamento_horas.models import ApontamentoHoras
 
 
 
@@ -34,12 +37,29 @@ def proximo_orcamento(request):
 
 def log_os(request, numero_os):
     os_obj = get_object_or_404(AberturaOS, numero_os=numero_os)
-    dados, total_horas = montar_dados_log_os(os_obj)
+    data_inicio = parse_date(request.GET.get("data_inicio") or "")
+    data_fim = parse_date(request.GET.get("data_fim") or "")
+
+    apontamentos = ApontamentoHoras.objects.select_related("colaborador__funcao").filter(ordem_servico=os_obj)
+
+    if data_inicio:
+        apontamentos =  apontamentos.filter(data_fim__gte=datetime.combine(data_inicio, time.min))
+    if data_fim:
+        apontamentos = apontamentos.filter(data_inicio__lte=datetime.combine(data_fim, time.max))
+    
+    relatorio, totais = ([], None)
+    
+    if apontamentos.exists():
+        relatorio, totais = processar_relatorio(apontamentos)
+
     return render(request, "relatorios/orcamento_cliente_pdf.html", {
-        "os": os_obj,
-        "dados": dados,
-        "total_horas": total_horas,
-        "data_emissao": timezone.now().strftime("%d/%m/%Y %H:%M")
+        "os_detalhes": os_obj,
+        "relatorio": relatorio,
+        "totais": totais,
+        "data_inicio": data_inicio,
+        "data_fim": data_fim,
+        "numero_orcamento": str(gerar_proximo_orcamento()).zfill(4),
+        "data_emissão": timezone.now().strftime("%d/%m/%y"),
     })
 
 
@@ -52,14 +72,46 @@ def log_os_pdf(request, numero_os):
         )
 
     html_renderer = import_module("weasyprint").HTML
+
     os_obj = get_object_or_404(AberturaOS, numero_os=numero_os)
-    dados, total_horas = montar_dados_log_os(os_obj)
+
+    data_inicio = parse_date(request.GET.get("data_inicio") or "")
+    data_fim = parse_date(request.GET.get("data_fim") or "")
+
+    apontamentos = (
+        ApontamentoHoras.objects
+        .select_related("colaborador__funcao")
+        .filter(ordem_servico=os_obj)
+    )
+
+    if data_inicio:
+        apontamentos = apontamentos.filter(
+            data_fim__gte=datetime.combine(data_inicio, time.min)
+        )
+
+    if data_fim:
+        apontamentos = apontamentos.filter(
+            data_inicio__lte=datetime.combine(data_fim, time.max)
+        )
+
+    relatorio, totais = ([], None)
+
+    if apontamentos.exists():
+        relatorio, totais = processar_relatorio(apontamentos)
+
     html = render_to_string("relatorios/orcamento_cliente_pdf.html", {
-        "logo_path": request.build_absolute_uri("/static/img/logo.png"),
-        "data_emissao": timezone.now().strftime("%d/%m/%Y %H:%M"),
-        "os": os_obj,
-        "dados": dados,
-        "total_horas": total_horas,
+        "os_detalhes": os_obj,
+        "relatorio": relatorio,
+        "totais": totais,
+        "data_inicio": data_inicio,
+        "data_fim": data_fim,
+        "numero_orcamento": str(gerar_proximo_orcamento()).zfill(4),
+        "data_emissão": timezone.now().strftime("%d/%m/%y"),
     })
-    pdf = html_renderer(string=html, base_url=request.build_absolute_uri()).write_pdf()
+
+    pdf = html_renderer(
+        string=html,
+        base_url=request.build_absolute_uri()
+    ).write_pdf()
+
     return HttpResponse(pdf, content_type="application/pdf")
