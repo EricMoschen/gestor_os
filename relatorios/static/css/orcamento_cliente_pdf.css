@@ -1,29 +1,77 @@
-@media print {
-    .no-print { display: none; }
+body {
+    font-size: 12px;
 }
 
-table th, table td {
-    border: 2px solid #3a3a3a;
+table th {
+    background-color: #1f2937;
+    color: white;
+    font-weight: 600;
 }
 
-thead th {
-    background-color: #9ca3af;
-    font-weight: 700;
-    color: #111827;
+table td,
+table th {
+    border: 1px solid #d1d5db;
 }
 
-.col-normal-title { background: #15803d; color: #fff; }
-.col-50-title     { background: #ca8a04; color: #fff; }
-.col-100-title    { background: #b91c1c; color: #fff; }
-.col-total-title  { background: #6b7280; color: #fff; }
+.col-normal-title {
+    background: #15803d;
+    color: #fff;
+}
 
-.col-normal { background: #dcfce7; }
-.col-50     { background: #fef9c3; }
-.col-100    { background: #fee2e2; }
+.col-50-title {
+    background: #ca8a04;
+    color: #fff;
+}
+
+.col-100-title {
+    background: #b91c1c;
+    color: #fff;
+}
+
+.col-total-title {
+    background: #6b7280;
+    color: #fff;
+}
+
+.col-normal {
+    background: #dcfce7;
+}
+
+.col-50 {
+    background: #fef9c3;
+}
+
+.col-100 {
+    background: #fee2e2;
+}
+
+.section-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #1f2937;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 4px;
+}
+
+.info-box p {
+    margin-bottom: 2px;
+}
 
 .box-total {
-    padding: 10px 16px;
-    border: 2px solid #333;
-    border-radius: 10px;
-    font-weight: bold;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    min-width: 150px;
+    text-align: center;
+}
+
+.no-print {
+    display: none;
+}
+
+@media screen {
+    .no-print {
+        display: block;
+    }
 }

@@ -1,4 +1,5 @@
 from collections import defaultdict
+from decimal import Decimal
 from datetime import datetime, time
 from django.utils.dateparse import parse_date
 from abertura_os.models import AberturaOS
@@ -8,48 +9,87 @@ from .horario import calcular_horas, formatar_horas, aplicar_filtro_datas
 
 
 def processar_relatorio(apontamentos):
-    colaboradores = defaultdict(lambda: {
-        "matricula": "",
-        "nome": "",
-        "valor_hora":None,
-        "normais": 0,
-        "extra50": 0,
-        "extra100": 0,
+    funcoes = defaultdict(lambda: {
+        "funcao": "Sem função",
+        "valor_hora": Decimal("0.00"),
+        "normais": Decimal("0"),
+        "extra50": Decimal("0"),
+        "extra100": Decimal("0"),
     })
 
     for ap in apontamentos:
         if not ap.data_inicio or not ap.data_fim:
             continue
-        normais, extra50, extra100 = calcular_horas(ap.data_inicio, ap.data_fim, ap.colaborador)
-        col = colaboradores[ap.colaborador.id]
-        col["matricula"] = ap.colaborador.matricula
-        col["nome"] = ap.colaborador.nome
-        col["valor_hora"] = getattr(getattr(ap.colaborador,"funcao", None),"valor_hora", None)
-        col["normais"] += normais
-        col["extra50"] += extra50
-        col["extra100"] += extra100
+
+        normais, extra50, extra100 = ap.calcular_horas()
+
+        normais = Decimal(normais)
+        extra50 = Decimal(extra50)
+        extra100 = Decimal(extra100)
+
+        funcao_obj = getattr(ap.colaborador, "funcao", None)
+        chave_funcao = getattr(funcao_obj, "id", None) or f"sem_funcao_{ap.colaborador.id}"
+
+        item = funcoes[chave_funcao]
+        item["funcao"] = getattr(funcao_obj, "descricao", None) or "Sem Função"
+
+        valor_hora = getattr(funcao_obj, "valor_hora", None)
+        item["valor_hora"] = Decimal(valor_hora) if valor_hora else Decimal("0.00")
+
+        item["normais"] += normais
+        item["extra50"] += extra50
+        item["extra100"] += extra100
 
     relatorio = []
-    totais = {"normais": 0, "extra50": 0, "extra100": 0, "geral": 0}
+    totais = {
+        "normais": Decimal("0"),
+        "extra50": Decimal("0"),
+        "extra100": Decimal("0"),
+        "geral_horas": Decimal("0"),
+        "geral_valor": Decimal("0.00"),
+    }
 
-    for c in colaboradores.values():
-        total = c["normais"] + c["extra50"] + c["extra100"]
+    for c in funcoes.values():
+        total_horas = c["normais"] + c["extra50"] + c["extra100"]
+
+        # 🔥 Cálculo financeiro
+        valor_normais = c["valor_hora"] * c["normais"]
+        valor_50 = c["valor_hora"] * Decimal("1.5") * c["extra50"]
+        valor_100 = c["valor_hora"] * Decimal("2.0") * c["extra100"]
+        total_valor = valor_normais + valor_50 + valor_100
+
+        # Totais gerais
         totais["normais"] += c["normais"]
         totais["extra50"] += c["extra50"]
         totais["extra100"] += c["extra100"]
-        totais["geral"] += total
+        totais["geral_horas"] += total_horas
+        totais["geral_valor"] += total_valor
 
         relatorio.append({
-            "matricula": c["matricula"],
-            "nome": c["nome"],
-            "valor_hora_fmt": f"R$ {c['valor_hora']:.2f}" if c["valor_hora"] is not None else "--",
+            "funcao": c["funcao"],
+
+            "valor_hora_fmt": f"R$ {c['valor_hora']:.2f}",
+
             "horas_normais_fmt": formatar_horas(c["normais"]),
             "horas_50_fmt": formatar_horas(c["extra50"]),
             "horas_100_fmt": formatar_horas(c["extra100"]),
-            "total_fmt": formatar_horas(total),
+            "total_fmt": formatar_horas(total_horas),
+
+            # 🔥 valores calculados
+            "valor_normais_fmt": f"R$ {valor_normais:.2f}",
+            "valor_50_fmt": f"R$ {valor_50:.2f}",
+            "valor_100_fmt": f"R$ {valor_100:.2f}",
+            "total_valor_fmt": f"R$ {total_valor:.2f}",
         })
 
-    totais_formatados = {k: formatar_horas(v) for k, v in totais.items()}
+    totais_formatados = {
+        "normais": formatar_horas(totais["normais"]),
+        "extra50": formatar_horas(totais["extra50"]),
+        "extra100": formatar_horas(totais["extra100"]),
+        "geral_horas": formatar_horas(totais["geral_horas"]),
+        "geral_valor": f"R$ {totais['geral_valor']:.2f}",
+    }
+
     return relatorio, totais_formatados
 
 

@@ -52,27 +52,17 @@ def log_os(request, numero_os):
     if apontamentos.exists():
         relatorio, totais = processar_relatorio(apontamentos)
 
-    return render(request, "relatorios/orcamento_cliente_pdf.html", {
+    return render(request, "relatorios/orcamento_horas_pdf.html", {
         "os_detalhes": os_obj,
         "relatorio": relatorio,
         "totais": totais,
         "data_inicio": data_inicio,
         "data_fim": data_fim,
         "numero_orcamento": str(gerar_proximo_orcamento()).zfill(4),
-        "data_emissão": timezone.now().strftime("%d/%m/%y"),
+        "data_emissao": timezone.now().strftime("%d/%m/%y"),
     })
 
-
 def log_os_pdf(request, numero_os):
-    if find_spec("weasyprint") is None:
-        return HttpResponse(
-            "Geração de PDF indisponível: instale a dependência 'weasyprint'.",
-            status=503,
-            content_type="text/plain; charset=utf-8",
-        )
-
-    html_renderer = import_module("weasyprint").HTML
-
     os_obj = get_object_or_404(AberturaOS, numero_os=numero_os)
 
     data_inicio = parse_date(request.GET.get("data_inicio") or "")
@@ -99,19 +89,14 @@ def log_os_pdf(request, numero_os):
     if apontamentos.exists():
         relatorio, totais = processar_relatorio(apontamentos)
 
-    html = render_to_string("relatorios/orcamento_cliente_pdf.html", {
+    context = {
         "os_detalhes": os_obj,
         "relatorio": relatorio,
         "totais": totais,
         "data_inicio": data_inicio,
         "data_fim": data_fim,
         "numero_orcamento": str(gerar_proximo_orcamento()).zfill(4),
-        "data_emissão": timezone.now().strftime("%d/%m/%y"),
-    })
+        "data_emissao": timezone.now().strftime("%d/%m/%y"),
+    }
 
-    pdf = html_renderer(
-        string=html,
-        base_url=request.build_absolute_uri()
-    ).write_pdf()
-
-    return HttpResponse(pdf, content_type="application/pdf")
+    return render(request, "relatorios/orcamento_cliente_pdf.html", context)
