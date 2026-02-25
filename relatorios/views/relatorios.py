@@ -20,7 +20,6 @@ def relatorio_os(request):
     return render(request, "relatorios/menu_relatorios.html", context)
 
 
-
 def orcamento_pdf(request):
     context = construir_contexto_relatorio_os(request)
     

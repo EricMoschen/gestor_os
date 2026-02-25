@@ -27,10 +27,10 @@ class ApontamentoHorasServiceTestes(SimpleTestCase):
         normais, extra50, extra100 = ApontamentoHorasService.calcular_horas(apontamento)
 
         self.assertEqual(normais, 2)
-        self.assertEqual(extra50, 1)
+        self.assertEqual(extra50, 0)
         self.assertEqual(extra100, 0)
 
-    def test_horas_apos_turno_em_dia_util_sa0_extra_50(self):
+    def test_horas_apos_turno_em_dia_util_continua_normal(self):
         apontamento = self._apontamento(
             datetime(2026, 1, 6, 16, 0),
             datetime(2026, 1, 6, 18, 0),
@@ -39,10 +39,24 @@ class ApontamentoHorasServiceTestes(SimpleTestCase):
 
         normais, extra50, extra100 = ApontamentoHorasService.calcular_horas(apontamento)
 
-        self.assertEqual(normais, 0.8)
-        self.assertEqual(extra50, 1.2)
+        self.assertEqual(normais, 2)
+        self.assertEqual(extra50, 0)
         self.assertEqual(extra100, 0)
         
+
+    def test_dia_normal_desconciderar_somente_almoco(self):
+        apontamento = self._apontamento(
+            datetime(2026, 1, 6, 8, 0),
+            datetime(2026, 1, 6, 17, 48),
+            turno="A",
+        )
+
+        normais, extra50, extra100 = ApontamentoHorasService.calcular_horas(apontamento)
+
+        self.assertEqual(normais, 8.8)
+        self.assertEqual(extra50, 0)
+        self.assertEqual(extra100, 0)
+
 
     def test_sabado_todo_periodo_e_extra_50(self):
         apontamento = self._apontamento(

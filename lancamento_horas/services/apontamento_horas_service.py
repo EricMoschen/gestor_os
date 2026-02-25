@@ -83,18 +83,17 @@ class ApontamentoHorasService:
                 elif tipo_dia == "Sábado":
                     horas_50 += horas_bloco
                 else:
-                    normais_no_bloco = 0
-                    for ini_turno, fim_turno  in ApontamentoHorasService._obter_intervalos_normais_no_dia(
+                    horas_pausadas_no_bloco = 0
+                    for ini_pausa, fim_pausa  in ApontamentoHorasService._obter_intervalos_pausa_no_dia(
                         apontamento.colaborador,
                         bloco_inicio.date(),
                         inicio,
                     ):
-                        inter_inicio = max(bloco_inicio, ini_turno)
-                        inter_fim = min(bloco_fim, fim_turno)
-                        normais_no_bloco += ApontamentoHorasService._duracao_em_horas(inter_inicio, inter_fim)
+                        inter_inicio = max(bloco_inicio, ini_pausa)
+                        inter_fim = min(bloco_fim, fim_pausa)
+                        horas_pausadas_no_bloco += ApontamentoHorasService._duracao_em_horas(inter_inicio, inter_fim)
 
-                    horas_normais += normais_no_bloco
-                    horas_50 += max(horas_bloco - normais_no_bloco, 0)
+                    horas_normais += max(horas_bloco - horas_pausadas_no_bloco, 0)
 
                 cursor = bloco_fim
 
@@ -134,6 +133,32 @@ class ApontamentoHorasService:
             ))
 
         return intervalos_normais
+    
+    @staticmethod
+    def _obter_intervalos_pausa_no_dia(colaborador, data_referencia, referencia_timezone):
+        
+        intervalos_pausa = []
+        intervalos_turno = ApontamentoHorasService.obter_intervalos_turno(colaborador)
+
+        for indice in range(len(intervalos_turno) - 1):
+            _, saida_atual = intervalos_turno[indice]
+            entrada_proximo, _ = intervalos_turno[indice + 1]
+
+            if not saida_atual or not entrada_proximo:
+                continue
+
+            inicio_pausa = datetime.combine(data_referencia, saida_atual)
+            fim_pausa = datetime.combine(data_referencia, entrada_proximo)
+
+            if fim_pausa <= inicio_pausa:
+                fim_pausa += timedelta(days=1)
+
+            intervalos_pausa.append((
+                ApontamentoHorasService._ajustar_para_referencia(inicio_pausa, referencia_timezone),
+                ApontamentoHorasService._ajustar_para_referencia(fim_pausa, referencia_timezone),
+            ))
+
+        return intervalos_pausa
 
     @staticmethod
     def encerrar_aberto(cls, colaborador):
