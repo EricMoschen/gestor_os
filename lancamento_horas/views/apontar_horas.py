@@ -30,7 +30,7 @@ def apontar_horas(request):
             numero_os=numero_os
         )
 
-        agora = timezone.localtime()
+        agora = timezone.now()
 
         if acao == "iniciar":
             # Bloqueio OS finalizada

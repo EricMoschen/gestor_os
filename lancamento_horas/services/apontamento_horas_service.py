@@ -6,6 +6,22 @@ from ..utils.feriados import eh_feriado_ou_domingo, eh_sabado
 class ApontamentoHorasService:
 
     @staticmethod
+    def _normalizar_datahora(datahora):
+        """Retornar datetime no timezone local apenas quando ele for aware."""
+        if timezone.is_naive(datahora):
+            return datahora
+        return timezone.localtime(datahora)
+    
+    @staticmethod
+    def _ajustar_para_referencia(datahora, referencia):
+        """Mantém naive/aware alinhado com a referência para evitar erros de comparação"""
+        if timezone.is_aware(referencia) and timezone.is_naive(datahora):
+            return timezone.make_aware(datahora)
+        if timezone.is_naive(referencia) and timezone.is_aware(datahora):
+            return timezone.make_naive(datahora)
+        return datahora
+
+    @staticmethod
     def obter_intervalos_turno(colaborador):
         turno = colaborador.turno
 
@@ -35,8 +51,8 @@ class ApontamentoHorasService:
         if not apontamento.data_fim:
             return 0, 0, 0
 
-        inicio = timezone.localtime(apontamento.data_inicio)
-        fim = timezone.localtime(apontamento.data_fim)
+        inicio = ApontamentoHorasService._normalizar_datahora(apontamento.data_inicio)
+        fim = ApontamentoHorasService._normalizar_datahora(apontamento.data_fim)
         total_horas = (fim - inicio).total_seconds() / 3600
         tipo_dia = ApontamentoHorasService.classificar_tipo_dia(inicio.date())
 
@@ -58,8 +74,8 @@ class ApontamentoHorasService:
                 if saida < entrada:
                     fim_turno += timedelta(days=1)
 
-                ini_turno = timezone.make_aware(ini_turno)
-                fim_turno = timezone.make_aware(fim_turno)
+                ini_turno = ApontamentoHorasService._ajustar_para_referencia(ini_turno, inicio)
+                fim_turno = ApontamentoHorasService._ajustar_para_referencia(fim_turno, inicio)
 
                 inter_inicio = max(inicio, ini_turno)
                 inter_fim = min(fim, fim_turno)
@@ -81,7 +97,7 @@ class ApontamentoHorasService:
         if not aberto:
             raise ValueError("Nenhum apontamento aberto encontrado.")
 
-        inicio = timezone.localtime(aberto.data_inicio)
+        inicio = ApontamentoHorasService._normalizar_datahora(aberto.data_inicio)
         tipo_dia = ApontamentoHorasService.classificar_tipo_dia(inicio.date())
         turno_inicio = colaborador.calcular_horario_inicio_turno()
         turno_fim = colaborador.calcular_horario_fim_turno()
@@ -103,7 +119,7 @@ class ApontamentoHorasService:
             raise ValueError("Apontamento fora do horário normal. Encerramento manual necessário.")
 
         fim_turno = datetime.combine(fim_turno_date, turno_fim)
-        fim_turno = timezone.make_aware(fim_turno)
+        fim_turno = ApontamentoHorasService._ajustar_para_referencia(fim_turno, inicio)
         if fim_turno < inicio:
             raise ValueError("Horário de término do turno inválido para encerramento automático.")
 
