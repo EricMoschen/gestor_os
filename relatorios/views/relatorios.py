@@ -9,7 +9,7 @@ from importlib.util import find_spec
 from importlib import import_module
 
 
-from ..utils.relatorio import (construir_contexto_relatorio_os,processar_relatorio)
+from ..utils.relatorio import (construir_contexto_relatorio_os,processar_relatorio,montar_dados_log_os)
 from ..utils.orcamento import gerar_proximo_orcamento
 from abertura_os.models import AberturaOS
 from lancamento_horas.models import ApontamentoHoras
@@ -41,22 +41,38 @@ def log_os(request, numero_os):
     data_inicio = parse_date(request.GET.get("data_inicio") or "")
     data_fim = parse_date(request.GET.get("data_fim") or "")
 
-    apontamentos = ApontamentoHoras.objects.select_related("colaborador__funcao").filter(ordem_servico=os_obj)
+    apontamentos = ApontamentoHoras.objects.select_related(
+        "colaborador__funcao"
+    ).filter(ordem_servico=os_obj)
 
     if data_inicio:
-        apontamentos =  apontamentos.filter(data_fim__gte=datetime.combine(data_inicio, time.min))
+        apontamentos = apontamentos.filter(
+            data_fim__gte=datetime.combine(data_inicio, time.min)
+        )
+
     if data_fim:
-        apontamentos = apontamentos.filter(data_inicio__lte=datetime.combine(data_fim, time.max))
-    
+        apontamentos = apontamentos.filter(
+            data_inicio__lte=datetime.combine(data_fim, time.max)
+        )
+
     relatorio, totais = ([], None)
-    
+
     if apontamentos.exists():
         relatorio, totais = processar_relatorio(apontamentos)
+
+    # 👇 CHAMANDO SUA FUNÇÃO AQUI
+    dados_log, total_log = montar_dados_log_os(
+        os_obj,
+        data_inicio=data_inicio,
+        data_fim=data_fim
+    )
 
     return render(request, "relatorios/orcamento_horas_pdf.html", {
         "os_detalhes": os_obj,
         "relatorio": relatorio,
         "totais": totais,
+        "dados_log": dados_log,          # 👈 enviando para o template
+        "total_log": total_log,          # 👈 enviando total formatado
         "data_inicio": data_inicio,
         "data_fim": data_fim,
         "numero_orcamento": str(gerar_proximo_orcamento()).zfill(4),

@@ -10,6 +10,8 @@ from .horario import calcular_horas, formatar_horas, aplicar_filtro_datas
 
 def processar_relatorio(apontamentos):
     funcoes = defaultdict(lambda: {
+        "matricula": "",
+        "nome":"",
         "funcao": "Sem função",
         "valor_hora": Decimal("0.00"),
         "normais": Decimal("0"),
@@ -31,6 +33,8 @@ def processar_relatorio(apontamentos):
         chave_funcao = getattr(funcao_obj, "id", None) or f"sem_funcao_{ap.colaborador.id}"
 
         item = funcoes[chave_funcao]
+        item["matricula"] = ap.colaborador.matricula
+        item["nome"] = ap.colaborador.nome
         item["funcao"] = getattr(funcao_obj, "descricao", None) or "Sem Função"
 
         valor_hora = getattr(funcao_obj, "valor_hora", None)
@@ -67,6 +71,8 @@ def processar_relatorio(apontamentos):
 
         relatorio.append({
             "funcao": c["funcao"],
+            "matricula": c["matricula"],
+            "nome": c["nome"],
 
             "valor_hora_fmt": f"R$ {c['valor_hora']:.2f}",
 
@@ -126,12 +132,23 @@ def construir_contexto_relatorio_os(request):
     }
 
 
+
 def montar_dados_log_os(os_obj, data_inicio=None, data_fim=None):
-    apontamentos = ApontamentoHoras.objects.filter(ordem_servico=os_obj)
+    apontamentos = (
+        ApontamentoHoras.objects
+        .select_related("colaborador")
+        .filter(ordem_servico=os_obj)
+    )
+
     if data_inicio:
-        apontamentos = apontamentos.filter(data_inicio__gte=data_inicio)
+        apontamentos = apontamentos.filter(
+            data_fim__gte=datetime.combine(data_inicio, time.min)
+        )
+
     if data_fim:
-        apontamentos = apontamentos.filter(data_fim__lte=data_fim)
+        apontamentos = apontamentos.filter(
+            data_inicio__lte=datetime.combine(data_fim, time.max)
+        )
 
     dados = []
     total_segundos = 0
@@ -139,18 +156,27 @@ def montar_dados_log_os(os_obj, data_inicio=None, data_fim=None):
     for ap in apontamentos:
         inicio = ap.data_inicio
         fim = ap.data_fim
-        if fim and inicio:
+
+        if inicio and fim:
             duracao = fim - inicio
-            total_segundos += duracao.total_seconds()
-            horas = duracao.seconds // 3600
-            minutos = (duracao.seconds % 3600) // 60
+            segundos = int(duracao.total_seconds())
+            total_segundos += segundos
+
+            horas = segundos // 3600
+            minutos = (segundos % 3600) // 60
+
             dados.append({
+                "matricula": ap.colaborador.matricula,
                 "colaborador": ap.colaborador.nome,
-                "inicio": inicio.strftime("%d/%m/%Y %H:%M"),
-                "fim": fim.strftime("%d/%m/%Y %H:%M"),
-                "duracao": f"{horas:02d}:{minutos:02d}"
+                "data": inicio.strftime("%d/%m/%Y"),
+                "hora_inicio": inicio.strftime("%H:%M"),
+                "hora_fim": fim.strftime("%H:%M"),
+                "duracao": f"{horas:02d}:{minutos:02d}",
             })
 
-    total_horas = int(total_segundos // 3600)
-    total_minutos = int((total_segundos % 3600) // 60)
-    return dados, f"{total_horas:02d}:{total_minutos:02d}"
+    total_horas = total_segundos // 3600
+    total_minutos = (total_segundos % 3600) // 60
+
+    total_formatado = f"{int(total_horas):02d}:{int(total_minutos):02d}"
+
+    return dados, total_formatado
