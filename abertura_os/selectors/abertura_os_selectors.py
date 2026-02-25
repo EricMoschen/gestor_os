@@ -1,4 +1,4 @@
-from cadastro.models import AberturaOS
+from abertura_os.models import AberturaOS
 
 
 def listar_os_ativas():

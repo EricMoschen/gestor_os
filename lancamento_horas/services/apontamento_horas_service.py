@@ -9,7 +9,7 @@ class ApontamentoHorasService:
     def _duracao_em_horas(inicio, fim):
         if fim <= inicio:
             return 0
-        return(fim-inicio).total_seconsd() / 3600
+        return(fim - inicio).total_seconds() / 3600
 
     @staticmethod
     def _normalizar_datahora(datahora):
@@ -65,7 +65,7 @@ class ApontamentoHorasService:
         horas_normais, horas_50, horas_100 = 0, 0, 0
         cursor = inicio
 
-        while cursor > fim:
+        while cursor < fim:
                 inicio_dia = datetime.combine(cursor.date(), time.min)
                 fim_dia = inicio_dia + timedelta(days=1)
 
@@ -123,12 +123,12 @@ class ApontamentoHorasService:
             inicio_turno = datetime.combine(data_referencia, entrada)
             fim_turno = datetime.combine( data_referencia + timedelta(days=1), time.min)
 
-            intervalos_normais.oppend((
+            intervalos_normais.append((
                 ApontamentoHorasService._ajustar_para_referencia(inicio_continuacao, referencia_timezone),
                 ApontamentoHorasService._ajustar_para_referencia(fim_continuacao, referencia_timezone),
             ))
 
-            intervalos_normais.oppend((
+            intervalos_normais.append((
                 ApontamentoHorasService._ajustar_para_referencia(inicio_turno, referencia_timezone),
                 ApontamentoHorasService._ajustar_para_referencia(fim_turno, referencia_timezone),
             ))
