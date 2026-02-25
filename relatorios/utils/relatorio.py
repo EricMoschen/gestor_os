@@ -138,6 +138,7 @@ def montar_dados_log_os(os_obj, data_inicio=None, data_fim=None):
         ApontamentoHoras.objects
         .select_related("colaborador")
         .filter(ordem_servico=os_obj)
+        .order_by("colaborador__matricula", "data_inicio")
     )
 
     if data_inicio:

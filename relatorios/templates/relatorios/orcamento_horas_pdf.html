@@ -99,24 +99,9 @@
 
         <!-- ================= TOTAIS ================= -->
         {% if total_log %}
-        <div class="flex justify-end gap-4 mt-8">
-            <div class="box-total bg-green-100 text-green-800">
-                Normais <b>{{ total_log }}</b>
+            <div class="box-total bg-blue-100 text-blue-800 ">
+               Horas Totais: <b>{{ totais.geral_horas }}</b>
             </div>
-
-            {% if totais %}
-            <div class="box-total bg-yellow-100 text-yellow-800">
-                50% <b>{{ totais.extra50 }}</b>
-            </div>
-
-            <div class="box-total bg-red-100 text-red-800">
-                100% <b>{{ totais.extra100 }}</b>
-            </div>
-
-            <div class="box-total bg-blue-100 text-blue-800">
-                {{ totais.geral_horas }}
-            </div>
-            {% endif %}
         </div>
         {% endif %}
 
