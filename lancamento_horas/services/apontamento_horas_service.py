@@ -6,6 +6,12 @@ from ..utils.feriados import eh_feriado_ou_domingo, eh_sabado
 class ApontamentoHorasService:
 
     @staticmethod
+    def _duracao_em_horas(inicio, fim):
+        if fim <= inicio:
+            return 0
+        return(fim-inicio).total_seconsd() / 3600
+
+    @staticmethod
     def _normalizar_datahora(datahora):
         """Retornar datetime no timezone local apenas quando ele for aware."""
         if timezone.is_naive(datahora):
@@ -53,39 +59,81 @@ class ApontamentoHorasService:
 
         inicio = ApontamentoHorasService._normalizar_datahora(apontamento.data_inicio)
         fim = ApontamentoHorasService._normalizar_datahora(apontamento.data_fim)
-        total_horas = (fim - inicio).total_seconds() / 3600
-        tipo_dia = ApontamentoHorasService.classificar_tipo_dia(inicio.date())
+        if fim <= inicio:
+            return 0, 0, 0
 
         horas_normais, horas_50, horas_100 = 0, 0, 0
+        cursor = inicio
 
-        if tipo_dia == "Dom/Feriado":
-            horas_100 = total_horas
-        elif tipo_dia == "Sábado":
-            horas_50 = total_horas
-        else:  # Dia normal
-            for entrada, saida in ApontamentoHorasService.obter_intervalos_turno(apontamento.colaborador):
-                if not entrada or not saida:
-                    continue
+        while cursor > fim:
+                inicio_dia = datetime.combine(cursor.date(), time.min)
+                fim_dia = inicio_dia + timedelta(days=1)
 
-                ini_turno = datetime.combine(inicio.date(), entrada)
-                fim_turno = datetime.combine(inicio.date(), saida)
+                inicio_dia = ApontamentoHorasService._ajustar_para_referencia(inicio_dia, inicio)
+                fim_dia = ApontamentoHorasService._ajustar_para_referencia(fim_dia, inicio)
 
-                # Turno passa da meia-noite
-                if saida < entrada:
-                    fim_turno += timedelta(days=1)
+                bloco_inicio = cursor
+                bloco_fim = min(fim, fim_dia)
+                
+                tipo_dia = ApontamentoHorasService.classificar_tipo_dia(bloco_inicio.date())
+                horas_bloco =  ApontamentoHorasService._duracao_em_horas(bloco_inicio, bloco_fim)
 
-                ini_turno = ApontamentoHorasService._ajustar_para_referencia(ini_turno, inicio)
-                fim_turno = ApontamentoHorasService._ajustar_para_referencia(fim_turno, inicio)
+                if tipo_dia == "Dom/Feriado":
+                    horas_100 += horas_bloco
+                elif tipo_dia == "Sábado":
+                    horas_50 += horas_bloco
+                else:
+                    normais_no_bloco = 0
+                    for ini_turno, fim_turno  in ApontamentoHorasService._obter_intervalos_normais_no_dia(
+                        apontamento.colaborador,
+                        bloco_inicio.date(),
+                        inicio,
+                    ):
+                        inter_inicio = max(bloco_inicio, ini_turno)
+                        inter_fim = min(bloco_fim, fim_turno)
+                        normais_no_bloco += ApontamentoHorasService._duracao_em_horas(inter_inicio, inter_fim)
 
-                inter_inicio = max(inicio, ini_turno)
-                inter_fim = min(fim, fim_turno)
+                    horas_normais += normais_no_bloco
+                    horas_50 += max(horas_bloco - normais_no_bloco, 0)
 
-                if inter_inicio < inter_fim:
-                    horas_normais += (inter_fim - inter_inicio).total_seconds() / 3600
-
-            horas_50 = max(total_horas - horas_normais, 0)
+                cursor = bloco_fim
 
         return horas_normais, horas_50, horas_100
+    
+
+    @staticmethod
+    def _obter_intervalos_normais_no_dia(colaborador, data_referencia, referencia_timezone):
+        intervalos_normais = []
+
+        for entrada, saida in ApontamentoHorasService.obter_intervalos_turno(colaborador):
+            if not entrada or not saida:
+                continue
+
+            if entrada < saida:
+                ini = datetime.combine(data_referencia, entrada)
+                fim = datetime.combine(data_referencia, saida)
+                intervalos_normais.append((
+                    ApontamentoHorasService._ajustar_para_referencia(ini, referencia_timezone),
+                    ApontamentoHorasService._ajustar_para_referencia(fim, referencia_timezone),
+                ))
+                continue
+
+            inicio_continuacao =  datetime.combine(data_referencia, time.min)
+            fim_continuacao = datetime.combine(data_referencia, saida)
+            inicio_turno = datetime.combine(data_referencia, entrada)
+            fim_turno = datetime.combine( data_referencia + timedelta(days=1), time.min)
+
+            intervalos_normais.oppend((
+                ApontamentoHorasService._ajustar_para_referencia(inicio_continuacao, referencia_timezone),
+                ApontamentoHorasService._ajustar_para_referencia(fim_continuacao, referencia_timezone),
+            ))
+
+            intervalos_normais.oppend((
+                ApontamentoHorasService._ajustar_para_referencia(inicio_turno, referencia_timezone),
+                ApontamentoHorasService._ajustar_para_referencia(fim_turno, referencia_timezone),
+            ))
+
+        return intervalos_normais
 
     @staticmethod
     def encerrar_aberto(cls, colaborador):
