@@ -23,10 +23,28 @@ def relatorio_os(request):
 
 def orcamento_pdf(request):
     context = construir_contexto_relatorio_os(request)
-    context.update({
-        "numero_orcamento":str(gerar_proximo_orcamento()).zfill(4),
-       "data_emissao": timezone.now().strftime("%d/%m/%y"), 
+    
+    os_obj = context.get("os_detalhe")
+    data_inicio = context.get("data_inicio")
+    data_fim = context.get("data_fim")
+
+    dados_log = []
+    total_log = None
+
+    if os_obj: 
+        dados_log, total_log = montar_dados_log_os(
+            os_obj,
+            data_inicio = data_inicio,
+            data_fim = data_fim,
+        )
+
+    context.update({ 
+       "dados_log": dados_log,
+       "total_log": total_log,
+       "numero_orcamento":str(gerar_proximo_orcamento()).zfill(4),
+       "data_emissao": timezone.now().strftime("%d/%m/%y"),
     })
+
     return render(request, "relatorios/orcamento_horas_pdf.html", context)
 
 
