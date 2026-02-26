@@ -395,7 +395,14 @@ body {
 .modal-col {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 12px;
+}
+
+.modal-col .form__group{
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
 /* Botões ocupando largura total */

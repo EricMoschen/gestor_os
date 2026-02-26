@@ -55,7 +55,7 @@ def dashboard(request):
                     "color": "color-pink",
                 },
                 {
-                    "title": "Funcão",
+                    "title": "Função",
                     "url": "cadastro_funcao",
                     "color": "color-pink",
                 },

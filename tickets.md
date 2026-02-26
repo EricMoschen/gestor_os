@@ -7,20 +7,13 @@
       - [x] Clientes
       - [x] Intervenção
       - [x] Colaborador
-- [ ] Corrigir o Orçamento Clientes para puxar:
-      - Valor da função
-      - Total de horas por OS
-      - Total de horas por função
-      - Manter os intervalos de horas
+- 
 - [ ] Virificar o apontamento de Horas
 - [ ] Verificar a abertura de OS
 
 ---
 
 ## 🟡 Melhorias
-
-- [ ] Modificar o Orçamento Horas para o mesmo layout do Orçamento Cliente
-- [ ] Na funcionalidade de Ajuste de Horas, adicionar campo para incluir lançamento
 - [ ] Atualizar layout do finalizar OS
 
 ---
@@ -31,3 +24,11 @@
       - [x]Remover valor da hora do cadastro de colaborador
       - [x]Criar cadastro de Função com valor/hora
       - [x] Relacionar apenas a Função ao Colaborador
+
+- [x] Modificar o Orçamento Horas para o mesmo layout do Orçamento Cliente
+- [x] Na funcionalidade de Ajuste de Horas, adicionar campo para incluir lançamento
+- [x] Corrigir o Orçamento Clientes para puxar:
+      - Valor da função
+      - Total de horas por OS
+      - Total de horas por função
+      - Manter os intervalos de horas
