@@ -66,6 +66,15 @@ body {
     font-weight: 700;
 }
 
+.page-header{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
 .page-header p {
     color: var(--text-muted);
     margin-top: 6px;
@@ -259,6 +268,20 @@ body {
     transform: translateY(-2px);
 }
 
+.btn--success {
+    background: var(--success);
+    color: white;
+}
+
+.btn--success:hover {
+    background:#16a34a;
+    transform: translateY(-2px);
+}
+
+.btn--add {
+    text-decoration: none;
+}
+
 .btn--secondary {
     background: rgba(148,163,184,.15);
     color: var(--text-main);
@@ -299,6 +322,23 @@ body {
     padding: 24px;
 
     box-shadow: 0 20px 60px rgba(0,0,0,.5);
+}
+
+
+.form__group{
+    margin-top: 14px;
+}
+
+.form__group label{
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-muted);
+    font-size: .9rem;
+}
+
+.input--textarea {
+    resize: vertical;
+    min-height: 90px;
 }
 
 .modal__actions {
