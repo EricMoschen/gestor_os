@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.contrib import messages
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
@@ -12,7 +13,15 @@ from ..models.apontamento_horas import ApontamentoHoras
 
 
 def __parse_datetime_loca(value):    
-    return timezone.make_aware(datetime.fromisoformat(value))
+    datahora = datetime.fromisoformat(value)
+
+    if not settings.USE_TZ:
+        return datahora
+    
+    if timezone.is_naive(datahora):
+        return timezone.make_aware(datahora)
+    
+    return datahora
 
 def ajuste_horas(request):
     if request.method == "POST":
@@ -60,7 +69,7 @@ def ajuste_horas(request):
                 tipo_dia=ApontamentoHorasService.classificar_tipo_dia(inicio.date()),
             )
 
-            messages.success(request, "Nova ocorrência da OS {os_obj.nuemro_os} cadastrada com sucesso.")
+            messages.success(request, "Nova ocorrência da OS {os_obj.numero_os} cadastrada com sucesso.")
             return redirect("lancamento_horas:ajuste_horas")
 
         apontamento = get_object_or_404(ApontamentoHoras, pk=request.POST.get("apontamento_id"))

@@ -1,5 +1,4 @@
 (function () {
-
     const filtroGeral = document.getElementById('filtro-geral');
     const filtroStatus = document.getElementById('filtro-status');
     const linhas = Array.from(document.querySelectorAll('#lista-apontamentos tr[data-id]'));
@@ -20,19 +19,17 @@
     const numeroOsInput = document.getElementById('novo-numero-os');
     const descricaoInput = document.getElementById('nova-descricao-os');
 
-
     function aplicarFiltro() {
-
         const termo = filtroGeral?.value.toLowerCase() || '';
         const status = filtroStatus?.value || '';
 
-        linhas.forEach(linha => {
+        linhas.forEach((linha) => {
 
             const texto = [
                 linha.dataset.matricula,
                 linha.dataset.colaborador,
                 linha.dataset.os,
-                linha.dataset.status
+                linha.dataset.status,
             ].join(' ');
 
             const okTermo = !termo || texto.includes(termo);
@@ -45,24 +42,32 @@
     }
 
     function abrirModalAjuste(linha) {
+        if (!linha || !modalAjuste) return;
 
         campoId.value = linha.dataset.id;
         campoInicio.value = linha.dataset.inicio || '';
         campoFim.value = linha.dataset.fim || '';
 
+        modalAjuste.classList.add('active');
+    }
+
+    function fecharModalAjuste(){
         modalAjuste?.classList.remove('active');
+    }
+
+    function abrirModalNovo(){
+        modalNovo?.classList.add('active');
     }
 
     function fecharModalNovo() {
-        modalAjuste?.classList.remove('active');
+        modalNovo?.classList.remove('active');
     }
 
     async function buscaColaborador() {
-
         const matricula = matriculaInput?.value.trim().toUpperCase();
         const baseUrl = formNovo?.dataset.colaboradorUrlBase;
 
-        if (!matricula || !baseUrl || !nomeInput){
+        if (!matricula || !baseUrl || !nomeInput) {
             if (nomeInput) nomeInput.value = '';
             return;
         }
@@ -73,12 +78,13 @@
             const url = baseUrl.replace('__MATRICULA__', encodeURIComponent(matricula));
             const resp = await fetch(url);
 
-            if (!resp.ok) throw new Error('Colaborador não Encontrado');
+            if (!resp.ok) throw new Error('Colaborador não encontrado');
 
             const data = await resp.json();
-            nomeInput.value = data.nome || 'Colaborador não Encotrado';
+
+            nomeInput.value = data.nome || 'Colaborador não encotrado';
         } catch { data = await resp.json();
-            nomeInput.value = 'Erro ao Buscar Colaborador'
+            nomeInput.value = 'Erro ao buscar colaborador'
         }
     }
 
@@ -98,20 +104,20 @@
             const url = baseUrl.replace('__OS__', encodeURIComponent(numero));
             const resp = await fetch(url);
 
-            if (!resp.ok) throw new Error('OS não Encontrada');
+            if (!resp.ok) throw new Error('OS não encontrada');
 
             const data = await resp.json();
             descricaoInput.value = data.descricao || 'OS não Encotrada';
         } catch {
             data = await resp.json();
-            descricaoInput.value = 'Erro ao Buscar OS'
+            descricaoInput.value = 'Erro ao buscar OS'
         }
     }
  
     filtroGeral?.addEventListener('input', aplicarFiltro);
     filtroStatus?.addEventListener('change', aplicarFiltro);
 
-    document.querySelectorAll('[data-open-modal]').forEach(btn => {
+    document.querySelectorAll('[data-open-modal]').forEach((btn) => {
         btn.addEventListener('click', () => abrirModalAjuste(btn.closest('tr')));
     });
 
@@ -122,11 +128,11 @@
     matriculaInput?.addEventListener('blur', buscaColaborador);
     numeroOsInput?.addEventListener('blur', buscarOS);
 
-    modalAjuste?.addEventListener('click', e => {
+    modalAjuste?.addEventListener('click', (e) => {
         if  (e.target === modalAjuste) fecharModalAjuste();
         });
 
-    modalNovo?.addEventListener('click', e => {
+    modalNovo?.addEventListener('click', (e) => {
         if (e.target === modalNovo) fecharModalNovo();
     });
 

@@ -18,9 +18,7 @@
         <h1>Ajuste de Horários</h1>
         <p>Painel de supervisão para revisão e correção de apontamentos.</p>
 
-        <button type="button" class="btn btn--primary btn--add" id="abrir-modal-novo">
-            + Incluir Lançamento
-        </button>
+
 
     </section>
 
@@ -78,6 +76,9 @@
                 <option value="encerrado">Encerrado</option>
             </select>
 
+            <button type="button" class="btn btn--primary btn--add" id="abrir-modal-novo">
+                + Incluir Lançamento
+            </button>
         </div>
 
         <div class="table-wrapper">
@@ -191,7 +192,7 @@
 
 <!-- Modal Nova Ocorencia-->
 
-<div class="modal" id="modal-novo-lancameto">
+<div class="modal" id="modal-novo-lancamento">
     <div class="modal__card">
         <h2> Incluir Nova Ocorrência</h2>
 
@@ -202,51 +203,61 @@
             {% csrf_token %}
 
             <input type="hidden" name="acao" value="criar">
+            <div class="modal-grid">
 
-            <div class="form_droup">
-                <label>Mátricula do Colaborador</label>
-                <input type="text" id="nova-matricula" name="matricula"  class="input" required>
-            </div>
+                <!-- COLUNA ESQUERDA -->
+                <div class="modal-col">
 
-            <div class="form_droup">
-                <label>Nome do Colaborador</label>
-                <input type="text" id="novo-nome-colaborador"  class="input" readonly>
-            </div>
+                    <div class="form_droup">
+                        <label>Mátricula do Colaborador</label>
+                        <input type="text" id="nova-matricula" name="matricula" class="input" required>
+                    </div>
+
+                    <div class="form_droup">
+                        <label>Nome do Colaborador</label>
+                        <input type="text" id="novo-nome-colaborador" class="input" readonly>
+                    </div>
 
 
-            <div class="form_droup">
-                <label>Número da OS</label>
-                <input type="text" id="novo-nuemero-os" name="numero_os" class="input" required>
-            </div>
-            
-            <div class="form_droup">
-                <label>Descrição da OS</label>
-                <textarea id="nova-descricao-os" class=" input input--textarea" rows="3" readonly></textarea>
-            </div>
+                    <div class="form_droup">
+                        <label>Número da OS</label>
+                        <input type="text" id="novo-numero-os" name="numero_os" class="input" required>
+                    </div>
 
-            <div class="form__group">
-                <label>Data</label>
-                <input type="date" name="data" id="nova-data" class="input" required>
-            </div>
+                    <div class="form_droup">
+                        <label>Descrição da OS</label>
+                        <textarea id="nova-descricao-os" class=" input input--textarea" rows="3" readonly></textarea>
+                    </div>
+                </div>
 
-            <div class="form__group">
-                <label>Hora de Início</label>
-                <input type="time" name="hora_inicio" id="nova-hora-inicio" class="input" required>
-            </div>
+                <!-- COLUNA DIREITA -->
+                <div class="modal-col">
+                    <div class="form__group">
+                        <label>Data</label>
+                        <input type="date" name="data" id="nova-data" class="input" required>
+                    </div>
 
-            <div class="form__group">
-                <label>Hora de Fim</label>
-                <input type="time" name="hora_fim" id="nova-hora-fim" class="input" required>
-            </div>
-        
-            <div class="modal__actions">
-                <button type="button" class="btn btn--secondary" id="cancelar-modal-novo">
-                    Cancelar
-                </button>
+                    <div class="form__group">
+                        <label>Hora de Início</label>
+                        <input type="time" name="hora_inicio" id="nova-hora-inicio" class="input" required>
+                    </div>
 
-                <button type="submit" class="btn btn--primary">
-                    Cadastrar
-                </button>
+                    <div class="form__group">
+                        <label>Hora de Fim</label>
+                        <input type="time" name="hora_fim" id="nova-hora-fim" class="input" required>
+                    </div>
+                </div>
+
+                <!-- BOTÕES SEMPRE EMBAIXO -->
+                <div class="modal__actions modal__actions--full">
+                    <button type="button" class="btn btn--secondary" id="cancelar-modal-novo">
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="btn btn--primary">
+                        Cadastrar
+                    </button>
+                </div>
             </div>
         </form>
     </div>

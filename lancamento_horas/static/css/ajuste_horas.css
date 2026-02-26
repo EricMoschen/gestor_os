@@ -5,10 +5,10 @@
 :root {
 
     --bg-main: #0f172a;
-    --bg-card: rgba(30,41,59,.75);
+    --bg-card: rgba(30, 41, 59, .75);
     --bg-hover: #334155;
 
-    --border: rgba(148,163,184,.15);
+    --border: rgba(148, 163, 184, .15);
 
     --primary: #6366f1;
     --primary-hover: #4f46e5;
@@ -24,7 +24,7 @@
     --transition: .25s ease;
 
     --shadow-card:
-        0 8px 30px rgba(0,0,0,.35);
+        0 8px 30px rgba(0, 0, 0, .35);
 
     --blur: blur(16px);
 }
@@ -66,7 +66,7 @@ body {
     font-weight: 700;
 }
 
-.page-header{
+.page-header {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
@@ -119,9 +119,17 @@ body {
     font-size: 1.7rem;
 }
 
-.kpi-card--success { border-left: 4px solid var(--success); }
-.kpi-card--warning { border-left: 4px solid var(--warning); }
-.kpi-card--info { border-left: 4px solid var(--primary); }
+.kpi-card--success {
+    border-left: 4px solid var(--success);
+}
+
+.kpi-card--warning {
+    border-left: 4px solid var(--warning);
+}
+
+.kpi-card--info {
+    border-left: 4px solid var(--primary);
+}
 
 /* ================================
    CARD CONTAINER
@@ -135,7 +143,7 @@ body {
     border: 1px solid var(--border);
     border-radius: var(--radius);
 
-    padding: clamp(16px,2vw,24px);
+    padding: clamp(16px, 2vw, 24px);
     box-shadow: var(--shadow-card);
 }
 
@@ -150,7 +158,7 @@ body {
     margin-bottom: 18px;
 
     grid-template-columns:
-        repeat(auto-fit, minmax(220px,1fr));
+        repeat(auto-fit, minmax(220px, 1fr));
 }
 
 /* ================================
@@ -165,16 +173,17 @@ body {
     border-radius: 10px;
     border: 1px solid var(--border);
 
-    background: rgba(15,23,42,.6);
+    background: rgba(15, 23, 42, .6);
     color: var(--text-main);
 
     transition: var(--transition);
 }
 
+
 .input:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 2px rgba(99,102,241,.3);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, .3);
 }
 
 /* ================================
@@ -199,7 +208,7 @@ body {
     letter-spacing: .05em;
 
     color: var(--text-muted);
-    background: rgba(51,65,85,.6);
+    background: rgba(51, 65, 85, .6);
 
     position: sticky;
     top: 0;
@@ -218,7 +227,7 @@ body {
 }
 
 .table tbody tr:hover {
-    background: rgba(99,102,241,.08);
+    background: rgba(99, 102, 241, .08);
 }
 
 /* ================================
@@ -234,12 +243,12 @@ body {
 }
 
 .status--success {
-    background: rgba(34,197,94,.15);
+    background: rgba(34, 197, 94, .15);
     color: #4ade80;
 }
 
 .status--warning {
-    background: rgba(245,158,11,.15);
+    background: rgba(245, 158, 11, .15);
     color: #fbbf24;
 }
 
@@ -274,7 +283,7 @@ body {
 }
 
 .btn--success:hover {
-    background:#16a34a;
+    background: #16a34a;
     transform: translateY(-2px);
 }
 
@@ -283,12 +292,12 @@ body {
 }
 
 .btn--secondary {
-    background: rgba(148,163,184,.15);
+    background: rgba(148, 163, 184, .15);
     color: var(--text-main);
 }
 
 .btn--secondary:hover {
-    background: rgba(148,163,184,.25);
+    background: rgba(148, 163, 184, .25);
 }
 
 /* ================================
@@ -304,7 +313,7 @@ body {
     align-items: center;
     justify-content: center;
 
-    background: rgba(2,6,23,.75);
+    background: rgba(2, 6, 23, .75);
     backdrop-filter: blur(6px);
     z-index: 999;
 }
@@ -317,19 +326,19 @@ body {
 
     width: min(480px, 95%);
     background: #020617;
-
+    
     border-radius: 18px;
     padding: 24px;
 
-    box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .5);
 }
 
 
-.form__group{
+.form__group {
     margin-top: 14px;
 }
 
-.form__group label{
+.form__group label {
     display: block;
     margin-bottom: 8px;
     color: var(--text-muted);
@@ -360,9 +369,41 @@ body {
     margin-bottom: 8px;
 }
 
-.alert--success { background: rgba(34,197,94,.15); }
-.alert--error { background: rgba(239,68,68,.15); }
-.alert--warning { background: rgba(245,158,11,.15); }
+.alert--success {
+    background: rgba(34, 197, 94, .15);
+}
+
+.alert--error {
+    background: rgba(239, 68, 68, .15);
+}
+
+.alert--warning {
+    background: rgba(245, 158, 11, .15);
+}
+
+/* ================================
+   GRID MODAL NOVO LANÇAMENTO
+================================ */
+
+.modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 10px;
+}
+
+.modal-col {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Botões ocupando largura total */
+.modal__actions--full {
+    margin-top: 15px;
+}
+
+
 
 /* ================================
    RESPONSIVO AVANÇADO
@@ -386,4 +427,10 @@ body {
         flex-direction: column;
     }
 
+}
+
+@media (max-width: 768px) {
+    .modal-grid {
+        grid-template-columns: 1fr;
+    }
 }
