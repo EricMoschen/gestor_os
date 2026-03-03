@@ -15,6 +15,7 @@
 
 ## 🟡 Melhorias
 - [ ] Atualizar layout do finalizar OS
+- [ ] Atualizar impressão da OS para estilo a um Word editavel, para enviar por meio digital e poder efetuar as anotações;
 
 ---
 

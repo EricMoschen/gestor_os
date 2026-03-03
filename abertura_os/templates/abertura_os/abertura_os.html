@@ -166,7 +166,7 @@
                         <td>{{ o.get_situacao_display }}</td>
 
                         <td class="table__actions">
-                            <button class="btn-icon edit-btn">✏️</button>
+                            <a class="btn-icon" href="{% url 'editar_os' o.pk %}" title="Editar OS">✏️</a>
                             <a href="{% url 'imprimir_os' o.pk %}" target="_blank">
                                 🖨️
                             </a>
