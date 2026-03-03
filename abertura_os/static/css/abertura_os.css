@@ -106,8 +106,9 @@ body {
 input,
 textarea,
 select,
+.form-control,
 .dropdown__selected {
-
+    width: 100%;
     padding: 11px 12px;
     border-radius: 8px;
     border: 1px solid var(--border);
@@ -119,7 +120,8 @@ select,
 
 input:focus,
 textarea:focus,
-select:focus {
+select:focus,
+.form-control {
 
     outline: none;
     border-color: var(--primary);
@@ -209,6 +211,11 @@ select:focus {
     padding-left: 20px;
 }
 
+.dropdown__selected{
+    cursor: pointer;
+    user-select: none;
+}
+
 .hidden {
     display: none;
 }
@@ -240,6 +247,35 @@ select:focus {
 
 .table tbody tr:hover {
     background: rgba(99,102,241,0.08);
+}
+
+.table__actions{
+    white-space: nowrap;
+}
+
+.table__actions a {
+    text-decoration: none;
+}
+
+.table__actions .btn-icon,
+.table__actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+
+.table__actions .btn-icon:hover,
+.table__actions  a:hover{
+    background: var(--bg-hover);
+}
+
+input[readonly] {
+    color: var(--text-muted);
 }
 
 /* =====================================
