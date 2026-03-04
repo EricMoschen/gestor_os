@@ -5,6 +5,16 @@ from ..models import AberturaOS
 class AberturaOSService:
 
     @staticmethod
+    def _obter_centro_custo(centro_id):
+        if not centro_id:
+            raise ValueError("Selecione um centro de custo válido.")
+        
+        try:
+            return CentroCusto.objects.get(pk=centro_id)
+        except CentroCusto.DoesNotExist as exc:
+            raise ValueError("Centro de custo inválido.") from exc
+
+    @staticmethod
     def criar_os(form, centro_id):
         """
         Cria uma nova Ordem de Serviço a partir do formulário.
@@ -12,15 +22,16 @@ class AberturaOSService:
         os_obj = form.save(commit=False)
         os_obj.situacao = AberturaOS.Status.ABERTA  # Status padrão
 
-        if not centro_id:
-            raise ValueError("Selecione um centro de custo válido.")
-
-        try:
-            os_obj.centro_custo = CentroCusto.objects.get(pk=centro_id)
-        except CentroCusto.DoesNotExist:
-            raise ValueError("Centro de custo inválido.")
+        os_obj.centro_custo = AberturaOSService._obter_centro_custo(centro_id)
 
         os_obj.save()  # Aqui o número da OS será gerado automaticamente pelo model
+        return os_obj
+
+    @staticmethod
+    def atualizar_os(form, centro_id):
+        os_obj = form.save(commit=False)
+        os_obj.centro_custo = AberturaOSService._obter_centro_custo(centro_id)
+        os_obj.save()
         return os_obj
 
     @staticmethod

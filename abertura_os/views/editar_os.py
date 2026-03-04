@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 
@@ -17,8 +18,15 @@ def editar_os(request, pk):
         form = AberturaOSForm(request.POST, instance=os_instance)
 
         if form.is_valid():
-            form.save()
-            return redirect("abrir_os")
+            try:
+                AberturaOSService.atualizar_os(
+                    form=form,
+                    centro_id=request.POST.get("centro_custo")
+                )
+                messages.success(request, "OS atualizada com sucesso!")
+                return redirect("abrir_os")
+            except ValueError as erro:
+                form.add_error(None, str(erro))
 
     else:
         form = AberturaOSForm(instance=os_instance)
