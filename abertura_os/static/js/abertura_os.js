@@ -43,27 +43,27 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.addEventListener('click', (e) => {
-    if (!e.target.closest('dropdown')) {
+    if (!e.target.closest('.dropdown')) {
       dropdown.close();
     }
   });
 
   dropdown.list.addEventListener('click', (e) => {
     const parent = e.target.closest('.dropdown__item--parent');
-    const chield = e.target.closest('.dropdown__item--child');
+    const child = e.target.closest('.dropdown__item--child');
 
-    if (!parent && !chield) return;
+    if (!parent && !child) return;
     const targetItem = child || parent;
     const arrow = parent?.querySelector('.arrow');
 
-    if (parent && e.target.classList.contains('.arrow')) {
-      const chieldren = document.getElementById(`children-${parent.dataset.cod}`);
+    if (parent) {
+      const children = document.getElementById(`children-${parent.dataset.cod}`);
 
       if (!children) return;
 
       children.classList.toggle('hidden');
       if (arrow) {
-        arrow.textContent = chieldren.classList.contains('hidden') ? '▶' : '▼'; // colocar indicadores
+        arrow.textContent = children.classList.contains('hidden') ? '▶' : '▼'; 
       }
       return;
     }

@@ -33,3 +33,4 @@
       - Total de horas por OS
       - Total de horas por função
       - Manter os intervalos de horas
+- [x] Verificar layout da abertura de OS
