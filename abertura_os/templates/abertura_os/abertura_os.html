@@ -6,10 +6,10 @@
 {% endblock %}
 
 {% block body %}
-  <!-- Botão voltar para Dashboard -->
-  {% block button_voltar %}
-    {% include 'components/_btn_voltar.html' %}
-  {% endblock %}
+<!-- Botão voltar para Dashboard -->
+{% block button_voltar %}
+{% include 'components/_btn_voltar.html' %}
+{% endblock %}
 
 <main class="layout">
 
@@ -32,17 +32,15 @@
         </header>
 
         <form method="post"
-              action="{% if modo_edicao %}{% url 'editar_os' os_id %}{% else %}{% url 'abrir_os' %}{% endif %}"
-              class="form">
+            action="{% if modo_edicao %}{% url 'editar_os' os_id %}{% else %}{% url 'abrir_os' %}{% endif %}"
+            class="form">
 
             {% csrf_token %}
 
             <!-- Número OS -->
             <div class="form__group">
                 <label>Número da OS</label>
-                <input class="input"
-                       value="{{ proximo_numero }}"
-                       readonly>
+                <input class="input" value="{{ proximo_numero }}" readonly>
             </div>
 
             <!-- Centro de Custo -->
@@ -51,9 +49,7 @@
 
                 <div class="dropdown">
 
-                    <div class="dropdown__selected"
-                         id="dropdownSelected"
-                         tabindex="0">
+                    <div class="dropdown__selected" id="dropdownSelected" tabindex="0">
                         {{ selected_centro_label|default:"Selecione..." }}
                     </div>
 
@@ -62,22 +58,23 @@
                         {% for pai in pais_centro_custo %}
                         <div class="dropdown__group">
 
-                            <div class="dropdown__item dropdown__item--parent"
-                                 data-cod="{{ pai.cod_centro }}"
-                                 data-label="{{ pai.descricao }}">
+                            <div class="dropdown__item dropdown__item--parent" data-cod="{{ pai.cod_centro }}"
+                                data-label="{{ pai.descricao }}">
 
-                                <span class="arrow">▶</span>
+
+                                <button type="button" class="dropdown__toggle" aria-label="Expandir {{ pai.descricao}}"
+                                    data-target="children-{{pai.cod_centro}}">
+                                    <span class="arrow">▶</span>
+                                </button>
                                 {{ pai.descricao }}
 
                             </div>
 
-                            <div class="dropdown__children hidden"
-                                 id="children-{{ pai.cod_centro }}">
+                            <div class="dropdown__children hidden" id="children-{{ pai.cod_centro }}">
 
                                 {% for filho in pai.subcentros.all %}
-                                <div class="dropdown__item dropdown__item--child"
-                                     data-cod="{{ filho.cod_centro }}"
-                                     data-label="{{ filho.descricao }}">
+                                <div class="dropdown__item dropdown__item--child" data-cod="{{ filho.cod_centro }}"
+                                    data-label="{{ filho.descricao }}">
                                     {{ filho.descricao }}
                                 </div>
                                 {% endfor %}
@@ -87,10 +84,8 @@
                         {% endfor %}
                     </div>
 
-                    <input type="hidden"
-                           name="centro_custo"
-                           id="centro_custo"
-                           value="{{ form.instance.centro_custo.pk|default:'' }}">
+                    <input type="hidden" name="centro_custo" id="centro_custo"
+                        value="{{ form.instance.centro_custo.pk|default:'' }}">
                 </div>
             </div>
 
@@ -118,13 +113,11 @@
                 </button>
 
                 {% if modo_edicao %}
-                <a class="btn btn--danger"
-                   href="{% url 'excluir_os' os_id %}">
+                <a class="btn btn--danger" href="{% url 'excluir_os' os_id %}">
                     Excluir
                 </a>
 
-                <a class="btn btn--secondary"
-                   href="{% url 'abrir_os' %}">
+                <a class="btn btn--secondary" href="{% url 'abrir_os' %}">
                     Cancelar
                 </a>
                 {% endif %}

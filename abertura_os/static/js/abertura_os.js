@@ -49,24 +49,30 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   dropdown.list.addEventListener('click', (e) => {
+    const toggleButton = e.target.closest('.dropdown__toggle');
     const parent = e.target.closest('.dropdown__item--parent');
     const child = e.target.closest('.dropdown__item--child');
 
-    if (!parent && !child) return;
-    const targetItem = child || parent;
-    const arrow = parent?.querySelector('.arrow');
-
-    if (parent) {
-      const children = document.getElementById(`children-${parent.dataset.cod}`);
+    // Abrir / fechar filhos
+    if (toggleButton) {
+      const children = document.getElementById(toggleButton.dataset.target);
+      const arrow = toggleButton.querySelector('.arrow');
 
       if (!children) return;
 
       children.classList.toggle('hidden');
+
       if (arrow) {
-        arrow.textContent = children.classList.contains('hidden') ? '▶' : '▼'; 
+        arrow.textContent = children.classList.contains('hidden') ? '▶' : '▼';
       }
+
       return;
     }
+
+    // Selecionar item
+    if (!parent && !child) return;
+
+    const targetItem = child || parent;
     dropdown.set(targetItem.dataset.cod, targetItem.dataset.label);
     dropdown.close();
   });

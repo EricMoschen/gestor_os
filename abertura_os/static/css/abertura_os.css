@@ -214,6 +214,27 @@ select:focus,
     cursor: pointer;
 }
 
+.dropdown__item--parent{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dropdown__toggle{
+    border: none;
+    background: transparent;
+    color: var(--text-main);
+    cursor: pointer;
+    padding: 0;
+    width: 18px;
+    display: inline-flex;
+    justify-content: center;
+}
+
+.dropdown__toggle .arrow{
+    pointer-events: none;
+}
+
 .dropdown__item:hover {
     background: var(--bg-hover);
 }
