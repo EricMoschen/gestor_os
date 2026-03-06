@@ -1,6 +1,5 @@
 from django.shortcuts import get_object_or_404
-from django.http import JsonResponse, Http404
-from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 from cadastro.models import Colaborador
 from abertura_os.models import AberturaOS
@@ -13,7 +12,7 @@ def api_colaborador(request, matricula):
         "id": colaborador.id,
         "matricula": colaborador.matricula,
         "nome": colaborador.nome,
-        "funcao": colaborador.funcao,
+        "funcao": str(colaborador.funcao) if colaborador.funcao else None,
         "turno": colaborador.turno,
     })
 
