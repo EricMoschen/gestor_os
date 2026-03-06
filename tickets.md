@@ -2,20 +2,21 @@
 
 ## 🔴 Bugs
 
-- [ ] Corrigir a opção de edição do app Cadastro
-      - [ ] Centro de Custo
-      - [x] Clientes
-      - [x] Intervenção
-      - [x] Colaborador
+- [ ] Corrigir a opção de edição do app Cadastro:
+      - [ ] Centro de Custo.
+      - [x] Clientes.
+      - [x] Intervenção.
+      - [x] Colaborador.
 - 
-- [ ] Virificar o apontamento de Horas
-- [ ] Verificar a abertura de OS
+- [ ] Virificar o apontamento de Horas.
+- [ ] Verificar a abertura de OS.
 
----
 
 ## 🟡 Melhorias
-- [ ] Atualizar layout do finalizar OS
-- [ ] Atualizar impressão da OS para estilo a um Word editavel, para enviar por meio digital e poder efetuar as anotações;
+- [ ] Atualizar layout do finalizar OS.
+- [ ] Atualizar impressão da OS para estilo a um Word editavel, para enviar por meio digital e poder efetuar as anotações.
+
+
 
 ---
 

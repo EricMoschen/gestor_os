@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
 from ..models.apontamento_horas import ApontamentoHoras
+from ..services.apontamento_horas_service import ApontamentoHorasService
 from cadastro.models import Colaborador
 from abertura_os.models import AberturaOS
 import holidays
@@ -39,7 +39,7 @@ def apontar_horas(request):
                     request,
                     f"A OS {os_obj.numero_os} está {os_obj.get_situacao_display()} e não permite apontamentos."
                 )
-                return redirect("apontar_horas")
+                return redirect("lancamento_horas:apontar_horas")
 
             aberto = ApontamentoHoras.objects.filter(
                 colaborador=colaborador,
@@ -54,9 +54,9 @@ def apontar_horas(request):
                         request,
                         f"Erro! OS {aberto.ordem_servico.numero_os} em aberto. {e}"
                     )
-                    return redirect("apontar_horas")
+                    return redirect("lancamento_horas:apontar_horas")
 
-            tipo_dia = ApontamentoHoras.classificar_tipo_dia(agora.date())
+            tipo_dia = ApontamentoHorasService.classificar_tipo_dia(agora.date())
 
             ApontamentoHoras.objects.create(
                 colaborador=colaborador,
@@ -74,21 +74,21 @@ def apontar_horas(request):
 
             if not aberto:
                 messages.warning(request, "Nenhuma OS em andamento para este colaborador.")
-                return redirect("apontar_horas")
+                return redirect("lancamento_horas:apontar_horas")
 
             if aberto.data_inicio > agora:
                 messages.error(request, "Erro! Horário de início maior que horário de fim.")
-                return redirect("apontar_horas")
+                return redirect("lancamento_horas:apontar_horas")
 
             aberto.data_fim = agora
             aberto.save(update_fields=["data_fim"])
             messages.success(request, f"OS {aberto.ordem_servico.numero_os} finalizada.")
 
-        return redirect("apontar_horas")
+        return redirect("lancamento_horas:apontar_horas")
 
     # GET → listar ordens de serviço
     ordens = AberturaOS.objects.select_related("centro_custo", "cliente").only(
-        "numero_os", "descricao_os", "centro_custo__descricao", "cliente__nome"
+        "numero_os", "descricao_os", "situacao","data_abertura", "centro_custo__descricao", "cliente__nome"
     ).order_by("-data_abertura")
 
     return render(request, "apontamento_horas/apontamento_horas.html", {"ordens": ordens})

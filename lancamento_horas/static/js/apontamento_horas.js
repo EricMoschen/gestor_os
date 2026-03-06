@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (loadingColab) loadingColab.style.display = "block";
         nomeInput.value = "Buscando...";
 
-        const resp = await fetch(`/lancamento/api/colaborador/${matricula}/`);
+        const resp = await fetch(`/lancamento_horas/api/colaborador/${matricula}/`);
 
         if (!resp.ok) throw new Error();
 
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (loadingOs) loadingOs.style.display = "block";
           descricaoInput.value = "Buscando...";
 
-          const resp = await fetch(`/lancamento/api/os/${numero}/`);
+          const resp = await fetch(`/lancamento_horas/api/os/${numero}/`);
 
           if (!resp.ok) throw new Error();
 
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ======================================================
   // AUTO SUMIR MENSAGENS DJANGO (10 segundos)
   // ======================================================
-  const alerts = document.querySelectorAll(".alert-message");
+  const alerts = document.querySelectorAll(".alert");
 
   alerts.forEach(alert => {
 

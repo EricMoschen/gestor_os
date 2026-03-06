@@ -82,9 +82,9 @@
 
             const data = await resp.json();
 
-            nomeInput.value = data.nome || 'Colaborador não encotrado';
-        } catch { data = await resp.json();
-            nomeInput.value = 'Erro ao buscar colaborador'
+            nomeInput.value = data.nome || 'Colaborador não encontrado';
+        } catch { 
+            nomeInput.value = 'Erro ao buscar colaborador';
         }
     }
 
@@ -107,9 +107,8 @@
             if (!resp.ok) throw new Error('OS não encontrada');
 
             const data = await resp.json();
-            descricaoInput.value = data.descricao || 'OS não Encotrada';
+            descricaoInput.value = data.descricao || 'OS não encotrada';
         } catch {
-            data = await resp.json();
             descricaoInput.value = 'Erro ao buscar OS'
         }
     }

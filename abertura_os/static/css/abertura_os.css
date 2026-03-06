@@ -59,6 +59,7 @@ body {
     display: flex;
     flex-direction: column;
     min-width: 0;
+    
 }
 
 .card__header {
@@ -120,7 +121,7 @@ select,
     border: 1px solid var(--border);
     background: var(--bg-main);
     color: var(--text-main);
-
+    resize: none;
     transition: var(--transition);
 }
 

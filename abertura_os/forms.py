@@ -21,7 +21,7 @@ class AberturaOSForm(forms.ModelForm):
         )
 
         widgets = {
-            "descricao_os": forms.Textarea(attrs={"rows": 3}),
+            "descricao_os": forms.Textarea(attrs={"rows": 2}),
         }
 
     # -------------------------------------------------
@@ -66,7 +66,6 @@ class AberturaOSForm(forms.ModelForm):
         cliente = cleaned_data.get("cliente")
         motivo = cleaned_data.get("motivo_intervencao")
 
-        # Exemplo regra real corporativa
         if motivo and motivo.codigo == "SEM_CLIENTE" and cliente:
             raise forms.ValidationError(
                 "Este motivo não permite vincular cliente."
