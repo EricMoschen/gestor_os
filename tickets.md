@@ -7,9 +7,8 @@
       - [x] Clientes.
       - [x] Intervenção.
       - [x] Colaborador.
-- 
-- [ ] Virificar o apontamento de Horas.
-- [ ] Verificar a abertura de OS.
+
+
 
 
 ## 🟡 Melhorias
@@ -35,3 +34,6 @@
       - Total de horas por função
       - Manter os intervalos de horas
 - [x] Verificar layout da abertura de OS
+- [x] Virificar o apontamento de Horas.
+- [x] Verificar a abertura de OS.
+- [x] Virificar layout do apontamento de Horas.

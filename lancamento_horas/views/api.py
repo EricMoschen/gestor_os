@@ -46,3 +46,4 @@ def api_os_detalhes(request, pk):
         "ssm": os_obj.ssm,
         "situacao": os_obj.situacao,
     })
+
