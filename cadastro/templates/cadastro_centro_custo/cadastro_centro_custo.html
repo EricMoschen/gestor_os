@@ -15,7 +15,7 @@
 
     <!-- FORMULÁRIO -->
     <div class="card form-card">
-        <h2>Cadastrar Centro de Custo</h2>
+        <h2 id="formTitle">Cadastrar Centro de Custo</h2>
         <form action="{% url 'cadastrar_centro_custo' %}" method="POST">
             {% csrf_token %}
             <input type="hidden" name="centro_id" id="centro_id">
@@ -35,10 +35,14 @@
                 {{ form.centro_pai }}
             </div>
 
-            <button type="submit" class="btn-primary" id="submitBtn">Cadastrar</button>
-            <button type="button" class="btn-secondary" id="btnCancelar">Cancelar</button>
-            <button type="button" class="btn-secondary" id="btnCancelar">Ex</button>
-            
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary" id="submitBtn">Cadastrar</button>
+                <button type="submit" class="btn-secondary hidden" id="btnExcluir">Excluir</button>
+                <button type="submit" class="btn-secondary hidden" id="btnCancelarEdicao">Cancelar edição</button>
+            </div>
+            <p class="form-tip" id="formTip">Clique em um centro na árvore para editar.</p>
+
         </form>
     </div>
 
@@ -51,8 +55,9 @@
                 <li>
                     {% if item.filhos %}
                     <span class="tree-toggle">
-                        
+
                         <span class="editable" data-id="{{ item.centro.id }}" data-cod="{{ item.centro.cod_centro }}"
+                            data-pai="{% if item.centro.centro_pai_id %}{{item.centro.centro_pai_id}}{% endif %}"
                             data-descricao="{{ item.centro.descricao }}">
                             {{ item.centro.descricao }} - {{ item.centro.cod_centro }}
                         </span>
@@ -62,6 +67,7 @@
                     </ul>
                     {% else %}
                     <span class="editable" data-id="{{ item.centro.id }}" data-cod="{{ item.centro.cod_centro }}"
+                        data-pai="{% if item.centro.centro_pai_id %}{{item.centro.centro_pai_id}}{% endif %}"
                         data-descricao="{{ item.centro.descricao }}">
                         {{ item.centro.descricao }} - {{ item.centro.cod_centro }}
                     </span>

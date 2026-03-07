@@ -15,7 +15,8 @@
 - [ ] Atualizar layout do finalizar OS.
 - [ ] Atualizar impressão da OS para estilo a um Word editavel, para enviar por meio digital e poder efetuar as anotações.
 
-
+- [ ] criar tela de login 
+- [ ] criar os grupos de acessos ao sistema( permissões)
 
 ---
 

@@ -74,6 +74,16 @@ body {
     outline: none;
 }
 
+.form-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.form-tip {
+    margin-top: 0.65rem;
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
 
 /* ---------- BOTÃO ---------- */
 
@@ -94,6 +104,39 @@ body {
     box-shadow: 0 8px 20px rgba(99,102,241,0.3);
 }
 
+.btn-secondary {
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #475569;
+    background: transparent;
+    color: #cbd5e1;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.btn-secondary {
+    background: rgba(148, 163, 184, 0.14);
+}
+
+.hidden {
+    display: none;
+}
+
+.editable {
+    cursor: pointer;
+    border-radius: 8px;
+    padding: 4px 6px;
+}
+
+.editable:hover {
+    background: rgba(99, 102, 241, 0.2);
+}
+
+.editable.is-editing {
+    background: rgba(99, 102, 241, 0.28);
+    color: #e0e7ff;
+}
 
 /* ---------- TREE ---------- */
 
@@ -180,4 +223,32 @@ body {
     .tree-scroll {
         max-height: none;
     }
+}
+
+
+/* ---------- AÇÕES DO FORMULÁRIO ---------- */
+
+
+
+
+
+
+
+.hidden{
+    display: none;
+}
+
+.editable {
+    cursor: pointer;
+    border-radius:8px ;
+    padding: 4px 6px;
+}
+
+.editable:hover{
+    background: rgba(99, 102, 241, 0.2);
+}
+
+.editable.is-editing{
+    background: rgba(99, 102, 241, 0.28);
+    color: #e0e7ff;
 }
