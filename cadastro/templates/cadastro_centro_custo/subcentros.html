@@ -3,7 +3,8 @@
     <li>
         {% if sub.filhos %}
         <span class="tree-toggle">
-            <span class="editable" data-id="{{ sub.centro.pk }}" data-cod="{{ sub.centro.cod_centro }}" c
+            <span class="editable" data-id="{{ sub.centro.pk }}" data-cod="{{ sub.centro.cod_centro }}"
+            data-pai="{% if sub.centro.centro_pai_id %}{{sub.centro.centro_pai_id}}{% endif %}"
                 data-descricao="{{ sub.centro.descricao }}">
                 {{ sub.centro.descricao }} - {{ sub.centro.cod_centro }}
             </span>

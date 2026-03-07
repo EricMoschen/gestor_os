@@ -10,11 +10,11 @@ class CentroCustoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Exibe apenas os centros "pais" (aqueles que não têm pai)
-        self.fields['centro_pai'].queryset = CentroCusto.objects.all()
+        self.fields['centro_pai'].queryset = CentroCusto.objects.filter(centro_pai__isnull=True)
 
         if self.instance and self.instance.pk:
             self.fields['centro_pai'].queryset = self.fields['centro_pai'].queryset.exclude(pk=self.instance.pk)
-            
+
         self.fields['centro_pai'].label = "Centro de Custo Pai (opcional)"
         self.fields['centro_pai'].required = False
 

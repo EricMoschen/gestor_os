@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         formTitle.textContent = 'Cadastrar Centro de Custo';
         formTip.textContent = 'Clique em um centro na árvore para editar.';
         btnCancelarEdicao.classList.add('hidden');
-        btnExcluir.classList('hidden');
+        btnExcluir.classList.add('hidden');
         limparDestaque();
     };
 
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const confirmou = window.confirm('Deseja realmente excluir este centro de custo?');
-        if (confirmou) {
+        if (!confirmou) {
             return;
         }
         inputAcao.value = 'excluir';
