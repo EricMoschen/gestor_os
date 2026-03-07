@@ -10,6 +10,19 @@
 {% block body %}
 <div class="dashboard-container">
 
+    <div class="dashboard-topbar">
+        <span>Olá, {{reques.user.username}}</span>
+        <a href="{% url 'logout' %}" class="logout-link">Sair</a>
+    </div>
+
+    {% if messages %}
+    <div class="dashboard-messages">
+        {% for message in messages %}
+        <div class="dashboard-message">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <h1 class="dashboard-title">Painel de Cadastros</h1>
 
     {% for categoria in categorias %}
@@ -30,6 +43,4 @@
 
 </div>
 
-
-</div>
 {% endblock body %}

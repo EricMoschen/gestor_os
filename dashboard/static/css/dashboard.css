@@ -69,3 +69,34 @@
     padding-left: 10px;
 }
 
+
+.dashboard-topbar{
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    color: #cbd5e1;
+}
+
+.logout-link {
+    color: #e9d5ff;
+    text-decoration: none;
+    background: #581c87;
+    padding: .35rem .9rem;
+    border-radius: 999px;
+}
+
+.dashboard-messages{
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 1rem;
+}
+.dashboard-message {
+    border: 1px solid #fca5a5;
+    background: #7f1d1d;
+    color: #fecaca;
+    padding: .7rem .9rem;
+    border-radius: 10px;
+}
+

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock head %}
+
+
+{% block body %}
+
+<div class="login-page">
+    <div class="login-card">
+        <h1 class="login-title">Gestor OS</h1>
+        <p class="login-subtitle">Acesse sua conta para continuar</p>
+
+
+        {% if error_message %}
+        <div class="login-error">{{ error_message }}</div>
+        {% endif %}
+
+        <form method="POST" class="login-form">
+            {% csrf_token %}
+            <label for="id_username">Usuário</label>
+            <input id="id_username" type="text" name="username" required autofocus>
+
+            <label for="id_password">Senha</label>
+            <input id="id_password" type="password" name="password" required>
+
+            <button type="submit" >Entrar</button>
+        </form>
+    </div>
+</div>
+{% endblock body %}

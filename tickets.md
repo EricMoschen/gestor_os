@@ -1,5 +1,11 @@
 # 📌 Tickets do Sistema
 
+# senhas e usuarios de testes
+User:ADM  / Senha:ADM@123456
+User:PCM  / Senha:PCM@123456
+User:ALMOXARIFE  / Senha:ALM@123456
+User:SUPERVISOR  / Senha:SUP@123456
+
 ## 🔴 Bugs
 
 
@@ -12,11 +18,6 @@
 
 - [ ] Atualizar layout do finalizar OS.
 - [ ] Atualizar impressão da OS para estilo a um Word editavel, para enviar por meio digital e poder efetuar as anotações.
-
-
-## modulos a serem criados
-- [ ] criar tela de login 
-- [ ] criar os grupos de acessos ao sistema( permissões)
 
 
 ## 🟢 Concluído
@@ -42,3 +43,6 @@
       - [x] Clientes.
       - [x] Intervenção.
       - [x] Colaborador.
+
+- [x] criar tela de login 
+- [x] criar os grupos de acessos ao sistema( permissões, PCM, ADM, SUPERVISOR, ALMOXARIFE)
