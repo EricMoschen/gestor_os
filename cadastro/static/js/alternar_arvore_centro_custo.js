@@ -16,18 +16,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    const form = document.querySelector("form");
-    const inputId = document.getElementById("centro_id");
-    const inputCod = document.getElementById("id_cod_centro");
-    const inputDescricao = document.getElementById("id_descricao");
-    const inputPai = document.getElementById("id_centro_pai");
-    const submitBtn = document.getElementById("submitBtn");
+    const form = document.getElementById('centroCustoForm');
+    const inputId = document.getElementById('centro_id');
+    const inputAcao = document.getElementById('acao');
+    const inputCod = document.getElementById('id_cod_centro');
+    const inputDescricao = document.getElementById('id_descricao');
+    const inputPai = document.getElementById('id_centro_pai');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnExcluir = document.getElementById('btnExcluir');
     const btnCancelarEdicao = document.getElementById('btnCancelarEdicao');
-    const formTitel = document.getElementById('formTitle');
+    const formTitle = document.getElementById('formTitle');
     const formTip = document.getElementById('formTip');
 
 
-    if (!form || !inputId || !submitBtn || !btnCancelarEdicao) {
+    if (!form || !inputId || !submitBtn || !btnCancelarEdicao || !btnExcluir) {
         return;
     }
 
@@ -40,10 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const ativarModoCadastro = () => {
         form.reset();
         inputId.value = '';
+        inputAcao.value = 'salvar';
         submitBtn.textContent = 'Cadastrar';
-        formTitel.textContent = 'Cadastrar Centro de Custo';
+        formTitle.textContent = 'Cadastrar Centro de Custo';
         formTip.textContent = 'Clique em um centro na árvore para editar.';
         btnCancelarEdicao.classList.add('hidden');
+        btnExcluir.classList('hidden');
         limparDestaque();
     };
 
@@ -52,24 +56,37 @@ document.addEventListener('DOMContentLoaded', () => {
             inputId.value = span.dataset.id || '';
             inputCod.value = span.dataset.cod || '';
             inputDescricao.value = span.dataset.descricao || '';
-
-            if (span.dataset.pai) {
-                inputPai.value = span.dataset.pai;
-            } else {
-                inputPai.value = '';
-            }
-
+            inputPai.value = span.dataset.pai || '';
+            inputAcao.value = 'salvar';
             submitBtn.textContent = 'Atualizar';
-            formTitel.textContent = 'Editar Centro de Custo';
+            formTitle.textContent = 'Editar Centro de Custo';
             formTip.textContent = 'Você está editando um centro selecionado na árvore.';
             btnCancelarEdicao.classList.remove('hidden');
+            btnExcluir.classList.remove('hidden');
 
             limparDestaque();
             span.classList.add('is-editing');
         });
     });
+
+    form.addEventListener('submit', () => {
+        if (inputAcao.value !== 'excluir') {
+            inputAcao.value = 'salvar';
+        }
+    });
+
+    btnExcluir.addEventListener('click', () => {
+        if (!inputId.value) {
+            return;
+        }
+
+        const confirmou = window.confirm('Deseja realmente excluir este centro de custo?');
+        if (confirmou) {
+            return;
+        }
+        inputAcao.value = 'excluir';
+        form.submit();
+    });
+
     btnCancelarEdicao.addEventListener('click', ativarModoCadastro);
-
 });
-
-

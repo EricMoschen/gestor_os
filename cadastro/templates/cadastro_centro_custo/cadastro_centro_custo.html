@@ -16,9 +16,9 @@
     <!-- FORMULÁRIO -->
     <div class="card form-card">
         <h2 id="formTitle">Cadastrar Centro de Custo</h2>
-        <form action="{% url 'cadastrar_centro_custo' %}" method="POST">
+        <form action="{% url 'cadastrar_centro_custo' %}" method="POST" id="centroCustoForm">
             {% csrf_token %}
-            <input type="hidden" name="centro_id" id="centro_id">
+            <input type="hidden" name="acao" id="acao" value="salvar">
 
             <div class="form-group">
                 <label>Código do Centro de Custo</label>
@@ -38,8 +38,8 @@
 
             <div class="form-actions">
                 <button type="submit" class="btn-primary" id="submitBtn">Cadastrar</button>
-                <button type="submit" class="btn-secondary hidden" id="btnExcluir">Excluir</button>
-                <button type="submit" class="btn-secondary hidden" id="btnCancelarEdicao">Cancelar edição</button>
+                <button type="button" class="btn-secondary hidden" id="btnExcluir">Excluir</button>
+                <button type="button" class="btn-secondary hidden" id="btnCancelarEdicao">Cancelar edição</button>
             </div>
             <p class="form-tip" id="formTip">Clique em um centro na árvore para editar.</p>
 
@@ -56,7 +56,7 @@
                     {% if item.filhos %}
                     <span class="tree-toggle">
 
-                        <span class="editable" data-id="{{ item.centro.id }}" data-cod="{{ item.centro.cod_centro }}"
+                        <span class="editable" data-id="{{ item.centro.pk }}" data-cod="{{ item.centro.cod_centro }}"
                             data-pai="{% if item.centro.centro_pai_id %}{{item.centro.centro_pai_id}}{% endif %}"
                             data-descricao="{{ item.centro.descricao }}">
                             {{ item.centro.descricao }} - {{ item.centro.cod_centro }}
@@ -66,7 +66,7 @@
                         {% include 'cadastro_centro_custo/subcentros.html' with subcentros=item.filhos %}
                     </ul>
                     {% else %}
-                    <span class="editable" data-id="{{ item.centro.id }}" data-cod="{{ item.centro.cod_centro }}"
+                    <span class="editable" data-id="{{ item.centro.pk }}" data-cod="{{ item.centro.cod_centro }}"
                         data-pai="{% if item.centro.centro_pai_id %}{{item.centro.centro_pai_id}}{% endif %}"
                         data-descricao="{{ item.centro.descricao }}">
                         {{ item.centro.descricao }} - {{ item.centro.cod_centro }}

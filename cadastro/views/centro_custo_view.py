@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
+from django.core.exceptions import ValidationError
 
 from cadastro.forms import CentroCustoForm
 from cadastro.models import CentroCusto
@@ -13,20 +14,38 @@ from cadastro.utils.centro_custo_tree import montar_hierarquia
 # =============================================================================
 
 def cadastrar_centro_custo(request):
-    form = CentroCustoForm(request.POST or None)
+    centro = None
 
-    if request.method == "POST" and form.is_valid():
+
+
+    if request.method == "POST":
        centros_id =  request.POST.get("centros_id")
-
        if centros_id:
-        centro = get_list_or_404(CentroCusto, id=centros_id)
-        atualizar_centro_custo(centro, **form.cleaned_data)
-        messages.success(request, "Centro de custo atualiado com sicesso!")
-       else:
-        criar_centro_custo(**form.cleaned_data)
-        messages.success(request, "Centro de custo cadastrado com sucesso!")
+          centro = get_object_or_404(CentroCusto, pk=centros_id)
 
-        return redirect("cadastrar_centro_custo")
+    form = CentroCustoForm(request.POST or None, instance=centro)
+
+    if request.method == 'POST':
+        acao = request.POST.get("acao", "salvar")
+
+        if acao == "excluir":
+            if centro:
+                centro.delete()
+                messages.success(request, "Centro de custo excluído com sucesso!")
+            else:
+                messages.error(request, "Selecione um centro de custos para excluir.")
+            return redirect("cadastrar_centro_custo")
+        if form.is_valid():
+            try:
+                if centro:
+                    atualizar_centro_custo(centro, **form.cleaned_data)
+                    messages.success(request, "Centro de custo atualizado com sucesso.")
+                else:
+                    criar_centro_custo(**form.cleaned_data)
+                    messages.success(request, "Centro de custo cadastrado com suscesso.")
+                return redirect("cadastrar_centro_custo")
+            except ValidationError as exc:
+                form.add_error(None, exc.message)
 
     centros_raiz = listar_centros_raiz()
     hierarquia = montar_hierarquia(centros_raiz)
@@ -40,34 +59,8 @@ def cadastrar_centro_custo(request):
 
 
 def editar_centro_custo(request, id):
-    centro = get_object_or_404(CentroCusto, id=id)
-    form = CentroCustoForm(request.POST or None, instance=centro)
-
-    if request.method == "POST" and form.is_valid():
-        atualizar_centro_custo(centro, **form.cleaned_data)
-        messages.success(request, "Centro de custo atualizado com sucesso!")
-        return redirect("cadastrar_centro_custo")
-
-    centros_raiz = listar_centros_raiz()
-    hierarquia = montar_hierarquia(centros_raiz)
-
-    context = {
-        "form": form,
-        "hierarquia": hierarquia,
-        "editar": True,
-        "centro": centro,
-    }
-
-    return render(request, "cadastro_centro_custo/cadastro_centro_custo.html", context)
+   return redirect("cadastro_centro_custo")
 
     
 def excluir_centro_custo(request, id):
-    centro = get_object_or_404(CentroCusto, id=id)
-
-    if request.method == "POST":
-        centro.delete()
-        messages.success(request, "Centro de custo excluído com sucesso!")
-        return redirect("cadastrar_centro_custo")
-
-    # Caso queira confirmar exclusão via GET (opcional)
-    return render(request, "cadastro_centro_custo/confirmar_exclusao.html", {"centro": centro})
+    return redirect("cadastrar_centro_custo")
