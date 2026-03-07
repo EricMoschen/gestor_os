@@ -2,23 +2,22 @@
 
 ## 🔴 Bugs
 
-- [ ] Corrigir a opção de edição do app Cadastro:
-      - [ ] Centro de Custo.
-      - [x] Clientes.
-      - [x] Intervenção.
-      - [x] Colaborador.
-
 
 
 
 ## 🟡 Melhorias
+
+- [ ] tratamento de erro ao excluir quando o centro de custo já esta em uso em alguma OS .
+- [ ] tratamento erro ao excluir um Centro Pai que possui centros Filhos.
+
 - [ ] Atualizar layout do finalizar OS.
 - [ ] Atualizar impressão da OS para estilo a um Word editavel, para enviar por meio digital e poder efetuar as anotações.
 
+
+## modulos a serem criados
 - [ ] criar tela de login 
 - [ ] criar os grupos de acessos ao sistema( permissões)
 
----
 
 ## 🟢 Concluído
 - [x] Adicionar botão de voltar na `base.html` com retorno ao dashboard
@@ -38,3 +37,8 @@
 - [x] Virificar o apontamento de Horas.
 - [x] Verificar a abertura de OS.
 - [x] Virificar layout do apontamento de Horas.
+- [x] Corrigir a opção de edição do app Cadastro:
+      - [x] Centro de Custo.
+      - [x] Clientes.
+      - [x] Intervenção.
+      - [x] Colaborador.

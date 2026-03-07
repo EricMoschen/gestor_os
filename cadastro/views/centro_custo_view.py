@@ -19,9 +19,9 @@ def cadastrar_centro_custo(request):
 
 
     if request.method == "POST":
-       centros_id =  request.POST.get("centros_id")
-       if centros_id:
-          centro = get_object_or_404(CentroCusto, pk=centros_id)
+       centro_id =  request.POST.get("centro_id")
+       if centro_id:
+          centro = get_object_or_404(CentroCusto, pk=centro_id)
 
     form = CentroCustoForm(request.POST or None, instance=centro)
 
@@ -59,7 +59,7 @@ def cadastrar_centro_custo(request):
 
 
 def editar_centro_custo(request, id):
-   return redirect("cadastro_centro_custo")
+   return redirect("cadastrar_centro_custo")
 
     
 def excluir_centro_custo(request, id):
