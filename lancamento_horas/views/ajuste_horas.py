@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 
 from django.contrib import messages
 from django.conf import settings
@@ -22,6 +22,63 @@ def _parse_datetime_loca(value):
         return timezone.make_aware(datahora)
     
     return datahora
+
+def _intervalo_competencia(competencia: str | None):
+    hoje = timezone.localdate()
+    competencia_valida = competencia or hoje.strftime("%Y-%m")
+
+    try:
+        ano, mes = map(int, competencia_valida.split("-"))
+        data_referencia = date(ano, mes, 1)
+    except(ValueError,TypeError):
+        data_referencia = date(hoje.year, hoje.month, 1)
+
+    if data_referencia.month == 1:
+        ano_anterior, mes_anterior = data_referencia.year - 1, 12
+    else:
+        ano_anterior, mes_anterior = data_referencia.year, data_referencia.month - 1
+
+    data_inicio = date(ano_anterior, mes_anterior, 21)
+    data_fim = date(data_referencia.year, data_referencia.month, 20)
+
+    return data_referencia.strftime("%Y-%m"), data_inicio, data_fim
+
+
+def _gerar_competencias(apontamentos):
+    meses_pt = [
+        "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", 
+        "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+    ]
+
+    primeira_data = apontamentos.order_by("data_inicio").values_list("data_inicio", flat=True).first()
+    ultima_data = apontamentos.order_by("-data_inicio").values_list("data_inicio", flat=True).first()
+
+    if not primeira_data or not ultima_data:
+        hoje = timezone.localdate()
+        chave = hoje.strftime("%Y-%m")
+        return [{"valor":chave, "label": f"{meses_pt[hoje.month - 1]}/{hoje.year}"}]
+    
+    cursor = date(primeira_data.year, primeira_data.month, 1)
+    limite = date(ultima_data.year, ultima_data.month, 1)
+    competencia = []
+
+    while cursor<= limite:
+        competencia.append(
+            {
+                "valor": cursor.strftime("%Y-%m"),
+                "label": f"{meses_pt[cursor.month - 1]}/{cursor.year}",
+
+            }
+        )
+
+        if cursor.month == 12:
+            cursor =  date(cursor.year + 1, 1, 1)
+        else:
+            cursor = date(cursor.year, cursor.month + 1, 1)
+
+    return list(reversed(competencia))
+
+
 
 def ajuste_horas(request):
     if request.method == "POST":

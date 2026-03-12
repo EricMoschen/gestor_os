@@ -63,13 +63,20 @@
 
         <header class="card__header">
             <h2>Apontamentos</h2>
+            <p>Período da competencia: {{ periodo_inicio|date:"d/m/Y" }} até {{ periodo_fim|date:"d/m/Y" }}</p>
         </header>
 
         <!-- FILTROS -->
         <div class="filter-grid">
-            <select id="filtro-mes" class="input w-50">
-                <option value=""></option>
-            </select>
+            <form method="get">
+                <select id="filtro-mes" class="input w-50" name="competencia" onchange="this.form.submit()">
+                    {% for comp in competencias %}
+                    <option value="{{ comp.valor }}" {% if comp.valor == competencia_selecionada %} selected {% endif %}>
+                        {{ comp.label }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </form>
 
             <input id="filtro-geral" class="input" placeholder="Filtrar por matrícula, colaborador, OS ou status">
 
