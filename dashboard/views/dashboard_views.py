@@ -6,6 +6,7 @@ from config.access_control import (
     ROLE_PCM,
     ROLE_SUPERVISOR,
     ROLE_ALMOXARIFE,
+    ROLE_FABRICA,
     ensure_roles_exist,
     user_has_any_role,
 )
@@ -29,7 +30,7 @@ def dashboard(request):
                     "title": "Apontar Horas",
                     "url": "lancamento_horas:apontar_horas",
                     "color": "color-purple",
-                    "roles": [ROLE_ADM, ROLE_SUPERVISOR, ROLE_ALMOXARIFE],
+                    "roles": [ROLE_ADM, ROLE_SUPERVISOR, ROLE_ALMOXARIFE, ROLE_FABRICA],
                 },
                 {
                     "title": "Ajustar Horas",
