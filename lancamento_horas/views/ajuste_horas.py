@@ -12,7 +12,7 @@ from lancamento_horas.services.apontamento_horas_service import ApontamentoHoras
 from ..models.apontamento_horas import ApontamentoHoras
 
 
-def _parse_datetime_loca(value):    
+def _parse_datetime_local(value):    
     datahora = datetime.fromisoformat(value)
 
     if not settings.USE_TZ:
@@ -107,8 +107,8 @@ def ajuste_horas(request):
                 return redirect("lancamento_horas:ajuste_horas")
 
             try:
-                inicio = _parse_datetime_loca(f"{data_raw}T{hora_inicio_raw}")
-                fim = _parse_datetime_loca(f"{data_raw}T{hora_fim_raw}")
+                inicio = _parse_datetime_local(f"{data_raw}T{hora_inicio_raw}")
+                fim = _parse_datetime_local(f"{data_raw}T{hora_fim_raw}")
             except ValueError:
                 messages.error(request, "Data ou horário inválido.")
                 return redirect("lancamento_horas:ajuste_horas")
@@ -139,7 +139,7 @@ def ajuste_horas(request):
             return redirect("lancamento_horas:ajuste_horas")
 
         try:
-            inicio = _parse_datetime_loca(inicio_raw)
+            inicio = _parse_datetime_local(inicio_raw)
         except ValueError:
             messages.error(request, "Data de início inválida.")
             return redirect("lancamento_horas:ajuste_horas")
@@ -147,7 +147,7 @@ def ajuste_horas(request):
         fim = None
         if fim_raw:
             try:
-                fim = _parse_datetime_loca(fim_raw)
+                fim = _parse_datetime_local(fim_raw)
             except ValueError:
                 messages.error(request, "Data de fim inválida.")
                 return redirect("lancamento_horas:ajuste_horas")
@@ -163,9 +163,22 @@ def ajuste_horas(request):
         messages.success(request, f"Apontamento da OS {apontamento.ordem_servico.numero_os} atualizado.")
         return redirect("lancamento_horas:ajuste_horas")
 
-    apontamentos = ApontamentoHoras.objects.select_related("colaborador", "ordem_servico").order_by("-data_inicio")
+    competencia_raw =  request.GET.get("competencia")
+    competencia_selecionada, periodo_inicio, periodo_fim =  _intervalo_competencia(competencia_raw)
+
+    apontamentos_base = ApontamentoHoras.objects.select_related("colaborador", "ordem_servico")
+    competencia = _gerar_competencias(apontamentos_base)
+    apontamentos = apontamentos_base.filter(
+        data_inicio__date__gte=periodo_inicio,
+        data_inicio__date__lte=periodo_fim,
+    ).order_by("-data_inicio")
+
     context = {
         "apontamentos": apontamentos,
+        "competencias": competencia,
+        "competencia_selecionada": competencia_selecionada,
+        "periodo_inicio": periodo_inicio,
+        "periodo_fim": periodo_fim,
         "kpis": {
             "total": apontamentos.count(),
             "em_aberto": apontamentos.filter(data_fim__isnull=True).count(),
