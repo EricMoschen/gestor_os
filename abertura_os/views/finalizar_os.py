@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 
 from ..models import AberturaOS
@@ -7,7 +6,7 @@ from ..utils import finalizar_ordem
 
 
 def finalizar_os_view(request):
-    ordens = AberturaOS.objects.all().order_by("-numero_os")
+    ordens = AberturaOS.objects.all().order_by("numero_os")
     erro = None
 
     if request.method == "POST":

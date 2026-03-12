@@ -7,7 +7,7 @@
     <title>
         Detalhamento de Horas Colaborador por OS {{ os_detalhes.numero_os|default:"--" }}
     </title>
-
+    
     <link rel="stylesheet" href="{% static 'css/orcamento_horas_pdf.css' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
 </head>
@@ -17,7 +17,7 @@
     <!-- ================= CABEÇALHO ================= -->
     <div class="flex justify-between items-center border-b pb-6 mb-6">
         <div class="flex items-center gap-4">
-            <img src="{% static 'img/tevere_logo.png' %}" alt="logo empresa Tévere Aço LTDA" class="h-16">
+            <img src="{% static 'img/tevere_logo.jpg' %}" alt="logo empresa Tévere Aço LTDA" class="h-20">
 
             <div class="info-box">
                 <p class="font-bold text-lg">Tévere LTDA</p>
@@ -46,6 +46,8 @@
 
         <div class="grid grid-cols-2 gap-x-8 gap-y-2">
             <p><b>Número Da OS:</b> {{ os_detalhes.numero_os|default:"--" }}</p>
+            <p></p>
+            <p><b>Descrição Da OS:</b> {{ os_detalhes.descricao_os|default:"--" }}</p>
             <p><b>Cliente:</b> {{ os_detalhes.cliente|default:"--" }}</p>
 
             {% if data_inicio or data_fim %}

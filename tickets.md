@@ -7,17 +7,18 @@ User:ALMOXARIFE  / Senha:ALM@123456
 User:SUPERVISOR  / Senha:SUP@123456
 
 ## 🔴 Bugs
-
-
-
+- [ ] corrigir erro ao puchar campos no finalizar OS.
+- [ ] mensages estao aparecendo no dashboard e não estão sumindo
 
 ## 🟡 Melhorias
-
+- [ ] incluir uma lista suspensa onde mostra todas as OS e horarios trabalhados em cadas OS ao clicar no colaborador na aba de relatórios.
 - [ ] tratamento de erro ao excluir quando o centro de custo já esta em uso em alguma OS .
 - [ ] tratamento erro ao excluir um Centro Pai que possui centros Filhos.
 
 - [ ] Atualizar layout do finalizar OS.
 - [ ] Atualizar impressão da OS para estilo a um Word editavel, para enviar por meio digital e poder efetuar as anotações.
+
+- [ ] no Ajuste de horas adicionar um seletor para selecionar o mes dos ajustes, começando do dia 21 do mes anterior até o dia 20 do mes atual, EX: Mes de Março Retorna o intervalo dos dias de (21/02 até 20/03).
 
 
 ## 🟢 Concluído
@@ -46,3 +47,4 @@ User:SUPERVISOR  / Senha:SUP@123456
 
 - [x] criar tela de login 
 - [x] criar os grupos de acessos ao sistema( permissões, PCM, ADM, SUPERVISOR, ALMOXARIFE)
+- [X] corrigir a separação das horas Normais,50% e 100% nos relatórios.

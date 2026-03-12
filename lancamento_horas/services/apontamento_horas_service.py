@@ -83,6 +83,16 @@ class ApontamentoHorasService:
                 elif tipo_dia == "Sábado":
                     horas_50 += horas_bloco
                 else:
+                    horas_normais_no_bloco = 0
+                    for ini_turno, fim_turno in ApontamentoHorasService._obter_intervalos_normais_no_dia(
+                        apontamento.colaborador,
+                        bloco_inicio.date(),
+                        inicio,
+                    ):
+                        inter_inicio = max(bloco_inicio, ini_turno)
+                        inter_fim = min(bloco_fim, fim_turno)
+                        horas_normais_no_bloco += ApontamentoHorasService._duracao_em_horas(inter_inicio, inter_fim)
+
                     horas_pausadas_no_bloco = 0
                     for ini_pausa, fim_pausa  in ApontamentoHorasService._obter_intervalos_pausa_no_dia(
                         apontamento.colaborador,
@@ -93,7 +103,8 @@ class ApontamentoHorasService:
                         inter_fim = min(bloco_fim, fim_pausa)
                         horas_pausadas_no_bloco += ApontamentoHorasService._duracao_em_horas(inter_inicio, inter_fim)
 
-                    horas_normais += max(horas_bloco - horas_pausadas_no_bloco, 0)
+                    horas_normais += max(horas_normais_no_bloco, 0)
+                    horas_50 += max(horas_bloco - horas_normais_no_bloco - horas_pausadas_no_bloco,0)
 
                 cursor = bloco_fim
 

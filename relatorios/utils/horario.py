@@ -51,3 +51,4 @@ def calcular_horas(inicio, fim, colaborador=None):
     h50 = 0
     h100 = 0
     return normais, h50, h100
+ 
