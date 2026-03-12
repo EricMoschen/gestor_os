@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 from django.contrib import messages
 from django.conf import settings
@@ -22,6 +22,12 @@ def _parse_datetime_local(value):
         return timezone.make_aware(datahora)
     
     return datahora
+
+def _ajustar_fim_virada_dia(inicio: datetime, fim: datetime):
+    """Quando o Fim é menor ou igual ao inicio, considera virada de dia."""
+    if fim <= inicio:
+        return fim + timedelta(days=1), True
+    return fim, False
 
 def _intervalo_competencia(competencia: str | None):
     hoje = timezone.localdate()
@@ -114,9 +120,7 @@ def ajuste_horas(request):
                 return redirect("lancamento_horas:ajuste_horas")
             
 
-            if fim <= inicio:
-                messages.error(request, "Horário de fim deve ser maior que início.")
-                return redirect("lancamento_horas:ajuste_horas")
+            fim, virou_dia = _ajustar_fim_virada_dia(inicio, fim)
             
             ApontamentoHoras.objects.create(
                 colaborador=colaborador,
@@ -125,6 +129,12 @@ def ajuste_horas(request):
                 data_fim=fim,
                 tipo_dia=ApontamentoHorasService.classificar_tipo_dia(inicio.date()),
             )
+
+            if virou_dia:
+                messages.warning(
+                    request,
+                    "Horário Ajustado para virada de dia (término no dia seguinte)"
+                )
 
             messages.success(request, f"Nova ocorrência da OS {os_obj.numero_os} cadastrada com sucesso.")
             return redirect("lancamento_horas:ajuste_horas")
