@@ -6,6 +6,8 @@ User:PCM  / Senha:PCM@123456
 User:ALMOXARIFE  / Senha:ALM@123456
 User:SUPERVISOR  / Senha:SUP@123456
 
+User:FABRICA / Senha:FAB@123456
+
 ## 🔴 Bugs
 
 - [ ] tratamento de erro ao excluir quando o centro de custo já esta em uso em alguma OS .
