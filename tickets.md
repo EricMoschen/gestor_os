@@ -7,35 +7,45 @@ User:ALMOXARIFE  / Senha:ALM@123456
 User:SUPERVISOR  / Senha:SUP@123456
 
 ## 🔴 Bugs
-- [ ] corrigir erro ao puchar campos no finalizar OS.
-- [ ] mensages estao aparecendo no dashboard e não estão sumindo
+
+- [ ] tratamento de erro ao excluir quando o centro de custo já esta em uso em alguma OS .
+- [ ] tratamento erro ao excluir um Centro Pai que possui centros Filhos.
+
+# Resolvido parcialmente, ainda avaliar
+- [/] mensages estao aparecendo no dashboard e não estão sumindo
 
 ## 🟡 Melhorias
 - [ ] incluir uma lista suspensa onde mostra todas as OS e horarios trabalhados em cadas OS ao clicar no colaborador na aba de relatórios.
-- [ ] tratamento de erro ao excluir quando o centro de custo já esta em uso em alguma OS .
-- [ ] tratamento erro ao excluir um Centro Pai que possui centros Filhos.
 
 - [ ] Atualizar layout do finalizar OS.
 - [ ] Atualizar impressão da OS para estilo a um Word editavel, para enviar por meio digital e poder efetuar as anotações.
 
-- [ ] no Ajuste de horas adicionar um seletor para selecionar o mes dos ajustes, começando do dia 21 do mes anterior até o dia 20 do mes atual, EX: Mes de Março Retorna o intervalo dos dias de (21/02 até 20/03).
+-[ ] Atualizar layout do cadastro de centros de custos.
 
 
-## 🟢 Concluído
+## 🟢  Concluído
+
+## Melhorias Implementadas
 - [x] Adicionar botão de voltar na `base.html` com retorno ao dashboard
 - [x] Alterar estrutura:
       - [x]Remover valor da hora do cadastro de colaborador
       - [x]Criar cadastro de Função com valor/hora
       - [x] Relacionar apenas a Função ao Colaborador
+      - [x] Modificar o Orçamento Horas para o mesmo layout do Orçamento Cliente
 
-- [x] Modificar o Orçamento Horas para o mesmo layout do Orçamento Cliente
 - [x] Na funcionalidade de Ajuste de Horas, adicionar campo para incluir lançamento
+- [x] criar tela de login 
+- [x] criar os grupos de acessos ao sistema( permissões, PCM, ADM, SUPERVISOR, ALMOXARIFE)
+- [x] no Ajuste de horas adicionar um seletor para selecionar o mes dos ajustes, começando do dia 21 do mes anterior até o dia 20 do mes atual, EX: Mes de Março Retorna o intervalo dos dias de (21/02 até 20/03).
+
+
+## Bugs Corrigidos
 - [x] Corrigir o Orçamento Clientes para puxar:
       - Valor da função
       - Total de horas por OS
       - Total de horas por função
       - Manter os intervalos de horas
-- [x] Verificar layout da abertura de OS
+
 - [x] Virificar o apontamento de Horas.
 - [x] Verificar a abertura de OS.
 - [x] Virificar layout do apontamento de Horas.
@@ -45,6 +55,6 @@ User:SUPERVISOR  / Senha:SUP@123456
       - [x] Intervenção.
       - [x] Colaborador.
 
-- [x] criar tela de login 
-- [x] criar os grupos de acessos ao sistema( permissões, PCM, ADM, SUPERVISOR, ALMOXARIFE)
-- [X] corrigir a separação das horas Normais,50% e 100% nos relatórios.
+- [x] corrigir a separação das horas Normais,50% e 100% nos relatórios.
+- [x] corrigir erro ao puchar campos no finalizar OS.
+

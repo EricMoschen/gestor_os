@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const form = document.querySelector(".form");
   const iniciarBtn = form?.querySelector('button[name="acao"][value="iniciar"]');
-  const finalizarBtn = form?.querySelector('button[name="acao"]["value="finalizar"]')
+  const finalizarBtn = form?.querySelector('button[name="acao"][value="finalizar"]');
 
   if (iniciarBtn) {
     iniciarBtn.addEventListener("click", () => {

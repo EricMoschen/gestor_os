@@ -7,29 +7,34 @@
 
 {% block body %}
 <div class="container">
-  <!-- Botão voltar para Dashboard -->
-  {% block button_voltar %}
+    <!-- Botão voltar para Dashboard -->
+    {% block button_voltar %}
     {% include 'components/_btn_voltar.html' %}
-  {% endblock %}
-  
+    {% endblock %}
+
     <!-- Painel esquerdo: Finalizar OS -->
     <div class="panel finalizar-os">
 
         <form method="post" action="{% url 'finalizar_os' %}" id="finalizarForm">
             {% csrf_token %}
 
+            <h1 class="panel-title">Finalizar Ordem de Serviço</h1>
+
             <!-- Número da OS -->
             <div class="form-group">
                 <label for="numero_os">Número da OS</label>
-                <input type="text" id="numero_os" name="numero_os" class="input-field" required>
+                <input type="text" id="numero_os" name="numero_os" class="input-field" required autocomplete="off"
+                    placeholder="Ex.: 001-26">
+                <small class="field-help">Digite o numero da OS ou selecione uma linha na tabela ao lado.</small>
             </div>
+            <div id="statusOS" class="status-message hidden" role="status" aria-live="polite"></div>
 
             <!-- Dados da OS -->
             <div id="dados-os">
 
                 <div class="form-group">
                     <label>Descrição</label>
-                    <textarea id="descricao_os" class="input-field" readonly rows="4"></textarea>
+                    <textarea id="descricao_os" class="input-field" readonly rows="2"></textarea>
                 </div>
 
                 <div class="form-group">
@@ -40,7 +45,7 @@
                 <!-- Observações -->
                 <div class="form-group">
                     <label for="observacoes">Observações</label>
-                    <textarea name="observacoes" id="observacoes" class="input-field" rows="4" required></textarea>
+                    <textarea name="observacoes" id="observacoes" class="input-field" rows="2" required></textarea>
                     <p class="field-error" id="erroObservacoes" style="display:none;">É obrigatório informar uma
                         observação.</p>
                 </div>
@@ -52,7 +57,7 @@
                 <input type="hidden" name="numero_os_hidden" id="numero_os_hidden">
 
                 <!-- Botão finalizar -->
-                <button type="submit" class="save-btn">✅ Finalizar OS</button>
+                <button type="submit" class="save-btn">Finalizar OS</button>
 
             </div>
 
@@ -84,18 +89,15 @@
                     {% for o in ordens %}
                     <tr class="linha-os {% if o.situacao == 'FI' %}os-finalizada{% else %}os-aberta{% endif %}"
                         data-numero="{{ o.numero_os }}" data-descricao="{{ o.descricao_os }}"
-                        data-situacao="{{ o.get_situacao_display }}">
+                        data-situacao="{{ o.get_situacao_display }}" data-situacao-codigo="{{o.situacao}}"
+                        data-observacoes="{{o.observacoes|default:''}}">
                         <td>{{ o.numero_os }}</td>
                         <td>{{ o.descricao_os }}</td>
                         <td>{{ o.centro_custo.descricao }}</td>
                         <td>{{ o.cliente }}</td>
                         <td>
-                            <span class="
-    px-2 py-1 rounded text-sm font-semibold
-    {% if o.situacao == 'FI' %} bg-red-100 text-red-700
-    {% elif o.situacao == 'AB' %} bg-green-100 text-green-700
-    {% endif %}
-  ">
+                            <span
+                                class="status-badge {% if o.situacao == 'FI' %}status--finalizada{% else %}status--aberta{% endif %}">
                                 {{ o.get_situacao_display }}
                             </span>
                         </td>

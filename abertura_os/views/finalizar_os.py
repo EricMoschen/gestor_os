@@ -19,6 +19,14 @@ def finalizar_os_view(request):
             erro = "Informe a observação antes de finalizar a OS."
         else:
             try:
+                ordem = AberturaOS.objects.get(numero_os=numero_os)
+                if ordem.situacao == AberturaOS.Status.FINALIZADA:
+                    erro = f"A OS {numero_os} já está finalizada."
+                    return render(request, "finalizar_os/finalizar_os.html", {
+                        "ordens": ordens,
+                        "erro": erro
+                    })
+                
                 finalizar_ordem(numero_os, observacoes)
                 return redirect("finalizar_os")
             except ObjectDoesNotExist:

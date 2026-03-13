@@ -11,22 +11,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const erroObs = document.getElementById("erroObservacoes");
     const form = document.getElementById("finalizarForm");
     const buscarTabela = document.getElementById("buscarTabela");
+    const msgStatus = document.getElementById("statusOS");
 
-    // Elementos para mensagens e spinner
-    const msgStatus = document.getElementById("statusOS"); // div para mensagens
-    const spinner = document.getElementById("spinnerOS"); // div com spinner CSS
-
-    // =============================
-    // Estado
-    // =============================
-    let ultimoNumeroBuscado = null;
-    let controller = null;
-    let debounceTimer;
-    const cacheOS = {}; // cache de OS já buscadas
+    const cacheOS = {};
 
     // =============================
     // Funções utilitárias
     // =============================
+
     function limparCampos() {
         descricaoInput.value = "";
         situacaoInput.value = "";
@@ -34,30 +26,31 @@ document.addEventListener("DOMContentLoaded", () => {
         hiddenInput.value = "";
     }
 
+    function mostrarMensagem(texto, tipo = "info") {
+        if (!msgStatus) return;
+
+        msgStatus.textContent = texto;
+        msgStatus.className = `status-message ${tipo}`;
+
+        if (texto) {
+            msgStatus.classList.remove("hidden");
+        } else {
+            msgStatus.classList.add("hidden");
+        }
+    }
+
     function preencherCampos(data, numero) {
-        descricaoInput.value = data.descricao ?? "";
-        situacaoInput.value = data.situacao ?? "";
-        observacoesInput.value = data.observacoes ?? "";
+        descricaoInput.value = data.descricao || "";
+        situacaoInput.value = data.situacao || "";
+        observacoesInput.value = data.observacoes || "";
         hiddenInput.value = numero;
     }
 
-    function mostrarMensagem(texto, tipo = "info") {
-        if (!msgStatus) return;
-        msgStatus.textContent = texto;
-        msgStatus.className = tipo; // tipo pode ser: info, erro, sucesso
-        msgStatus.style.display = texto ? "block" : "none";
-    }
-
-    function mostrarSpinner(ativar = true) {
-        if (!spinner) return;
-        spinner.style.display = ativar ? "inline-block" : "none";
-    }
-
     // =============================
-    // Buscar OS via fetch
+    // Carregar OS da tabela
     // =============================
-    async function buscarOS(numero) {
-        numero = numero.trim();
+
+    function carregarDaTabela(numero) {
 
         if (!numero) {
             limparCampos();
@@ -65,109 +58,117 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // evita requisição duplicada
-        if (numero === ultimoNumeroBuscado && cacheOS[numero]) {
-            preencherCampos(cacheOS[numero], numero);
-            mostrarMensagem("");
+        const os = cacheOS[numero];
+
+        if (!os) {
+            limparCampos();
+            mostrarMensagem(`OS ${numero} não encontrada na lista de ordens`, "erro");
             return;
         }
 
-        ultimoNumeroBuscado = numero;
+        preencherCampos(os, numero);
 
-        // cancela requisição anterior
-        if (controller) controller.abort();
-        controller = new AbortController();
-
-        mostrarSpinner(true);
-        mostrarMensagem("");
-
-        try {
-            const url = `/relatorio/buscar-os/${encodeURIComponent(numero)}/`;
-            const response = await fetch(url, { signal: controller.signal });
-
-            if (!response.ok) {
-                limparCampos();
-                mostrarMensagem("Erro ao conectar com o servidor.", "erro");
-                mostrarSpinner(false);
-                return;
-            }
-
-            const data = await response.json();
-
-            if (data.erro) {
-                limparCampos();
-                mostrarMensagem(`OS ${numero} não encontrada.`, "erro");
-                mostrarSpinner(false);
-                return;
-            }
-
-            // salva no cache e preenche campos
-            cacheOS[numero] = data;
-            preencherCampos(data, numero);
-
-            mostrarMensagem("OS carregada com sucesso.", "sucesso");
-
-        } catch (err) {
-            if (err.name === "AbortError") return; // cancelamento normal
-            console.error("Erro ao buscar OS:", err);
-            limparCampos();
-            mostrarMensagem("Erro de rede. Tente novamente.", "erro");
-        } finally {
-            mostrarSpinner(false);
+        if (os.situacaoCodigo === "FI") {
+            mostrarMensagem("Atenção: esta OS já está finalizada.", "aviso");
+            return;
         }
+
+        mostrarMensagem("");
     }
 
     // =============================
-    // Auto buscar ao digitar (debounce)
+    // Carregar dados da tabela
     // =============================
-    numeroInput.addEventListener("input", () => {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => buscarOS(numeroInput.value), 400);
-    });
 
-    // =============================
-    // Preencher ao clicar na tabela
-    // =============================
-    document.querySelectorAll(".linha-os").forEach(row => {
-        row.addEventListener("click", function () {
-            const numero = this.dataset.numero;
-            const data = {
-                descricao: this.dataset.descricao,
-                situacao: this.dataset.situacao,
-                observacoes: this.dataset.observacoes ?? ""
-            };
+    document.querySelectorAll(".linha-os").forEach((row) => {
 
+        const numero = row.dataset.numero;
+
+        cacheOS[numero] = {
+            descricao: row.dataset.descricao || "",
+            situacao: row.dataset.situacao || "",
+            situacaoCodigo: row.dataset.situacaoCodigo || "",
+            observacoes: row.dataset.observacoes || ""
+        };
+
+        row.addEventListener("click", () => {
             numeroInput.value = numero;
-            preencherCampos(data, numero);
-
-            // salva no cache para não buscar novamente
-            cacheOS[numero] = data;
-            mostrarMensagem("OS carregada da tabela.", "sucesso");
+            carregarDaTabela(numero);
         });
+
     });
 
     // =============================
-    // Validação de Observações no submit
+    // Buscar OS digitando número
     // =============================
+
+    numeroInput.addEventListener("input", () => {
+        const numero = numeroInput.value.trim();
+        carregarDaTabela(numero);
+    });
+
+    // =============================
+    // Validação do formulário
+    // =============================
+
     form.addEventListener("submit", (e) => {
-        if (observacoesInput.value.trim() === "") {
+
+        const numero = numeroInput.value.trim();
+        const observacoes = observacoesInput.value.trim();
+
+        if (!numero) {
+            e.preventDefault();
+            mostrarMensagem("Informe o número da OS para finalizar.", "erro");
+            numeroInput.focus();
+            return;
+        }
+
+        if (!cacheOS[numero]) {
+            e.preventDefault();
+            mostrarMensagem("Selecione uma OS válida na tabela para finalizar.", "erro");
+            numeroInput.focus();
+            return;
+        }
+
+        if (cacheOS[numero].situacaoCodigo === "FI") {
+            e.preventDefault();
+            mostrarMensagem("Não é possível finalizar uma OS que já está finalizada.", "erro");
+            return;
+        }
+
+        if (!observacoes) {
             e.preventDefault();
             erroObs.style.display = "block";
+            mostrarMensagem("Preencha o campo de observações para continuar.", "erro");
             observacoesInput.focus();
-        } else {
-            erroObs.style.display = "none";
+            return;
         }
+
+        erroObs.style.display = "none";
+        hiddenInput.value = numero;
+
     });
 
     // =============================
-    // Filtro da tabela
+    // Busca na tabela
     // =============================
+
     buscarTabela.addEventListener("input", function () {
+
         const filtro = this.value.toLowerCase();
-        document.querySelectorAll("#tabelaOs tbody tr").forEach(linha => {
+
+        document.querySelectorAll("#tabelaOs tbody tr").forEach((linha) => {
+
             const texto = linha.innerText.toLowerCase();
-            linha.style.display = texto.includes(filtro) ? "" : "none";
+
+            if (texto.includes(filtro)) {
+                linha.style.display = "";
+            } else {
+                linha.style.display = "none";
+            }
+
         });
+
     });
 
 });
