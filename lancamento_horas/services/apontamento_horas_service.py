@@ -13,8 +13,12 @@ class ApontamentoHorasService:
 
     @staticmethod
     def _normalizar_datahora(datahora):
-        """Retornar datetime no timezone local apenas quando ele for aware."""
+        """Normaliza detetime para evitar erros entre naive/aware"""
+        if not datahora:
+            return datahora
         if timezone.is_naive(datahora):
+            if timezone.is_aware(timezone.now()):
+                return timezone.make_aware(datahora,timezone.get_current_timezone())
             return datahora
         return timezone.localtime(datahora)
     
