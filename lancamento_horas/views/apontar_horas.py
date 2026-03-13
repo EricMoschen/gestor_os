@@ -14,7 +14,7 @@ BR_HOLIDAYS = holidays.Brazil()  # Para verificar feriados
 def apontar_horas(request):
     if request.method == "POST":
         matricula = request.POST.get("matricula", "").strip().upper()
-        numero_os = request.POST.get("numero_os")
+        numero_os = request.POST.get("numero_os", "").strip()
         acao = request.POST.get("acao")
 
         colaborador = get_object_or_404(
@@ -25,14 +25,17 @@ def apontar_horas(request):
             matricula__iexact=matricula
         )
 
-        os_obj = get_object_or_404(
-            AberturaOS.objects.only("id", "numero_os", "situacao"),
-            numero_os=numero_os
-        )
-
         agora = timezone.now()
 
         if acao == "iniciar":
+            if not numero_os:
+                messages.error(request, "Informe o número da OS para inicia o apontamento.")
+                return redirect("lancamento_horas:apontar_horas")
+            os_obj = get_object_or_404(
+                AberturaOS.objects.only("id", "numero_os", "situacao"),
+                numero_os=numero_os
+            
+            )
             # Bloqueio OS finalizada
             if os_obj.situacao == AberturaOS.Status.FINALIZADA:
                 messages.error(
@@ -76,6 +79,14 @@ def apontar_horas(request):
                 messages.warning(request, "Nenhuma OS em andamento para este colaborador.")
                 return redirect("lancamento_horas:apontar_horas")
 
+            if numero_os and set(aberto.ordem_servico.numero_os) != str(numero_os):
+                messages.error(
+                    request,
+                    f"A OS em andamento para o colaborador informado é: {aberto.ordem_servico.numero_os}."
+                )
+
+                return redirect("lancamento_horas:apontar_horas")
+            
             if aberto.data_inicio > agora:
                 messages.error(request, "Erro! Horário de início maior que horário de fim.")
                 return redirect("lancamento_horas:apontar_horas")
@@ -84,6 +95,8 @@ def apontar_horas(request):
             aberto.save(update_fields=["data_fim"])
             messages.success(request, f"OS {aberto.ordem_servico.numero_os} finalizada.")
 
+        else:
+            messages.error(request, "Ação inválida para apontamento de horas.")
         return redirect("lancamento_horas:apontar_horas")
 
     # GET → listar ordens de serviço

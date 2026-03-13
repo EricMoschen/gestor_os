@@ -26,6 +26,22 @@ document.addEventListener("DOMContentLoaded", () => {
   const loadingColab = document.getElementById("loading-colaborador");
   const loadingOs = document.getElementById("loading-os");
 
+  const form = document.querySelector(".form");
+  const iniciarBtn = form?.querySelector('button[name="acao"][value="iniciar"]');
+  const finalizarBtn = form?.querySelector('button[name="acao"]["value="finalizar"]')
+
+  if (iniciarBtn) {
+    iniciarBtn.addEventListener("click", () => {
+      if (numeroOsInput) numeroOsInput.required = true;
+    });
+  }
+
+  if (finalizarBtn) {
+    finalizarBtn.addEventListener("click", () => {
+      if (numeroOsInput) numeroOsInput.required = false;
+    })  
+  }
+
   // ======================================================
   // BUSCAR COLABORADOR
   // ======================================================
