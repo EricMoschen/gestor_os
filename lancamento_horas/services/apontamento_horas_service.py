@@ -186,32 +186,32 @@ class ApontamentoHorasService:
             raise ValueError("Nenhum apontamento aberto encontrado.")
 
         inicio = ApontamentoHorasService._normalizar_datahora(aberto.data_inicio)
-        tipo_dia = ApontamentoHorasService.classificar_tipo_dia(inicio.date())
+        agora = timezone.now()
+
+        tipo_dia = ApontamentoHorasService.classificar_tipo_dia(agora.date())
         turno_inicio = colaborador.horario_inicio_turno()
         turno_fim = colaborador.horario_fim_turno()
 
         if tipo_dia != "Dia Normal":
-            raise ValueError("Apontamento fora do horário normal. Encerramento manual necessário.")
+            raise ValueError(
+                "Fora de um dia normal. Encerramento manual da OS anterior necessário."
+            )
 
-        hora_inicio = inicio.time()
+        hora_atual = agora.time()
+
         if turno_inicio <= turno_fim:
-            dentro_turno = turno_inicio <= hora_inicio <= turno_fim
-            fim_turno_date = inicio.date()
+            dentro_turno = turno_inicio <= hora_atual <= turno_fim
         else:
-            dentro_turno = hora_inicio >= turno_inicio or hora_inicio <= turno_fim
-            fim_turno_date = inicio.date()
-            if hora_inicio <= turno_fim:
-                fim_turno_date += timedelta(days=1)
+            # turno que vira a meia noite
+            dentro_turno = hora_atual >= turno_inicio or hora_atual <= turno_fim
 
         if not dentro_turno:
-            raise ValueError("Apontamento fora do horário normal. Encerramento manual necessário.")
+            raise ValueError(
+                "Horário atual fora do turno do colaborador. Encerramento manual necessário."
+            )
 
-        fim_turno = datetime.combine(fim_turno_date, turno_fim)
-        fim_turno = ApontamentoHorasService._ajustar_para_referencia(fim_turno, inicio)
-        if fim_turno < inicio:
-            raise ValueError("Horário de término do turno inválido para encerramento automático.")
-
-        aberto.data_fim = fim_turno
+        # encerra com horário atual
+        aberto.data_fim = agora
         aberto.save(update_fields=["data_fim"])
 
         return aberto
