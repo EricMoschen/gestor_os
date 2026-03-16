@@ -174,7 +174,7 @@ class ApontamentoHorasService:
             ))
 
         return intervalos_pausa
-
+    @staticmethod
     def _calcular_fim_turno_para_inicio(inicio, turno_inicio, turno_fim):
         if not turno_inicio or not turno_fim:
             return None
@@ -184,7 +184,7 @@ class ApontamentoHorasService:
         else:
             #turno cruza maia-noite (ex.: 16:48 -> 02:00)
             if inicio.time() <= turno_fim:
-                fim - datetime.combine(inicio.date(), turno_fim)
+                fim = datetime.combine(inicio.date(), turno_fim)
             else:
                 fim = datetime.combine(inicio.date() + timedelta(days=1), turno_fim)
 

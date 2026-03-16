@@ -5,11 +5,6 @@ from ..models.apontamento_horas import ApontamentoHoras
 from ..services.apontamento_horas_service import ApontamentoHorasService
 from cadastro.models import Colaborador
 from abertura_os.models import AberturaOS
-import holidays
-
-BR_HOLIDAYS = holidays.Brazil()  # Para verificar feriados
-
-
 
 def apontar_horas(request):
     if request.method == "POST":
@@ -17,13 +12,14 @@ def apontar_horas(request):
         numero_os = request.POST.get("numero_os", "").strip()
         acao = request.POST.get("acao")
 
-        colaborador = get_object_or_404(
-            Colaborador.objects.only(
-                "id", "turno", "hr_entrada_am", "hr_saida_am",
-                "hr_entrada_pm", "hr_saida_pm", "matricula", "nome"
-            ),
-            matricula__iexact=matricula
-        )
+        colaborador =  Colaborador.objects.only(
+            "id", "turno", "hr_entrada_am", "hr_saida_am",
+            "hr_entrada_pm","hr_saida_pm", "matricula", "nome"
+        ).filter(matricula__iexact=matricula).first()
+
+        if not colaborador:
+            messages.error(request, "Mátricula não encontrada.")
+            return redirect("lancamento_horas:apontar_horas")
 
         agora = timezone.now()
 
@@ -31,11 +27,13 @@ def apontar_horas(request):
             if not numero_os:
                 messages.error(request, "Informe o número da OS para inicia o apontamento.")
                 return redirect("lancamento_horas:apontar_horas")
-            os_obj = get_object_or_404(
-                AberturaOS.objects.only("id", "numero_os", "situacao"),
-                numero_os=numero_os
+            os_obj =  AberturaOS.objects.only("id", "numero_os","situacao").filter(
+                numero_os__iexact=numero_os
+            ).first()
+
+            if not os_obj:
+                messages.error(request, "Número da OS não encontrado.")
             
-            )
             # Bloqueio OS finalizada
             if os_obj.situacao == AberturaOS.Status.FINALIZADA:
                 messages.error(
@@ -52,10 +50,10 @@ def apontar_horas(request):
             if aberto:
                 try:
                     ApontamentoHoras.encerrar_aberto(colaborador)
-                except (ValueError, AttributeError) as e:
+                except (ValueError, AttributeError) as erro:
                     messages.error(
                         request,
-                        f"A OS {aberto.ordem_servico.numero_os} já está em andamento para o colaborador {aberto.colaborador.nome}."
+                        f"A OS {aberto.ordem_servico.numero_os} ainda está em andamento para  {aberto.colaborador.nome}: {erro}."
                     )
                     return redirect("lancamento_horas:apontar_horas")
 
