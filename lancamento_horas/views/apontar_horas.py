@@ -52,10 +52,10 @@ def apontar_horas(request):
             if aberto:
                 try:
                     ApontamentoHoras.encerrar_aberto(colaborador)
-                except ValueError as e:
+                except (ValueError, AttributeError) as e:
                     messages.error(
                         request,
-                        f"Erro! OS {aberto.ordem_servico.numero_os} em aberto. {e}"
+                        f"A OS {aberto.ordem_servico.numero_os} já está em andamento para o colaborador {aberto.colaborador.nome}."
                     )
                     return redirect("lancamento_horas:apontar_horas")
 

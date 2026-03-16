@@ -6,11 +6,11 @@
 {% endblock %}
 
 {% block body %}
-  <!-- Botão voltar para Dashboard -->
-  {% block button_voltar %}
-    {% include 'components/_btn_voltar.html' %}
-  {% endblock %}
-  
+<!-- Botão voltar para Dashboard -->
+{% block button_voltar %}
+{% include 'components/_btn_voltar.html' %}
+{% endblock %}
+
 <div class="page-wrapper">
 
     <!-- ================= FORM ================= -->
@@ -18,9 +18,9 @@
 
         <h2>
             {% if editando %}
-                Editar Colaborador
+            Editar Colaborador
             {% else %}
-                Novo Colaborador
+            Novo Colaborador
             {% endif %}
         </h2>
 
@@ -117,8 +117,7 @@
                         <th>Função</th>
                         <th>Valor</th>
                         <th>Turno</th>
-                        <th></th>
-                        <th></th>
+                        <th colspan="2" style="text-align: center;">Ação</th>
                     </tr>
                 </thead>
 
@@ -139,16 +138,15 @@
 
                         <td>
                             {% if colaborador.os_count|default:0 > 0 %}
-                                <span class="em-uso">
-                                    Em uso ({{ colaborador.os_count }})
-                                </span>
+                            <span class="em-uso">
+                                Em uso ({{ colaborador.os_count }})
+                            </span>
                             {% else %}
-                                <button class="delete-btn"
-                                 data-url="{% url 'excluir_colaborador' colaborador.id %}"
-                                 data-nome="{{ colaborador.nome }}">
-                               
-                                    🗑️
-                                </button>
+                            <button class="delete-btn" data-url="{% url 'excluir_colaborador' colaborador.id %}"
+                                data-nome="{{ colaborador.nome }}">
+
+                                🗑️
+                            </button>
                             {% endif %}
                         </td>
                     </tr>
@@ -157,7 +155,7 @@
 
             </table>
             {% else %}
-                <p class="empty-msg">Nenhum colaborador cadastrado</p>
+            <p class="empty-msg">Nenhum colaborador cadastrado</p>
             {% endif %}
 
         </div>

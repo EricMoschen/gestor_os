@@ -5,8 +5,8 @@ User:ADM  / Senha:ADM@123456
 User:PCM  / Senha:PCM@123456
 User:ALMOXARIFE  / Senha:ALM@123456
 User:SUPERVISOR  / Senha:SUP@123456
-
 User:FABRICA / Senha:FAB@123456
+
 
 ## 🔴 Bugs
 
