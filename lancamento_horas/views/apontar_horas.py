@@ -50,6 +50,13 @@ def apontar_horas(request):
             ).order_by("-data_inicio").first()
 
             if aberto:
+                if aberto.ordem_servico_id == os_obj.id:
+                    messages.warning(
+                        request,
+                        f"A OS {os_obj.numero_os} já está em aberto para o colaborador {colaborador.nome}"
+                    )
+                    return redirect("lancamento_horas:apontar_horas")
+                
                 try:
                     ApontamentoHoras.encerrar_aberto(colaborador, referencia_agora=agora)
                 except (ValueError, AttributeError) as erro:

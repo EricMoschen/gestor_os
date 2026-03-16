@@ -205,7 +205,7 @@ class ApontamentoHorasService:
 
         turno_inicio = colaborador.horario_inicio_turno()
         turno_fim = colaborador.horario_fim_turno()
-        
+
         if inicio.date() < agora.date():
             fim_turno = ApontamentoHorasService._calcular_fim_turno_para_inicio(inicio, turno_inicio, turno_fim)
             if not fim_turno or fim_turno <= inicio:
@@ -215,25 +215,6 @@ class ApontamentoHorasService:
             aberto.save(update_fields=["data_fim"])
             return aberto
         
-        tipo_dia = ApontamentoHorasService.classificar_tipo_dia(agora.date())
-        if tipo_dia != "Dia Normal":
-            raise ValueError(
-                "Fora de um dia normal. Encerramento manual da OS anterior necessário."
-            )
-
-        hora_atual = agora.time()
-
-        if turno_inicio <= turno_fim:
-            dentro_turno = turno_inicio <= hora_atual <= turno_fim
-        else:
-            # turno que vira a meia noite
-            dentro_turno = hora_atual >= turno_inicio or hora_atual <= turno_fim
-
-        if not dentro_turno:
-            raise ValueError(
-                "Horário atual fora do turno do colaborador. Encerramento manual necessário."
-            )
-
         # encerra com horário atual
         aberto.data_fim = agora
         aberto.save(update_fields=["data_fim"])
