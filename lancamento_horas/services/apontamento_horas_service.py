@@ -187,8 +187,8 @@ class ApontamentoHorasService:
 
         inicio = ApontamentoHorasService._normalizar_datahora(aberto.data_inicio)
         tipo_dia = ApontamentoHorasService.classificar_tipo_dia(inicio.date())
-        turno_inicio = colaborador.calcular_horario_inicio_turno()
-        turno_fim = colaborador.calcular_horario_fim_turno()
+        turno_inicio = colaborador.horario_inicio_turno()
+        turno_fim = colaborador.horario_fim_turno()
 
         if tipo_dia != "Dia Normal":
             raise ValueError("Apontamento fora do horário normal. Encerramento manual necessário.")

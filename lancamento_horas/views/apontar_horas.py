@@ -79,7 +79,7 @@ def apontar_horas(request):
                 messages.warning(request, "Nenhuma OS em andamento para este colaborador.")
                 return redirect("lancamento_horas:apontar_horas")
 
-            if numero_os and set(aberto.ordem_servico.numero_os) != str(numero_os):
+            if numero_os and aberto.ordem_servico.numero_os != numero_os:
                 messages.error(
                     request,
                     f"A OS em andamento para o colaborador informado é: {aberto.ordem_servico.numero_os}."
