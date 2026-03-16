@@ -175,6 +175,21 @@ class ApontamentoHorasService:
 
         return intervalos_pausa
 
+    def _calcular_fim_turno_para_inicio(inicio, turno_inicio, turno_fim):
+        if not turno_inicio or not turno_fim:
+            return None
+        
+        if turno_inicio <= turno_fim:
+            fim = datetime.combine(inicio.date(), turno_fim)
+        else:
+            #turno cruza maia-noite (ex.: 16:48 -> 02:00)
+            if inicio.time() <= turno_fim:
+                fim - datetime.combine(inicio.date(), turno_fim)
+            else:
+                fim = datetime.combine(inicio.date() + timedelta(days=1), turno_fim)
+
+        return ApontamentoHorasService._ajustar_para_referencia(fim, inicio)
+  
     @staticmethod
     def encerrar_aberto(cls, colaborador):
         aberto = cls.objects.filter(
@@ -187,11 +202,19 @@ class ApontamentoHorasService:
 
         inicio = ApontamentoHorasService._normalizar_datahora(aberto.data_inicio)
         agora = timezone.now()
-
+        
         tipo_dia = ApontamentoHorasService.classificar_tipo_dia(agora.date())
         turno_inicio = colaborador.horario_inicio_turno()
         turno_fim = colaborador.horario_fim_turno()
+        if inicio.date() < agora.date():
+            fim_turno = ApontamentoHorasService._calcular_fim_turno_para_inicio(inicio, turno_inicio, turno_fim)
+            if not fim_turno or fim_turno <= inicio:
+                raise ValueError("Não foi possivel encerra automaticamente no fim do turno. Solicite ao seu Supervisor para efetuar o encerramento manual.")
 
+            aberto.data_fim = fim_turno
+            aberto.save(update_fields=["data_fim"])
+            return aberto
+        
         if tipo_dia != "Dia Normal":
             raise ValueError(
                 "Fora de um dia normal. Encerramento manual da OS anterior necessário."
