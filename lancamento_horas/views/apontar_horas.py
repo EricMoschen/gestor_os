@@ -50,7 +50,10 @@ def apontar_horas(request):
             ).order_by("-data_inicio").first()
 
             if aberto:
-                if aberto.ordem_servico_id == os_obj.id:
+                mesma_os = aberto.ordem_servico_id == os_obj.id
+                os_de_outro_dia = aberto.data_inicio.date() < agora.date()
+
+                if mesma_os and not os_de_outro_dia:
                     messages.warning(
                         request,
                         f"A OS {os_obj.numero_os} já está em aberto para o colaborador {colaborador.nome}"
@@ -66,6 +69,12 @@ def apontar_horas(request):
                     )
                     return redirect("lancamento_horas:apontar_horas")
 
+                if not mesma_os:
+                    messages.warning(
+                        request,
+                        f"A OS {aberto.ordem_servico.numero_os} foi finalizada automaticamente para iniciar a OS {os_obj.numero_os}."
+                    )
+                    
             tipo_dia = ApontamentoHorasService.classificar_tipo_dia(agora.date())
 
             ApontamentoHoras.objects.create(
