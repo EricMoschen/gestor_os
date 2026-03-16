@@ -31,6 +31,6 @@ class ApontamentoHoras(models.Model):
     # MÉTODO PARA ENCERRAR APONTAMENTO ABERTO
     # =====================================================
     @classmethod
-    def encerrar_aberto(cls, colaborador):
+    def encerrar_aberto(cls, colaborador, referencia_agora=None):
         from ..services.apontamento_horas_service import ApontamentoHorasService
-        return ApontamentoHorasService.encerrar_aberto(cls, colaborador)
+        return ApontamentoHorasService.encerrar_aberto(cls, colaborador, referencia_agora=referencia_agora)

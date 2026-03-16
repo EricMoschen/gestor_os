@@ -191,7 +191,7 @@ class ApontamentoHorasService:
         return ApontamentoHorasService._ajustar_para_referencia(fim, inicio)
   
     @staticmethod
-    def encerrar_aberto(cls, colaborador):
+    def encerrar_aberto(cls, colaborador, referencia_agora=None):
         aberto = cls.objects.filter(
             colaborador=colaborador,
             data_fim__isnull=True
@@ -201,11 +201,11 @@ class ApontamentoHorasService:
             raise ValueError("Nenhum apontamento aberto encontrado.")
 
         inicio = ApontamentoHorasService._normalizar_datahora(aberto.data_inicio)
-        agora = timezone.now()
-        
-        tipo_dia = ApontamentoHorasService.classificar_tipo_dia(agora.date())
+        agora = referencia_agora or timezone.now()
+
         turno_inicio = colaborador.horario_inicio_turno()
         turno_fim = colaborador.horario_fim_turno()
+        
         if inicio.date() < agora.date():
             fim_turno = ApontamentoHorasService._calcular_fim_turno_para_inicio(inicio, turno_inicio, turno_fim)
             if not fim_turno or fim_turno <= inicio:
@@ -215,6 +215,7 @@ class ApontamentoHorasService:
             aberto.save(update_fields=["data_fim"])
             return aberto
         
+        tipo_dia = ApontamentoHorasService.classificar_tipo_dia(agora.date())
         if tipo_dia != "Dia Normal":
             raise ValueError(
                 "Fora de um dia normal. Encerramento manual da OS anterior necessário."

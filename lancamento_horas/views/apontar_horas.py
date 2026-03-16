@@ -33,6 +33,8 @@ def apontar_horas(request):
 
             if not os_obj:
                 messages.error(request, "Número da OS não encontrado.")
+                
+                return redirect("lancamento_horas:apontar_horas")
             
             # Bloqueio OS finalizada
             if os_obj.situacao == AberturaOS.Status.FINALIZADA:
@@ -49,7 +51,7 @@ def apontar_horas(request):
 
             if aberto:
                 try:
-                    ApontamentoHoras.encerrar_aberto(colaborador)
+                    ApontamentoHoras.encerrar_aberto(colaborador, referencia_agora=agora)
                 except (ValueError, AttributeError) as erro:
                     messages.error(
                         request,
