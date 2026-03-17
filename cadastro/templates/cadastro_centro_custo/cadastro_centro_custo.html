@@ -11,6 +11,16 @@
 {% include 'components/_btn_voltar.html' %}
 {% endblock %}
 
+{% if messages %}
+<section class="alerts">
+    {% for message in messages %}
+    <div class="alert alert--{{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</section>
+{% endif %}
+
 <div class="page-wrapper">
 
     <!-- FORMULÁRIO -->

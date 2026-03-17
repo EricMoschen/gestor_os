@@ -10,7 +10,6 @@ User:FABRICA / Senha:FAB@123456
 
 ## 🔴 Bugs
 
-- [ ] tratamento de erro ao excluir quando o centro de custo já esta em uso em alguma OS .
 
 
 # Resolvido parcialmente, ainda avaliar
@@ -24,7 +23,7 @@ User:FABRICA / Senha:FAB@123456
 
 -[ ] Atualizar layout do cadastro de centros de custos.
 
-- [ ] incluir para poder excluir registro no ajuste de horas.
+- [ ] incluir funcionalidade para poder excluir registro no ajuste de horas.
 
 ## 🟢  Concluído
 
@@ -65,3 +64,4 @@ User:FABRICA / Senha:FAB@123456
 - [x] no colaborador retirar a função de excluir e add a opção de desligar o colaborador 
 - [X] retorno das Intervenções que já estão em uso 
 - [x] tratamento erro ao excluir um Centro Pai que possui centros Filhos.
+- [x] tratamento de erro ao excluir quando o centro de custo já esta em uso em alguma OS .

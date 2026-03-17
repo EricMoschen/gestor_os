@@ -1,5 +1,6 @@
 from django.db import transaction
 from django.core.exceptions import ValidationError
+from django.db.models.deletion import ProtectedError
 
 from abertura_os.models import AberturaOS
 from cadastro.models import CentroCusto
@@ -84,9 +85,14 @@ def excluir_centro_custo(centro, confirmar_exclusao_filhos=False):
     # O vínculo centro_pai usa PROTECT; portanto a exclusão em lote pode tentar
     # remover o pai antes dos filhos e falhar. Excluímos do nível mais profundo
     # para o mais alto para garantir que centros pais também possam ser removidos.
-    with transaction.atomic():
-        for descendente in reversed(descendentes):
-            descendente.delete()
-        centro.delete()
+    try:
+        with transaction.atomic():
+            for descendente in reversed(descendentes):
+                descendente.delete()
+            centro.delete()
+    except ProtectedError:
+        raise ValidationError(
+            "Não é possível excluir. O centro de custo está em uso em alguma OS."
+        )
 
     return descendentes

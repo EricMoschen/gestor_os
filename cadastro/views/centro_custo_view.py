@@ -49,7 +49,8 @@ def cadastrar_centro_custo(request):
                     else:
                         messages.success(request, "Centro de custo excluído com sucesso!")
                 except ValidationError as exc:
-                    messages.error(request, exc.message)
+                    mensagem = exc.messages[0] if getattr(exc, "messages", None) else str(exc)
+                    messages.error(request, mensagem)
             else:
                 messages.error(request, "Selecione um centro de custos para excluir.")
             return redirect("cadastrar_centro_custo")
@@ -63,7 +64,9 @@ def cadastrar_centro_custo(request):
                     messages.success(request, "Centro de custo cadastrado com suscesso.")
                 return redirect("cadastrar_centro_custo")
             except ValidationError as exc:
-                form.add_error(None, exc.message)
+                fmensagem = exc.messages[0] if getattr(exc, "messages", None) else str(exc)
+                form.add_error(None, mensagem)
+                messages.error(request, mensagem)
 
     centros_raiz = listar_centros_raiz()
     hierarquia = montar_hierarquia(centros_raiz)
