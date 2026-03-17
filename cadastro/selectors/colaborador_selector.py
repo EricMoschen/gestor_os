@@ -1,5 +1,5 @@
 from django.db.models import Count
-from cadastro.models import Colaborador
+from cadastro.models import Colaborador, Funcao_colab
 
 
 
@@ -13,3 +13,10 @@ def listar_colaboradores_com_os():
 
 def listar_colaboradores():
     return Colaborador.objects.order_by('nome')
+
+def listar_funcoes_com_colaboradores():
+    return(
+        Funcao_colab.objects
+        .annotate(colaboradores_coun=Count("colaborador"))
+        .order_by("descricao")
+)

@@ -1,11 +1,40 @@
 from collections import defaultdict
 from decimal import Decimal
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
+from django.utils import timezone
 from django.utils.dateparse import parse_date
 from abertura_os.models import AberturaOS
 from lancamento_horas.models import ApontamentoHoras
+from lancamento_horas.services.apontamento_horas_service import ApontamentoHorasService
 
 from .horario import calcular_horas, formatar_horas, aplicar_filtro_datas
+
+
+def _calcular_segundos_com_desconto_pausas(apontamento, inicio, fim):
+    segundos_totais = int((fim - inicio).total_seconds())
+    if segundos_totais <= 0:
+        return 0
+
+    segundos_pausa = 0
+    data_cursor = inicio.date()
+    data_limite = fim.date()
+
+    while data_cursor <= data_limite:
+        intervalos_pausa = ApontamentoHorasService._obter_intervalos_pausa_no_dia(
+            apontamento.colaborador,
+            data_cursor,
+            inicio,
+        )
+
+        for pausa_inicio, pausa_fim in intervalos_pausa:
+            sobreposicao_inicio = max(inicio, pausa_inicio)
+            sobreposicao_fim = min(fim, pausa_fim)
+            if sobreposicao_fim > sobreposicao_inicio:
+                segundos_pausa += int((sobreposicao_fim - sobreposicao_inicio).total_seconds())
+
+        data_cursor += timedelta(days=1)
+
+    return max(segundos_totais - segundos_pausa, 0)
 
 
 def processar_relatorio(apontamentos):
@@ -159,8 +188,12 @@ def montar_dados_log_os(os_obj, data_inicio=None, data_fim=None):
         fim = ap.data_fim
 
         if inicio and fim:
-            duracao = fim - inicio
-            segundos = int(duracao.total_seconds())
+            if timezone.is_aware(inicio):
+                inicio = timezone.localtime(inicio)
+            if timezone.is_aware(fim):
+                fim = timezone.localtime(fim)
+
+            segundos = _calcular_segundos_com_desconto_pausas(ap, inicio, fim)
             total_segundos += segundos
 
             horas = segundos // 3600

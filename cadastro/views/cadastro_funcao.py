@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from cadastro.models import Funcao_colab
+from cadastro.selectors.colaborador_selector import listar_funcoes_com_colaboradores
 
 
 def cadastro_funcao(request):
@@ -27,7 +29,7 @@ def cadastro_funcao(request):
         except Exception as e:
             mensagem_erro = f"Erro ao salvar função: {str(e)}"
 
-    funcoes = Funcao_colab.objects.all().order_by("descricao")
+    funcoes = listar_funcoes_com_colaboradores()
 
     return render(request, "cadastro_funcao/cadastro_funcao.html", {
         "funcoes": funcoes,
@@ -56,7 +58,11 @@ def excluir_funcao(request, id):
     funcao = get_object_or_404(Funcao_colab, id=id)
 
     if request.method == "POST":
+        if funcao.colaborador_set.exists():
+            messages.error(request, "Não é possível excluir uma função que já está em uso.")
+            return redirect("cadastro_funcao")
         funcao.delete()
+        messages.success(request, "Função removida com sucesso.")
         return redirect("cadastro_funcao")
 
     return redirect("cadastro_funcao")
