@@ -82,7 +82,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    btnExcluir.addEventListener('click', () => {
+    btnExcluir.addEventListener('click', (event) => {
+        event.preventDefault();
+        
         if (!inputId.value) {
             return;
         }
@@ -107,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (inputConfirmarExclusaoFilhos) {
             inputConfirmarExclusaoFilhos.value = '0';
         }
-        
+
         inputAcao.value = 'excluir';
         form.submit();
     });

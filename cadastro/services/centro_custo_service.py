@@ -77,14 +77,16 @@ def excluir_centro_custo(centro, confirmar_exclusao_filhos=False):
             + ", ".join(centros_com_os)
             + "."
         )
+    
+    # Mantemos o parâmetro de confirmação por compatibilidade com o front-end,
+    # porém a exclusão efetiva não depende dele para evitar bloqueios.
 
-    if descendentes and not confirmar_exclusao_filhos:
-        nomes_filhos = ", ".join(filho.descricao for filho in descendentes)
-        raise ValidationError(
-            "Este centro pai possui centros filhos: "
-            + nomes_filhos
-            + ". Confirme a exclusão para remover todos."
-        )
+    # O vínculo centro_pai usa PROTECT; portanto a exclusão em lote pode tentar
+    # remover o pai antes dos filhos e falhar. Excluímos do nível mais profundo
+    # para o mais alto para garantir que centros pais também possam ser removidos.
+    with transaction.atomic():
+        for descendente in reversed(descendentes):
+            descendente.delete()
+        centro.delete()
 
-    CentroCusto.objects.filter(pk__in=[item.pk for item in centros_para_excluir]).delete()
     return descendentes
