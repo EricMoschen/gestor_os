@@ -11,7 +11,6 @@ User:FABRICA / Senha:FAB@123456
 ## 🔴 Bugs
 
 - [ ] tratamento de erro ao excluir quando o centro de custo já esta em uso em alguma OS .
-- [ ] tratamento erro ao excluir um Centro Pai que possui centros Filhos.
 
 
 # Resolvido parcialmente, ainda avaliar
@@ -65,3 +64,4 @@ User:FABRICA / Senha:FAB@123456
 - [x] retorno das funções que já estão em uso igual ao dos clientes 
 - [x] no colaborador retirar a função de excluir e add a opção de desligar o colaborador 
 - [X] retorno das Intervenções que já estão em uso 
+- [x] tratamento erro ao excluir um Centro Pai que possui centros Filhos.
