@@ -13,7 +13,7 @@ User:FABRICA / Senha:FAB@123456
 - [ ] tratamento de erro ao excluir quando o centro de custo já esta em uso em alguma OS .
 - [ ] tratamento erro ao excluir um Centro Pai que possui centros Filhos.
 - [ ] retorno das Intervenções que já estão em uso 
-- [ ] no colaborador retirar a função de excluir e add a opção de desligar o colaborador 
+
 
 
 # Resolvido parcialmente, ainda avaliar
@@ -65,3 +65,4 @@ User:FABRICA / Senha:FAB@123456
 - [x] corrigir erro ao puchar campos no finalizar OS.
 - [X] verificar o orçamento de horas PDF, as horas estão puchando 3 horas a frente do horario normal, adicionar desconto do almoço 
 - [x] retorno das funções que já estão em uso igual ao dos clientes 
+- [x] no colaborador retirar a função de excluir e add a opção de desligar o colaborador 

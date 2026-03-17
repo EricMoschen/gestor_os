@@ -49,6 +49,12 @@
                     {{ form.turno }}
                 </div>
 
+                {% if editando %}
+                <div class="form-group">
+                    <label>Status</label>
+                    {{ form.ativo }}
+                </div>
+                {% endif %}
             </div>
 
             <!-- Horários -->
@@ -118,7 +124,7 @@
                         <th>Valor</th>
                         <th>Turno</th>
                         <th>Status</th>
-                        <th colspan="2" style="text-align: center;">Ação</th>
+                        <th style="text-align: center;">Ação</th>
                     </tr>
                 </thead>
 
@@ -137,20 +143,12 @@
                             <span class="status-badge inativo">Desligado</span>
                             {% endif %}
                         </td>
-
                         <td>
                             <a href="{% url 'editar_colaborador' colaborador.pk %}" class="edit-btn">
                                 ✏️
                             </a>
                         </td>
 
-                        <td>
-                            <button class="status-btn" data-url="{% url 'alternar_status_colaborador' colaborador.id %}"
-                                data-nome="{{ colaborador.nome }}"
-                                data-acao="{% if colaborador.ativo %}desligar{% else %}reativar{% endif %}">
-                                {% if colaborador.ativo %}⏻{% else %}↺{% endif %}
-                            </button>
-                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -161,30 +159,6 @@
             {% endif %}
 
         </div>
-
-    </div>
-
-</div>
-
-
-<!-- ================= MODAL ================= -->
-<div id="statusModal" class="modal">
-
-    <div class="modal-content">
-
-        <p>
-            Excluir <strong id="modalNome"></strong>?
-        </p>
-
-        <form id="statusForm" method="POST">
-            {% csrf_token %}
-
-            <div class="modal-buttons">
-                <button class="btn-danger" id="confirmarAcaoBtn"></button>
-                <button type="button" class="btn-secondary close">Cancelar</button>
-            </div>
-
-        </form>
 
     </div>
 

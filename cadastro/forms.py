@@ -41,10 +41,15 @@ class IntervencaoForm(forms.ModelForm):
 # =====================================================
 
 class ColaboradorForm(forms.ModelForm):
+    def __init__(self, *args, include_status=False, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if not include_status:
+            self.fields.pop('ativo', None)
     class Meta:
         model = Colaborador
         fields = [
-            'matricula', 'nome', 'funcao', 'turno',
+            'matricula', 'nome', 'funcao', 'turno', 'ativo',
             'hr_entrada_am', 'hr_saida_am',
             'hr_entrada_pm', 'hr_saida_pm'
         ]
@@ -63,6 +68,9 @@ class ColaboradorForm(forms.ModelForm):
             'turno': forms.Select(attrs={
                 'class': 'form-select',
                 'id': 'id_turno'
+            }),
+            'ativo': forms.Select(choices=[(True, 'Ativo'), (False, 'Desligado')], attrs={
+                'class': 'form-select'
             }),
             'hr_entrada_am': forms.TimeInput(attrs={
                 'class': 'form-control',

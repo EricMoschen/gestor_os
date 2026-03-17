@@ -12,7 +12,7 @@ from cadastro.services.colaborador_service import salvar_colaborador
 def cadastro_colaborador(request):
 
     if request.method == 'POST':
-        form = ColaboradorForm(request.POST)
+        form = ColaboradorForm(request.POST, include_status=False)
 
         if form.is_valid():
             salvar_colaborador(form)
@@ -22,7 +22,7 @@ def cadastro_colaborador(request):
         messages.error(request, 'Erro ao cadastrar colaborador.')
 
     else:
-        form = ColaboradorForm()
+        form = ColaboradorForm(include_status=False)
 
     colaboradores = listar_colaboradores_com_os()
 

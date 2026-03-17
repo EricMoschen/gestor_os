@@ -14,7 +14,7 @@ def editar_colaborador(request, pk):
     colaborador = get_object_or_404(Colaborador, pk=pk)
 
     if request.method == 'POST':
-        form = ColaboradorForm(request.POST, instance=colaborador)
+        form = ColaboradorForm(request.POST, instance=colaborador, include_status=True)
 
         if form.is_valid():
             salvar_colaborador(form)
@@ -27,7 +27,7 @@ def editar_colaborador(request, pk):
         messages.error(request, 'Erro ao atualizar colaborador.')
 
     else:
-        form = ColaboradorForm(instance=colaborador)
+        form = ColaboradorForm(instance=colaborador, include_status=True)
 
     colaboradores = listar_colaboradores()
 
