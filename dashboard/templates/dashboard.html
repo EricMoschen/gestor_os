@@ -11,23 +11,15 @@
 <div class="dashboard-container">
 
     <div class="dashboard-topbar">
-        <span>Olá, {{user.username}}</span>
+        <span class="user-chip">Olá, {{user.username}}</span>
         <a href="{% url 'logout' %}" class="logout-link">Sair</a>
     </div>
-    <!--
-    {% if messages %}
-    <div class="dashboard-messages">
-        {% for message in messages %}
-        <div class="dashboard-message">{{ message }}</div>
-        {% endfor %}
-    </div>
-    {% endif %}
-    -->
-
-    <h1 class="dashboard-title">Painel de Cadastros</h1>
+    <header>
+        <h1 class="dashboard-title">Painel de Gestão</h1>
+    </header>
 
     {% for categoria in categorias %}
-    <div class="categoria-bloco">
+    <section class="categoria-bloco">
 
         <h2 class="categoria-titulo">{{ categoria.nome }}</h2>
 
@@ -39,7 +31,7 @@
             {% endfor %}
         </div>
 
-    </div>
+    </section>
     {% endfor %}
 
 </div>

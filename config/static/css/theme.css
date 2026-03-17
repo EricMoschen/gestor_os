@@ -1,0 +1,101 @@
+:root {
+    --bg-main: #0f172a;
+    --bg-main-gradient: radial-gradient(circle at top, #1e293b, #020617);
+    --bg-card: rgba(30, 41, 59, .76);
+    --bg-elevated: rgba(15, 23, 42, .75);
+    --border: rgba(148, 163, 184, .2);
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --success: #22c55e;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --radius: 16px;
+    --shadow-card: 0 12px 34px rgba(0, 0, 0, .35);
+    --transition: .25s ease;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--bg-main-gradient);
+    color: var(--text-main);
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+input,
+select,
+textarea,
+button {
+    font: inherit;
+}
+
+.app-back-button {
+    position: fixed;
+    top: 1.25rem;
+    right: 1.25rem;
+    z-index: 80;
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .58rem .95rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-main);
+    text-decoration: none;
+    backdrop-filter: blur(8px);
+    transition: var(--transition);
+    opacity: .88;
+}
+
+.app-back-button:hover {
+    opacity: 1;
+    transform: translateY(-1px);
+    border-color: rgba(99, 102, 241, .4);
+    box-shadow: var(--shadow-card);
+}
+
+.card {
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    box-shadow: var(--shadow-card);
+    border-radius: var(--radius);
+    backdrop-filter: blur(12px);
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-danger {
+    border-radius: 10px;
+    padding: .65rem 1rem;
+    border: 1px solid transparent;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+    color: #fff;
+}
+
+.btn-secondary {
+    background: rgba(148, 163, 184, .17);
+    color: var(--text-main);
+    border-color: var(--border);
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: #fff;
+}
+
+.btn-primary:hover,
+.btn-secondary:hover,
+.btn-danger:hover {
+    transform: translateY(-1px);
+}
