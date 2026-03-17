@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.core.exceptions import ValidationError
 
 from abertura_os.models import AberturaOS
 from cadastro.models import CentroCusto
@@ -44,3 +45,46 @@ def atualizar_centro_custo(centro, **dados):
         centro.delete()
     
     return(centro_atualizado)
+
+
+def _listar_descendentes(centro):
+    descendentes = []
+    fila = list(centro.subcentros.all())
+
+    while fila:
+        atual = fila.pop(0)
+        descendentes.append(atual)
+        fila.extend(atual.subcentros.all())
+
+    return descendentes
+
+
+def excluir_centro_custo(centro, confirmar_exclusao_filhos=False):
+    descendentes = _listar_descendentes(centro)
+    centros_para_excluir = [centro, *descendentes]
+
+    os_vinculadas = (
+        AberturaOS.objects
+        .filter(centro_custo__in=centros_para_excluir)
+        .values_list("centro_custo__descricao", flat=True)
+        .distinct()
+    )
+
+    centros_com_os = list(os_vinculadas)
+    if centros_com_os:
+        raise ValidationError(
+            "Não é possível excluir. O centro de custo está em uso em alguma OS: "
+            + ", ".join(centros_com_os)
+            + "."
+        )
+
+    if descendentes and not confirmar_exclusao_filhos:
+        nomes_filhos = ", ".join(filho.descricao for filho in descendentes)
+        raise ValidationError(
+            "Este centro pai possui centros filhos: "
+            + nomes_filhos
+            + ". Confirme a exclusão para remover todos."
+        )
+
+    CentroCusto.objects.filter(pk__in=[item.pk for item in centros_para_excluir]).delete()
+    return descendentes

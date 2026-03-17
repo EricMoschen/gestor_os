@@ -6,6 +6,11 @@ from cadastro.forms import CentroCustoForm
 from cadastro.models import CentroCusto
 from cadastro.selectors.centro_custo_selectors import listar_centros_raiz
 from cadastro.services.centro_custo_service import atualizar_centro_custo, criar_centro_custo
+from cadastro.services.centro_custo_service import (
+    atualizar_centro_custo,
+    criar_centro_custo,
+    excluir_centro_custo as excluir_centro_custo_service,
+)
 from cadastro.utils.centro_custo_tree import montar_hierarquia
 
 
@@ -30,8 +35,21 @@ def cadastrar_centro_custo(request):
 
         if acao == "excluir":
             if centro:
-                centro.delete()
-                messages.success(request, "Centro de custo excluído com sucesso!")
+                confirmar_exclusao_filhos = request.POST.get("confirmar_exclusao_filhos") == "1"
+                try:
+                    filhos_excluidos = excluir_centro_custo_service(
+                        centro,
+                        confirmar_exclusao_filhos=confirmar_exclusao_filhos,
+                    )
+                    if filhos_excluidos:
+                        messages.success(
+                            request,
+                            "Centro pai e seus centros filhos foram excluídos com sucesso.",
+                        )
+                    else:
+                        messages.success(request, "Centro de custo excluído com sucesso!")
+                except ValidationError as exc:
+                    messages.error(request, exc.message)
             else:
                 messages.error(request, "Selecione um centro de custos para excluir.")
             return redirect("cadastrar_centro_custo")

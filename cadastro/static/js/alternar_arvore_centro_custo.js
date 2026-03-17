@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('centroCustoForm');
     const inputId = document.getElementById('centro_id');
     const inputAcao = document.getElementById('acao');
+    const inputConfirmarExclusaoFilhos = document.getElementById('confirmar_exclusao_filhos');
     const inputCod = document.getElementById('id_cod_centro');
     const inputDescricao = document.getElementById('id_descricao');
     const inputPai = document.getElementById('id_centro_pai');
@@ -43,6 +44,9 @@ document.addEventListener('DOMContentLoaded', () => {
         form.reset();
         inputId.value = '';
         inputAcao.value = 'salvar';
+        if (inputConfirmarExclusaoFilhos) {
+            inputConfirmarExclusaoFilhos.value = '0';
+        }
         submitBtn.textContent = 'Cadastrar';
         formTitle.textContent = 'Cadastrar Centro de Custo';
         formTip.textContent = 'Clique em um centro na árvore para editar.';
@@ -72,6 +76,9 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', () => {
         if (inputAcao.value !== 'excluir') {
             inputAcao.value = 'salvar';
+            if (inputConfirmarExclusaoFilhos) {
+                inputConfirmarExclusaoFilhos.value = '0';
+            }
         }
     });
 
@@ -84,6 +91,23 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!confirmou) {
             return;
         }
+
+        const possuiFilhos = editable.some((item) => item.dataset.pai === inputId.value);
+        if (possuiFilhos) {
+            const confirmarTodos = window.confirm(
+                'Este é um centro pai e possui centros filhos. Deseja excluir também todos os filhos?'
+            );
+            if (!confirmarTodos) {
+                return;
+            }
+
+            if (inputConfirmarExclusaoFilhos) {
+                inputConfirmarExclusaoFilhos.value = '1';
+            }
+        } else if (inputConfirmarExclusaoFilhos) {
+            inputConfirmarExclusaoFilhos.value = '0';
+        }
+        
         inputAcao.value = 'excluir';
         form.submit();
     });

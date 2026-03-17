@@ -5,6 +5,7 @@ from django.contrib import messages
 from cadastro.models import Intervencao
 from cadastro.selectors.intervencao_selectors import listar_intervencoes_com_os
 from cadastro.services.intervencao_service import salvar_intervencao, remover_intervencao
+from django.core.exceptions import ValidationError
 
 
 # =============================================================================
@@ -49,12 +50,11 @@ def cadastro_intervencao(request):
 
 def excluir_intervencao(request, pk):
     intervencao = get_object_or_404(Intervencao, pk=pk)
-
-    try:
-        intervencao.delete()
-        messages.success(request, "Intervenção removida.")
-
-    except Exception as e:
-        messages.error(request, str(e))
+    if request.method == "POST":
+            try:
+                remover_intervencao(intervencao)
+                messages.success(request, "Intervenção removida.")
+            except ValidationError as e:
+                messages.error(request, e.messages[0])
 
     return redirect("cadastro_intervencao")
