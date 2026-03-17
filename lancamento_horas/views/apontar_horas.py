@@ -15,7 +15,7 @@ def apontar_horas(request):
         colaborador =  Colaborador.objects.only(
             "id", "turno", "hr_entrada_am", "hr_saida_am",
             "hr_entrada_pm","hr_saida_pm", "matricula", "nome"
-        ).filter(matricula__iexact=matricula).first()
+        ).filter(matricula__iexact=matricula, ativo=True).first()
 
         if not colaborador:
             messages.error(request, "Mátricula não encontrada.")

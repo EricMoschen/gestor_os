@@ -17,6 +17,6 @@ def listar_colaboradores():
 def listar_funcoes_com_colaboradores():
     return(
         Funcao_colab.objects
-        .annotate(colaboradores_coun=Count("colaborador"))
+        .annotate(colaboradores_count=Count("Função_Colaborador"))
         .order_by("descricao")
 )

@@ -1,15 +1,21 @@
 
 // Modal
-const modal = document.getElementById("deleteModal");
+const modal = document.getElementById("statusModel");
 const modalNome = document.getElementById("modalNome");
-const deleteForm = document.getElementById("deleteForm");
+const modalAcao = document.getElementById("modalAcao");
+const statusForm = document.getElementById("statusForm");
+const confirmarAcaoBtn = document.getElementById("confirmarAcaoBtn");
 
-document.querySelectorAll(".delete-btn").forEach(btn => {
+document.querySelectorAll(".status-btn").forEach(btn => {
     btn.addEventListener("click", e => {
         e.preventDefault();
 
+        const acao = btn.dataset.acao;
+
         modalNome.textContent = btn.dataset.nome;
-        deleteForm.action = btn.dataset.url;
+        modalAcao.textContent = acao;
+        statusForm.action = btn.dataset.url;
+        confirmarAcaoBtn.textContent = acao.charAt(0).toUpperCase() + acao.slice(1);
 
         modal.style.display = "block";
     });

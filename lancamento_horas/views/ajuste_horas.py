@@ -102,7 +102,7 @@ def ajuste_horas(request):
                 messages.error(request, "Preencha todos os campos para cadastrar uma nova ocorrência.")
                 return redirect("lancamento_horas:ajuste_horas")
             
-            colaborador = Colaborador.objects.filter(matricula__iexact=matricula).first()
+            colaborador = Colaborador.objects.filter(matricula__iexact=matricula, ativo=True).first()
             if not colaborador:
                 messages.error(request, "Matrícula não encontrada.")
                 return redirect("lancamento_horas:ajuste_horas")

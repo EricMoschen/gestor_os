@@ -58,7 +58,7 @@ def excluir_funcao(request, id):
     funcao = get_object_or_404(Funcao_colab, id=id)
 
     if request.method == "POST":
-        if funcao.colaborador_set.exists():
+        if funcao.Função_Colaborador.exists():
             messages.error(request, "Não é possível excluir uma função que já está em uso.")
             return redirect("cadastro_funcao")
         funcao.delete()

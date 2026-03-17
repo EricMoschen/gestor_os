@@ -7,7 +7,7 @@ from abertura_os.models import AberturaOS
 
 
 def api_colaborador(request, matricula):
-    colaborador = get_object_or_404(Colaborador, matricula__iexact=matricula)
+    colaborador = get_object_or_404(Colaborador, matricula__iexact=matricula, ativo=True)
     return JsonResponse({
         "id": colaborador.id,
         "matricula": colaborador.matricula,

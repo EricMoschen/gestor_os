@@ -6,8 +6,8 @@ def salvar_colaborador(form):
         return form.save()
 
 
-def deletar_colaborador(colaborador):
+def alternar_status_colaborador(colaborador):
     with transaction.atomic():
-        nome = colaborador.nome
-        colaborador.delete()
-        return nome
+        colaborador.ativo = not colaborador.ativo
+        colaborador.save(update_fields=["ativo"])
+        return colaborador

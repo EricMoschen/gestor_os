@@ -26,7 +26,7 @@ urlpatterns = [
     # Rota para Cadastro de Colaboradores    
     path('colaborador/',role_required([ROLE_ADM, ROLE_SUPERVISOR, ROLE_ALMOXARIFE]) (views.cadastro_colaborador), name='cadastro_colaborador'),
     path('editar/<int:pk>/',role_required([ROLE_ADM, ROLE_SUPERVISOR, ROLE_ALMOXARIFE]) (views.editar_colaborador), name='editar_colaborador'),
-    path('excluir/<int:pk>/',role_required([ROLE_ADM, ROLE_SUPERVISOR, ROLE_ALMOXARIFE]) (views.excluir_colaborador), name='excluir_colaborador'),
+    path('colaborador/status/<int:pk>/',role_required([ROLE_ADM, ROLE_SUPERVISOR, ROLE_ALMOXARIFE]) (views.alternar_status_colaborador_view), name='alternar_status_colaborador'),
 
     # Rota para Cadastro de Funções
     path("funcoes/",role_required([ROLE_ADM, ROLE_SUPERVISOR, ROLE_ALMOXARIFE]) (views.cadastro_funcao), name="cadastro_funcao"),

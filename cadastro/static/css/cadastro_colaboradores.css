@@ -139,16 +139,35 @@ body {
 /* BOTÕES TABELA */
 
 .edit-btn,
-.delete-btn {
+.status-btn {
     font-size: 1.2rem;
     background: none;
     border: none;
     cursor: pointer;
 }
 
-.delete-btn {
+.status-btn {
     color: #f87171;
 }
+
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.status-badge.ativo {
+    background: rgba(34, 197, 94, 0.2);
+    color: #86efac;
+}
+
+.status-badge.inativo {
+    background: rgba(248, 113, 113, 0.2);
+    color: #fca5a5;
+}
+
 
 /* MODAL */
 

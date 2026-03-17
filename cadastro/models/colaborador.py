@@ -18,6 +18,12 @@ class Colaborador(models.Model):
         verbose_name='Nome'
     )
 
+    ativo = models.BooleanField(
+        default=True,
+        verbose_name='Ativo'
+    )
+
+
     funcao = models.ForeignKey(
         Funcao_colab,
         on_delete=models.PROTECT,

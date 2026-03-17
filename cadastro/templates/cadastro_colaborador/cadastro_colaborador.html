@@ -117,6 +117,7 @@
                         <th>Função</th>
                         <th>Valor</th>
                         <th>Turno</th>
+                        <th>Status</th>
                         <th colspan="2" style="text-align: center;">Ação</th>
                     </tr>
                 </thead>
@@ -129,6 +130,13 @@
                         <td>{{ colaborador.funcao }}</td>
                         <td>R$ {{ colaborador.funcao.valor_hora|floatformat:2 }}</td>
                         <td>{{ colaborador.turno }}</td>
+                        <td>
+                            {% if colaborador.ativo %}
+                            <span class="status-badge ativo">Ativo</span>
+                            {% else %}
+                            <span class="status-badge inativo">Desligado</span>
+                            {% endif %}
+                        </td>
 
                         <td>
                             <a href="{% url 'editar_colaborador' colaborador.pk %}" class="edit-btn">
@@ -137,17 +145,11 @@
                         </td>
 
                         <td>
-                            {% if colaborador.os_count|default:0 > 0 %}
-                            <span class="em-uso">
-                                Em uso ({{ colaborador.os_count }})
-                            </span>
-                            {% else %}
-                            <button class="delete-btn" data-url="{% url 'excluir_colaborador' colaborador.id %}"
-                                data-nome="{{ colaborador.nome }}">
-
-                                🗑️
+                            <button class="status-btn" data-url="{% url 'alternar_status_colaborador' colaborador.id %}"
+                                data-nome="{{ colaborador.nome }}"
+                                data-acao="{% if colaborador.ativo %}desligar{% else %}reativar{% endif %}">
+                                {% if colaborador.ativo %}⏻{% else %}↺{% endif %}
                             </button>
-                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
@@ -166,7 +168,7 @@
 
 
 <!-- ================= MODAL ================= -->
-<div id="deleteModal" class="modal">
+<div id="statusModal" class="modal">
 
     <div class="modal-content">
 
@@ -174,11 +176,11 @@
             Excluir <strong id="modalNome"></strong>?
         </p>
 
-        <form id="deleteForm" method="POST">
+        <form id="statusForm" method="POST">
             {% csrf_token %}
 
             <div class="modal-buttons">
-                <button class="btn-danger">Excluir</button>
+                <button class="btn-danger" id="confirmarAcaoBtn"></button>
                 <button type="button" class="btn-secondary close">Cancelar</button>
             </div>
 
