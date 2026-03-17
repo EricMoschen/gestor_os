@@ -141,6 +141,12 @@ def ajuste_horas(request):
 
         apontamento = get_object_or_404(ApontamentoHoras, pk=request.POST.get("apontamento_id"))
 
+        if acao == "excluir":
+            numero_os = apontamento.ordem_servico.numero_os
+            apontamento.delete()
+            messages.success(request, f"Apontamento da OS {numero_os} excluído com sucesso.")
+            return redirect("lancamento_horas:ajuste_horas")
+
         inicio_raw = request.POST.get("data_inicio", "").strip()
         fim_raw = request.POST.get("data_fim", "").strip()
 

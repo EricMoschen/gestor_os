@@ -21,9 +21,9 @@ User:FABRICA / Senha:FAB@123456
 - [ ] Atualizar layout do finalizar OS.
 - [ ] Atualizar impressão da OS para estilo a um Word editavel, para enviar por meio digital e poder efetuar as anotações.
 
--[ ] Atualizar layout do cadastro de centros de custos.
+- [ ] Atualizar layout do cadastro de centros de custos.
 
-- [ ] incluir funcionalidade para poder excluir registro no ajuste de horas.
+
 
 ## 🟢  Concluído
 
@@ -39,6 +39,7 @@ User:FABRICA / Senha:FAB@123456
 - [x] criar tela de login 
 - [x] criar os grupos de acessos ao sistema( permissões, PCM, ADM, SUPERVISOR, ALMOXARIFE)
 - [x] no Ajuste de horas adicionar um seletor para selecionar o mes dos ajustes, começando do dia 21 do mes anterior até o dia 20 do mes atual, EX: Mes de Março Retorna o intervalo dos dias de (21/02 até 20/03).
+- [X] incluir funcionalidade para poder excluir registro no ajuste de horas.
 
 
 ## Bugs Corrigidos
