@@ -213,33 +213,6 @@ body {
 }
 
 
-
-/* ---------- ALERTAS ---------- */
-
-.alerts {
-    padding: 0 2rem;
-    margin-top: 1rem;
-}
-
-.alert {
-    border-radius: 10px;
-    padding: 10px 12px;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-
-.alert--error {
-    background: rgba(239, 68, 68, 0.2);
-    border: 1px solid rgba(239, 68, 68, 0.55);
-    color: #fecaca;
-}
-
-.alert--success {
-    background: rgba(34, 197, 94, 0.2);
-    border: 1px solid rgba(34, 197, 94, 0.55);
-    color: #bbf7d0;
-}
-
 /* ---------- RESPONSIVIDADE ---------- */
 
 @media (max-width: 1024px) {

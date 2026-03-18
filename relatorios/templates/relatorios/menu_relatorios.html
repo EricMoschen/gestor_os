@@ -6,13 +6,12 @@
 {% endblock head %}
 
 {% block body %}
-  <!-- Botão voltar para Dashboard -->
-  {% block button_voltar %}
-    {% include 'components/_btn_voltar.html' %}
-  {% endblock %}
-  
-<div class="container">
+<!-- Botão voltar para Dashboard -->
+{% block button_voltar %}
+{% include 'components/_btn_voltar.html' %}
+{% endblock %}
 
+<div class="container">
     <h2 class="titulo">Relatório de Horas por Ordem de Serviço</h2>
 
     <!-- ================= FILTROS ================= -->
@@ -40,12 +39,14 @@
 
         {% if os_detalhes %}
         <!-- Botão Orçamento -->
-        <a href="{% url 'orcamento_pdf' %}?os={{ os_detalhes.numero_os }}{% if data_inicio %}&data_inicio={{ data_inicio|date:'Y-m-d' }}{% endif %}{% if data_fim %}&data_fim={{ data_fim|date:'Y-m-d' }}{% endif %}" target="_blank"class="btn-secondary">
-             Orçamento Horas (PDF)
+        <a href="{% url 'orcamento_pdf' %}?os={{ os_detalhes.numero_os }}{% if data_inicio %}&data_inicio={{ data_inicio|date:'Y-m-d' }}{% endif %}{% if data_fim %}&data_fim={{ data_fim|date:'Y-m-d' }}{% endif %}"
+            target="_blank" class="btn-secondary">
+            Orçamento Horas (PDF)
         </a>
 
         <!-- Botão Log de Horas -->
-        <a href="{% url 'log_os_pdf' os_detalhes.numero_os %}?{% if data_inicio %}data_inicio={{ data_inicio|date:'Y-m-d' }}&{% endif %}{% if data_fim %}data_fim={{ data_fim|date:'Y-m-d' }}{% endif %}" target="_blank"class="btn-secondary">
+        <a href="{% url 'log_os_pdf' os_detalhes.numero_os %}?{% if data_inicio %}data_inicio={{ data_inicio|date:'Y-m-d' }}&{% endif %}{% if data_fim %}data_fim={{ data_fim|date:'Y-m-d' }}{% endif %}"
+            target="_blank" class="btn-secondary">
             Orçamento Cliente (PDF)
         </a>
         {% endif %}

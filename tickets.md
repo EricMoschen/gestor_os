@@ -16,6 +16,7 @@ User:FABRICA / Senha:FAB@123456
 - [/] mensages estao aparecendo no dashboard e não estão sumindo
 
 ## 🟡 Melhorias
+
 - [ ] incluir uma lista suspensa onde mostra todas as OS e horarios trabalhados em cadas OS ao clicar no colaborador na aba de relatórios.
 
 - [ ] Atualizar layout do finalizar OS.

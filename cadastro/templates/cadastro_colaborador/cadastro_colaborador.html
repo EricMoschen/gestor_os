@@ -11,159 +11,161 @@
 {% include 'components/_btn_voltar.html' %}
 {% endblock %}
 
-<div class="page-wrapper">
 
-    <!-- ================= FORM ================= -->
-    <div class="card form-card">
+<main class="layout">
 
-        <h2>
-            {% if editando %}
-            Editar Colaborador
-            {% else %}
-            Novo Colaborador
-            {% endif %}
-        </h2>
+    <div class="page-wrapper">
+        <!-- ================= FORM ================= -->
+        <div class="card form-card">
 
-        <form method="POST">
-            {% csrf_token %}
-
-            <div class="form-grid">
-
-                <div class="form-group">
-                    <label>Matrícula</label>
-                    {{ form.matricula }}
-                </div>
-
-                <div class="form-group">
-                    <label>Nome</label>
-                    {{ form.nome }}
-                </div>
-
-                <div class="form-group">
-                    <label>Função</label>
-                    {{ form.funcao }}
-                </div>
-
-                <div class="form-group">
-                    <label>Turno</label>
-                    {{ form.turno }}
-                </div>
-
+            <h2>
                 {% if editando %}
-                <div class="form-group">
-                    <label>Status</label>
-                    {{ form.ativo }}
-                </div>
+                Editar Colaborador
+                {% else %}
+                Novo Colaborador
                 {% endif %}
-            </div>
+            </h2>
 
-            <!-- Horários -->
-            <div id="horarios-personalizados" class="schedule-card">
+            <form method="POST">
+                {% csrf_token %}
 
-                <h4>Horários Personalizados</h4>
-
-                <div class="schedule-grid">
+                <div class="form-grid">
 
                     <div class="form-group">
-                        <label>Entrada Manhã</label>
-                        {{ form.hr_entrada_am }}
+                        <label>Matrícula</label>
+                        {{ form.matricula }}
                     </div>
 
                     <div class="form-group">
-                        <label>Saída Manhã</label>
-                        {{ form.hr_saida_am }}
+                        <label>Nome</label>
+                        {{ form.nome }}
                     </div>
 
                     <div class="form-group">
-                        <label>Entrada Tarde</label>
-                        {{ form.hr_entrada_pm }}
+                        <label>Função</label>
+                        {{ form.funcao }}
                     </div>
 
                     <div class="form-group">
-                        <label>Saída Tarde</label>
-                        {{ form.hr_saida_pm }}
+                        <label>Turno</label>
+                        {{ form.turno }}
+                    </div>
+
+                    {% if editando %}
+                    <div class="form-group">
+                        <label>Status</label>
+                        {{ form.ativo }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Horários -->
+                <div id="horarios-personalizados" class="schedule-card">
+
+                    <h4>Horários Personalizados</h4>
+
+                    <div class="schedule-grid">
+
+                        <div class="form-group">
+                            <label>Entrada Manhã</label>
+                            {{ form.hr_entrada_am }}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Saída Manhã</label>
+                            {{ form.hr_saida_am }}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Entrada Tarde</label>
+                            {{ form.hr_entrada_pm }}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Saída Tarde</label>
+                            {{ form.hr_saida_pm }}
+                        </div>
+
                     </div>
 
                 </div>
 
-            </div>
+                <div class="button-group">
 
-            <div class="button-group">
+                    <button type="submit" class="btn-primary">
+                        {% if editando %}Salvar{% else %}Cadastrar{% endif %}
+                    </button>
 
-                <button type="submit" class="btn-primary">
-                    {% if editando %}Salvar{% else %}Cadastrar{% endif %}
-                </button>
+                    {% if editando %}
+                    <a href="{% url 'cadastro_colaborador' %}" class="btn-secondary">
+                        Cancelar
+                    </a>
+                    {% endif %}
 
-                {% if editando %}
-                <a href="{% url 'cadastro_colaborador' %}" class="btn-secondary">
-                    Cancelar
-                </a>
+                </div>
+
+            </form>
+        </div>
+
+
+        <!-- ================= LISTA ================= -->
+        <div class="card table-card">
+
+            <h2>Colaboradores</h2>
+
+            <div class="table-scroll">
+
+                {% if colaboradores %}
+                <table class="data-table">
+
+                    <thead>
+                        <tr>
+                            <th>Matrícula</th>
+                            <th>Nome</th>
+                            <th>Função</th>
+                            <th>Valor</th>
+                            <th>Turno</th>
+                            <th>Status</th>
+                            <th style="text-align: center;">Ação</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for colaborador in colaboradores %}
+                        <tr>
+                            <td>{{ colaborador.matricula }}</td>
+                            <td>{{ colaborador.nome }}</td>
+                            <td>{{ colaborador.funcao }}</td>
+                            <td>R$ {{ colaborador.funcao.valor_hora|floatformat:2 }}</td>
+                            <td>{{ colaborador.turno }}</td>
+                            <td>
+                                {% if colaborador.ativo %}
+                                <span class="status-badge ativo">Ativo</span>
+                                {% else %}
+                                <span class="status-badge inativo">Desligado</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'editar_colaborador' colaborador.pk %}" class="edit-btn">
+                                    ✏️
+                                </a>
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+                {% else %}
+                <p class="empty-msg">Nenhum colaborador cadastrado</p>
                 {% endif %}
 
             </div>
-
-        </form>
-    </div>
-
-
-    <!-- ================= LISTA ================= -->
-    <div class="card table-card">
-
-        <h2>Colaboradores</h2>
-
-        <div class="table-scroll">
-
-            {% if colaboradores %}
-            <table class="data-table">
-
-                <thead>
-                    <tr>
-                        <th>Matrícula</th>
-                        <th>Nome</th>
-                        <th>Função</th>
-                        <th>Valor</th>
-                        <th>Turno</th>
-                        <th>Status</th>
-                        <th style="text-align: center;">Ação</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for colaborador in colaboradores %}
-                    <tr>
-                        <td>{{ colaborador.matricula }}</td>
-                        <td>{{ colaborador.nome }}</td>
-                        <td>{{ colaborador.funcao }}</td>
-                        <td>R$ {{ colaborador.funcao.valor_hora|floatformat:2 }}</td>
-                        <td>{{ colaborador.turno }}</td>
-                        <td>
-                            {% if colaborador.ativo %}
-                            <span class="status-badge ativo">Ativo</span>
-                            {% else %}
-                            <span class="status-badge inativo">Desligado</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a href="{% url 'editar_colaborador' colaborador.pk %}" class="edit-btn">
-                                ✏️
-                            </a>
-                        </td>
-
-                    </tr>
-                    {% endfor %}
-                </tbody>
-
-            </table>
-            {% else %}
-            <p class="empty-msg">Nenhum colaborador cadastrado</p>
-            {% endif %}
 
         </div>
 
     </div>
-
-</div>
-
+</main>
 <script src="{% static 'js/cadastro_colaborador.js' %}"></script>
 
 {% endblock %}

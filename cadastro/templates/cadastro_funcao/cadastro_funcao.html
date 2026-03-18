@@ -6,111 +6,116 @@
 {% endblock %}
 
 {% block body %}
-<div class="page-wrapper">
-    <!-- Botão voltar para Dashboard -->
-    {% block button_voltar %}
-    {% include 'components/_btn_voltar.html' %}
-    {% endblock %}
+<main class="layout">
 
-    <!-- FORM -->
-    <div class="card form-card">
-        <h2>Cadastro de Função </h2>
+    <div class="page-wrapper">
+        <!-- Botão voltar para Dashboard -->
+        {% block button_voltar %}
+        {% include 'components/_btn_voltar.html' %}
+        {% endblock %}
 
-        <form method="POST" id="funcaoForm">
-            {% csrf_token %}
+        <!-- FORM -->
+        <div class="card form-card">
+            <h2>Cadastro de Função </h2>
 
-            <input type="hidden" name="funcao_id" id="funcao_id" />
-
-            <div class="form-group">
-                <label>Descrição da Função</label>
-                <input type="text" name="descricao" id="id_descricao" required />
-            </div>
-
-            <div class="form-group">
-                <label>Valor da Hora</label>
-                <input type="number" name="valor_hora" id="id_valor_hora" required />
-            </div>
-
-            <div class="button-group">
-                <button type="submit" class="btn-primary" id="submitBtn">Salvar</button>
-
-                <button type="button" class="btn-secondary" id="btnCancelar">Cancelar</button>
-            </div>
-        </form>
-
-        {% if mensagem_erro %}
-        <div class="erro-msg">{{ mensagem_erro|safe }}</div>
-        {% endif %}
-    </div>
-
-    <!-- LISTA -->
-    <div class="card table-card">
-        <h2>Funções Cadastradas</h2>
-
-        <div class="table-scroll">
-            {% if funcoes %}
-            <table class="client-table">
-                <thead>
-                    <tr>
-                        <th>Função</th>
-                        <th>Valor Hora</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for funcao in funcoes %}
-                    <tr>
-                        <td>{{ funcao.descricao }}</td>
-                        <td>R$ {{ funcao.valor_hora }}</td>
-
-                        <td>
-                            <a href="#" class="edit-btn" data-id="{{ funcao.id }}"
-                                data-descricao="{{ funcao.descricao }}" data-valor="{{ funcao.valor_hora }}"
-                                step="0.01">
-                                ✏️
-                            </a>
-                        </td>
-
-                        <td>
-                            {% if funcao.colaboradores_count > 0 %}
-                            <span class="em-uso">Em uso ({{ funcao.colaboradores_count }})</span>
-                            {% else %}
-                            <a href="#" class="delete-btn" data-id="{{ funcao.id }}"
-                                data-descricao="{{ funcao.descricao }}" data-url="{% url 'excluir_funcao' funcao.id %}">
-                                🗑️
-                            </a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            {% else %}
-            <p class="empty-msg">Nenhuma função cadastrada</p>
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- MODAL -->
-    <div id="deleteModal" class="modal">
-        <div class="modal-content">
-            <p>
-                Deseja excluir <strong id="modalNome"></strong>?
-            </p>
-
-            <form id="deleteForm" method="POST">
+            <form method="POST" id="funcaoForm">
                 {% csrf_token %}
 
-                <div class="modal-buttons">
-                    <button type="submit" class="btn-danger ">Excluir</button>
+                <input type="hidden" name="funcao_id" id="funcao_id" />
 
-                    <button type="button" class="btn-secondary close">Cancelar</button>
+                <div class="form-group">
+                    <label>Descrição da Função</label>
+                    <input type="text" name="descricao" id="id_descricao" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Valor da Hora</label>
+                    <input type="number" name="valor_hora" id="id_valor_hora" required />
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn-primary" id="submitBtn">Salvar</button>
+
+                    <button type="button" class="btn-secondary" id="btnCancelar">Cancelar</button>
                 </div>
             </form>
+
+            {% if mensagem_erro %}
+            <div class="erro-msg">{{ mensagem_erro|safe }}</div>
+            {% endif %}
+        </div>
+
+        <!-- LISTA -->
+        <div class="card table-card">
+            <h2>Funções Cadastradas</h2>
+
+            <div class="table-scroll">
+                {% if funcoes %}
+                <table class="client-table">
+                    <thead>
+                        <tr>
+                            <th>Função</th>
+                            <th>Valor Hora</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for funcao in funcoes %}
+                        <tr>
+                            <td>{{ funcao.descricao }}</td>
+                            <td>R$ {{ funcao.valor_hora }}</td>
+
+                            <td>
+                                <a href="#" class="edit-btn" data-id="{{ funcao.id }}"
+                                    data-descricao="{{ funcao.descricao }}" data-valor="{{ funcao.valor_hora }}"
+                                    step="0.01">
+                                    ✏️
+                                </a>
+                            </td>
+
+                            <td>
+                                {% if funcao.colaboradores_count > 0 %}
+                                <span class="em-uso">Em uso ({{ funcao.colaboradores_count }})</span>
+                                {% else %}
+                                <a href="#" class="delete-btn" data-id="{{ funcao.id }}"
+                                    data-descricao="{{ funcao.descricao }}"
+                                    data-url="{% url 'excluir_funcao' funcao.id %}">
+                                    🗑️
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="empty-msg">Nenhuma função cadastrada</p>
+                {% endif %}
+            </div>
         </div>
     </div>
+</main>
 
-    <script src="{% static 'js/cadastro_funcao.js' %}"></script>
-    {% endblock %}j
+<!-- MODAL -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <p>
+            Deseja excluir <strong id="modalNome"></strong>?
+        </p>
+
+        <form id="deleteForm" method="POST">
+            {% csrf_token %}
+
+            <div class="modal-buttons">
+                <button type="submit" class="btn-danger ">Excluir</button>
+
+                <button type="button" class="btn-secondary close">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="{% static 'js/cadastro_funcao.js' %}"></script>
+{% endblock %}

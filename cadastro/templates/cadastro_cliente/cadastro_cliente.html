@@ -2,14 +2,16 @@
 {% load static %}
 
 {% block head %}
-  <link rel="stylesheet" href="{% static 'css/cadastro_cliente.css' %}" />
+<link rel="stylesheet" href="{% static 'css/cadastro_cliente.css' %}" />
 {% endblock %}
 
 {% block body %}
+<main class="layout">
+
   <div class="page-wrapper">
     <!-- Botão voltar para Dashboard -->
     {% block button_voltar %}
-      {% include 'components/_btn_voltar.html' %}
+    {% include 'components/_btn_voltar.html' %}
     {% endblock %}
 
     <!-- FORM -->
@@ -39,7 +41,7 @@
       </form>
 
       {% if mensagem_erro %}
-        <div class="erro-msg">{{ mensagem_erro|safe }}</div>
+      <div class="erro-msg">{{ mensagem_erro|safe }}</div>
       {% endif %}
     </div>
 
@@ -49,62 +51,63 @@
 
       <div class="table-scroll">
         {% if clientes %}
-          <table class="client-table">
-            <thead>
-              <tr>
-                <th>Código</th>
-                <th>Nome</th>
-                <th></th>
-                <th></th>
-              </tr>
-            </thead>
+        <table class="client-table">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Nome</th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
 
-            <tbody>
-              {% for cliente in clientes %}
-                <tr>
-                  <td>{{ cliente.codigo }}</td>
-                  <td>{{ cliente.nome }}</td>
+          <tbody>
+            {% for cliente in clientes %}
+            <tr>
+              <td>{{ cliente.codigo }}</td>
+              <td>{{ cliente.nome }}</td>
 
-                  <td>
-                    <a href="#" class="edit-btn" data-id="{{ cliente.id }}" data-codigo="{{ cliente.codigo }}" data-nome="{{ cliente.nome }}">✏️</a>
-                  </td>
+              <td>
+                <a href="#" class="edit-btn" data-id="{{ cliente.id }}" data-codigo="{{ cliente.codigo }}"
+                  data-nome="{{ cliente.nome }}">✏️</a>
+              </td>
 
-                  <td>
-                    {% if cliente.os_count > 0 %}
-                      <span class="em-uso">Em uso ({{ cliente.os_count }})</span>
-                    {% else %}
-                      <a href="#" class="delete-btn" data-id="{{ cliente.id }}" data-nome="{{ cliente.nome }}">🗑️</a>
-                    {% endif %}
-                  </td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+              <td>
+                {% if cliente.os_count > 0 %}
+                <span class="em-uso">Em uso ({{ cliente.os_count }})</span>
+                {% else %}
+                <a href="#" class="delete-btn" data-id="{{ cliente.id }}" data-nome="{{ cliente.nome }}">🗑️</a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
         {% else %}
-          <p class="empty-msg">Nenhum cliente cadastrado</p>
+        <p class="empty-msg">Nenhum cliente cadastrado</p>
         {% endif %}
       </div>
     </div>
   </div>
+</main>
+<!-- MODAL -->
+<div id="deleteModal" class="modal">
+  <div class="modal-content">
+    <p>
+      Deseja excluir <strong id="modalNome"></strong>?
+    </p>
 
-  <!-- MODAL -->
-  <div id="deleteModal" class="modal">
-    <div class="modal-content">
-      <p>
-        Deseja excluir <strong id="modalNome"></strong>?
-      </p>
+    <form id="deleteForm" method="POST">
+      {% csrf_token %}
 
-      <form id="deleteForm" method="POST">
-        {% csrf_token %}
+      <div class="modal-buttons">
+        <button type="submit" class="btn-danger ">Excluir</button>
 
-        <div class="modal-buttons">
-          <button type="submit" class="btn-danger ">Excluir</button>
-
-          <button type="button" class="btn-secondary close">Cancelar</button>
-        </div>
-      </form>
-    </div>
+        <button type="button" class="btn-secondary close">Cancelar</button>
+      </div>
+    </form>
   </div>
+</div>
 
-  <script src="{% static 'js/cadastro_clientes.js' %}"></script>
+<script src="{% static 'js/cadastro_clientes.js' %}"></script>
 {% endblock %}

@@ -1,12 +1,14 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ordem de Serviço - {{ proximo_numero }}</title>
     <link rel="stylesheet" href="{% static 'css/imprimir_os.css' %}">
 </head>
+
 <body>
     <div class="os-container">
         <header class="os-header">
@@ -25,17 +27,22 @@
             <div><strong>Equipamento:</strong> <span class="destaque">{{ os.centro_custo.descricao }}</span></div>
             <div><strong>Cliente:</strong> <span class="destaque">{{ os.cliente }}</span></div>
             <div><strong>Setor:</strong> <span class="destaque">{{ os.setor }}</span></div>
-            <div><strong>Data Solicitação:</strong> <span class="destaque">{{ os.data_abertura|date:"d/m/Y" }}</span></div>
+            <div><strong>Data Solicitação:</strong> <span class="destaque">{{ os.data_abertura|date:"d/m/Y" }}</span>
+            </div>
             <div><strong>Hora:</strong> <span class="destaque">{{ os.data_abertura|date:"H:i" }}</span></div>
             <div class="situacao_equipamento">
                 <strong>Situação do Equipamento:</strong>
                 <select name="situacao" id="situacao" class="select-situacao destaque">
-                    <option value="INICIAL" {% if os.situacao == "INICIAL" %}selected{% endif %}>------------------------------</option>
-                    <option value="MAQUINA PARADA" {% if os.situacao == "MAQUINA PARADA" %}selected{% endif %}>Máquina Parada</option>
-                    <option value="OPERANDO COM DEFEITO" {% if os.situacao == "OPERANDO COM DEFEITO" %}selected{% endif %}>Operando Com Defeito </option>
-                    <option value="OPERANDO PROGRAMADA" {% if os.situacao == "OPERANDO PROGRAMADA" %}selected{% endif %}>Operando Programada</option>
-                    <option value="MAQUINA PARADA MELHORIA" {% if os.situacao == "MAQUINA PARADA MELHORIA" %}selected{% endif %}>Máquina Parada Melhoria</option>
-                    <option value="OPERANDO MELHORIA" {% if os.situacao == "OPERANDO MELHORIA" %}selected{% endif %}>Operando Melhoria</option>
+                    <option value="INICIAL" {% if os.situacao == "INICIAL" %}selected{% endif %}>
+                        ------------------------------</option>
+                    <option value="MAQUINA PARADA" {% if os.situacao == "MAQUINA PARADA" %}selected{% endif %}>Máquina
+                        Parada</option>
+                    <option value="OPERANDO COM DEFEITO" {% if os.situacao == "OPERANDO COM DEFEITO" %}selected{% endif%}>Operando Com Defeito </option>
+                    <option value="OPERANDO PROGRAMADA" {% if os.situacao == "OPERANDO PROGRAMADA" %}selected{% endif %}>
+                        Operando Programada</option>
+                    <option value="MAQUINA PARADA MELHORIA" {% if os.situacao == "MAQUINA PARADA MELHORIA" %}selected{%endif %}>Máquina Parada Melhoria</option>
+                    <option value="OPERANDO MELHORIA" {% if os.situacao == "OPERANDO MELHORIA" %}selected{% endif %}>
+                        Operando Melhoria</option>
                     <option value="OUTROS" {% if os.situacao == "OUTROS" %}selected{% endif %}>Outros</option>
                 </select>
             </div>
@@ -54,16 +61,14 @@
 
         <section class="os-descricao manual-area">
             <h3>Descrição Técnica da Avaria</h3>
-            <div class="linha"></div>
-            <div class="linha"></div>
-            <div class="linha"></div>
+            <div class="editable-block" contenteditable="true" role="textbox" aria-label="Descrição Técnica da Avaria">
+            </div>
         </section>
 
         <section class="os-descricao manual-area">
             <h3>Descrição da Intervenção</h3>
-            <div class="linha"></div>
-            <div class="linha"></div>
-            <div class="linha"></div>
+            <div class="editable-block" contenteditable="true" role="textbox" aria-label="Descrição da Intervenção">
+            </div>
         </section>
 
         <section class="os-pecas manual-area">
@@ -78,42 +83,100 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td></td><td></td><td></td><td></td></tr>
-                    <tr><td></td><td></td><td></td><td></td></tr>
-                    <tr><td></td><td></td><td></td><td></td></tr>
-                    <tr><td></td><td></td><td></td><td></td></tr>
+                    <tr>
+                        <td>
+                            <div class="editable-cell" contenteditable="true" aria-label="Quantidade peça 1"></div>
+                        </td>
+                        <td>
+                            <div class="editable-cell" contenteditable="true" aria-label="Descrição peça 1"></div>
+                        </td>
+                        <td>
+                            <div class="editable-cell" contenteditable="true" aria-label="Quantidade peça 2"></div>
+                        </td>
+                        <td>
+                            <div class="editable-cell" contenteditable="true" aria-label="Descrição peça 2"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="editable-cell" contenteditable="true" aria-label="Quantidade peça 3"></div>
+                        </td>
+                        <td>
+                            <div class="editable-cell" contenteditable="true" aria-label="Descrição peça 3"></div>
+                        </td>
+                        <td>
+                            <div class="editable-cell" contenteditable="true" aria-label="Quantidade peça 4"></div>
+                        </td>
+                        <td>
+                            <div class="editable-cell" contenteditable="true" aria-label="Descrição peça 4"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="editable-cell" contenteditable="true" aria-label="Quantidade peça 5"></div>
+                        </td>
+                        <td>
+                            <div class="editable-cell" contenteditable="true" aria-label="Descrição peça 5"></div>
+                        </td>
+                        <td>
+                            <div class="editable-cell" contenteditable="true" aria-label="Quantidade peça 6"></div>
+                        </td>
+                        <td>
+                            <div class="editable-cell" contenteditable="true" aria-label="Descrição peça 6"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="editable-cell" contenteditable="true" aria-label="Quantidade peça 7"></div>
+                        </td>
+                        <td>
+                            <div class="editable-cell" contenteditable="true" aria-label="Descrição peça 7"></div>
+                        </td>
+                        <td>
+                            <div class="editable-cell" contenteditable="true" aria-label="Quantidade peça 8"></div>
+                        </td>
+                        <td>
+                            <div class="editable-cell" contenteditable="true" aria-label="Descrição peça 8"></div>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </section>
 
-        <section class="os-detalhes manual-area">
-            <div><strong>Cód. Sintoma:</strong> ____________________________</div>
-            <div><strong>Cód. Causa:</strong> ____________________________</div>
-            <div><strong>Cód. Intervenção:</strong> ____________________________</div>
+        <section class="os-detalhes manual-area field-grid field-grid--three">
+            <div class="editable-field"><strong>Cód. Sintoma:</strong><span contenteditable="true"
+                    class="editable-inline" aria-label="Código do sintoma"></span></div>
+            <div class="editable-field"><strong>Cód. Causa:</strong><span contenteditable="true" class="editable-inline"
+                    aria-label="Código da causa"></span></div>
+            <div class="editable-field"><strong>Cód. Intervenção:</strong><span contenteditable="true"
+                    class="editable-inline" aria-label="Código da intervenção"></span></div>
         </section>
 
-        <section class="os-tempo manual-area">
-            <div><strong>Data Início:</strong> ____/____/______</div>
-            <div><strong>Hora Início:</strong> ________</div>
-            <div><strong>Data Fim:</strong> ____/____/______</div>
-            <div><strong>Hora Fim:</strong> ________</div>
-        </section>
+        <section class="os-tempo manual-area field-grid field-grid--two">
+            <div class="editable-field"><strong>Data Início:</strong><span contenteditable="true"
+                    class="editable-inline editable-inline--date" aria-label="Data de início"></span></div>
+            <div class="editable-field"><strong>Hora Início:</strong><span contenteditable="true"
+                    class="editable-inline editable-inline--time" aria-label="Hora de início"></span></div>
+            <div class="editable-field"><strong>Data Fim:</strong><span contenteditable="true"
+                    class="editable-inline editable-inline--date" aria-label="Data de fim"></span></div>
+            <div class="editable-field"><strong>Hora Fim:</strong><span contenteditable="true"
+                    class="editable-inline editable-inline--time" aria-label="Hora de fim"></span></div>
+            <div class="editable-field"><strong>Responsável:</strong><span contenteditable="true"
+                    class="editable-inline editable-inline--name" aria-label="Responsável"></span></div>
+            <div class="editable-field"><strong>Visto Solicitante:</strong><span contenteditable="true"
+                    class="editable-inline editable-inline--name" aria-label="Visto do solicitante"></span></div>
 
-        <section class="os-responsavel manual-area">
-            <div><strong>Responsável:</strong> ____________________________</div>
-            <div><strong>Visto Solicitante:</strong> ____________________________</div>
-        </section>
+            <section class="os-observacoes manual-area">
+                <h3>Observações</h3>
+                <div class="editable-block editable-block--observacoes" contenteditable="true" role="textbox"
+                    aria-label="Observações">
+                </div>
+            </section>
 
-        <section class="os-observacoes manual-area">
-            <h3>Observações</h3>
-            <div class="linha"></div>
-            <div class="linha"></div>
-            <div class="linha"></div>
-        </section>
-
-        <footer>
-            <button class="btn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
-        </footer>
+            <footer>
+                <button class="btn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
+            </footer>
     </div>
 </body>
+
 </html>
