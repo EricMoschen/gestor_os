@@ -7,7 +7,9 @@
 }
 
 @media print {
-    html, body {
+
+    html,
+    body {
         width: 210mm;
         height: 297mm;
         margin: 0;
@@ -44,7 +46,7 @@
         padding: 6px;
     }
 
-    .os-pecas table th, 
+    .os-pecas table th,
     .os-pecas table td {
         padding: 3px 6px;
         font-size: 12px;
@@ -109,10 +111,11 @@ body {
     padding-bottom: 5px;
     border-bottom: 1px solid #ccc;
 }
+
 .destaque {
-    font-weight: 700;       
-    font-size: 1.2em;        
-    color: #1a1a1a;          
+    font-weight: 700;
+    font-size: 1.2em;
+    color: #1a1a1a;
 }
 
 .situacao_equipamento {
@@ -156,10 +159,11 @@ select {
     line-height: 1.3;
 }
 
-.descricao{
+.descricao {
     font-weight: bolder;
     color: #1a1a1a;
 }
+
 /* ===========================
    TABELA DE PEÇAS
    =========================== */
@@ -176,15 +180,17 @@ select {
     text-align: left;
     font-size: 12px;
 }
-.os-pecas td{
+
+.os-pecas td {
     height: 10px;
 }
+
 .os-pecas th {
     background-color: #eaeaea;
     font-weight: bold;
 }
 
-.os-pecas .quantidade{
+.os-pecas .quantidade {
     width: 60px;
 }
 
@@ -227,6 +233,15 @@ footer {
     margin-top: 10px;
 }
 
+.acoes-impressao {
+    display: flex;
+    gap: 8px;
+}
+
+.acoes-impressao form {
+    margin: 0;
+}
+
 .btn-print {
     background-color: #2d6cdf;
     color: #fff;
@@ -243,3 +258,46 @@ footer {
 }
 
 
+
+/* ===========================
+   novo
+   =========================== */
+
+
+textarea {
+    width: 100%;
+    resize: none;
+    overflow: hidden;
+    background: transparent;
+    border-radius: 5px;
+}
+
+
+input {
+    width: 100%;
+    border: 1px solid #bbb;
+    border-radius: 3px;
+    background: transparent;
+}
+
+
+.linha_bottom {
+    border: none;
+    border-bottom: 1px solid #000;
+}
+
+.tamanho_cod {
+    max-width: 150px;
+}
+
+.tamanho_data {
+    max-width: 100px;
+}
+
+.tamanho_time {
+    max-width: 70px;
+}
+
+.tamanho_ass {
+    max-width: 150px;
+}

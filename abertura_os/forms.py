@@ -60,6 +60,7 @@ class AberturaOSForm(forms.ModelForm):
     # -------------------------------------------------
     # Validação global
     # -------------------------------------------------
+
     def clean(self):
         cleaned_data = super().clean()
 
