@@ -10,6 +10,13 @@ from lancamento_horas.services.apontamento_horas_service import ApontamentoHoras
 from .horario import calcular_horas, formatar_horas, aplicar_filtro_datas
 
 
+def formatar_moeda_br(valor):
+    valor = Decimal(valor).quantize(Decimal("0.01"))
+    valor_formatado = f"{valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    return f"R$ {valor_formatado}"
+
+
+
 def _calcular_segundos_com_desconto_pausas(apontamento, inicio, fim):
     segundos_totais = int((fim - inicio).total_seconds())
     if segundos_totais <= 0:
@@ -103,7 +110,7 @@ def processar_relatorio(apontamentos):
             "matricula": c["matricula"],
             "nome": c["nome"],
 
-            "valor_hora_fmt": f"R$ {c['valor_hora']:.2f}",
+            "valor_hora_fmt": formatar_moeda_br(c["valor_hora"]),
 
             "horas_normais_fmt": formatar_horas(c["normais"]),
             "horas_50_fmt": formatar_horas(c["extra50"]),
@@ -111,10 +118,10 @@ def processar_relatorio(apontamentos):
             "total_fmt": formatar_horas(total_horas),
 
             # 🔥 valores calculados
-            "valor_normais_fmt": f"R$ {valor_normais:.2f}",
-            "valor_50_fmt": f"R$ {valor_50:.2f}",
-            "valor_100_fmt": f"R$ {valor_100:.2f}",
-            "total_valor_fmt": f"R$ {total_valor:.2f}",
+            "valor_normais_fmt": formatar_moeda_br(valor_normais),
+            "valor_50_fmt": formatar_moeda_br(valor_50),
+            "valor_100_fmt": formatar_moeda_br(valor_100),
+            "total_valor_fmt": formatar_moeda_br(total_valor),
         })
 
     totais_formatados = {
@@ -122,7 +129,7 @@ def processar_relatorio(apontamentos):
         "extra50": formatar_horas(totais["extra50"]),
         "extra100": formatar_horas(totais["extra100"]),
         "geral_horas": formatar_horas(totais["geral_horas"]),
-        "geral_valor": f"R$ {totais['geral_valor']:.2f}",
+        "geral_valor": formatar_moeda_br(totais["geral_valor"]),
     }
 
     return relatorio, totais_formatados

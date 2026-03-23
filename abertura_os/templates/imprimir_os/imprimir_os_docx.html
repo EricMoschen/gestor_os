@@ -1,4 +1,4 @@
-{% load static %}
+</html>{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ordem de Serviço - {{ proximo_numero }}</title>
     <link rel="stylesheet" href="{% static 'css/imprimir_os.css' %}">
+
 </head>
 
 <body>
@@ -33,17 +34,19 @@
             <div class="situacao_equipamento">
                 <strong>Situação do Equipamento:</strong>
                 <select name="situacao" id="situacao" class="select-situacao destaque">
-                    <option value="INICIAL" {% if os.situacao == "INICIAL" %}selected{% endif %}>
+                    <option value="INICIAL" {% if os.situacao=="INICIAL" %}selected{% endif %}>
                         ------------------------------</option>
-                    <option value="MAQUINA PARADA" {% if os.situacao == "MAQUINA PARADA" %}selected{% endif %}>Máquina
+                    <option value="MAQUINA PARADA" {% if os.situacao=="MAQUINA PARADA" %}selected{% endif %}>Máquina
                         Parada</option>
-                    <option value="OPERANDO COM DEFEITO" {% if os.situacao == "OPERANDO COM DEFEITO" %}selected{% endif %}>Operando Com Defeito </option>
-                    <option value="OPERANDO PROGRAMADA" {% if os.situacao == "OPERANDO PROGRAMADA" %}selected{% endif %}>
+                    <option value="OPERANDO COM DEFEITO" {% if os.situacao=="OPERANDO COM DEFEITO" %}selected{% endif%}>
+                        Operando Com Defeito </option>
+                    <option value="OPERANDO PROGRAMADA" {% if os.situacao=="OPERANDO PROGRAMADA" %}selected{% endif %}>
                         Operando Programada</option>
-                    <option value="MAQUINA PARADA MELHORIA" {% if os.situacao == "MAQUINA PARADA MELHORIA" %}selected{%endif %}>Máquina Parada Melhoria</option>
-                    <option value="OPERANDO MELHORIA" {% if os.situacao == "OPERANDO MELHORIA" %}selected{% endif %}>
+                    <option value="MAQUINA PARADA MELHORIA" {% if os.situacao=="MAQUINA PARADA MELHORIA"
+                        %}selected{%endif %}>Máquina Parada Melhoria</option>
+                    <option value="OPERANDO MELHORIA" {% if os.situacao=="OPERANDO MELHORIA" %}selected{% endif %}>
                         Operando Melhoria</option>
-                    <option value="OUTROS" {% if os.situacao == "OUTROS" %}selected{% endif %}>Outros</option>
+                    <option value="OUTROS" {% if os.situacao=="OUTROS" %}selected{% endif %}>Outros</option>
                 </select>
             </div>
             <div><strong>Motivo da Intervenção:</strong> <span class="destaque">{{ os.motivo_intervencao }}</span></div>
@@ -61,16 +64,12 @@
 
         <section class="os-descricao manual-area">
             <h3>Descrição Técnica da Avaria</h3>
-            <div class="linha"></div>
-            <div class="linha"></div>
-            <div class="linha"></div>
+            <div><textarea name="descricao_tecnica" oninput="autoResize(this)" rows="3"></textarea></div>
         </section>
 
         <section class="os-descricao manual-area">
             <h3>Descrição da Intervenção</h3>
-            <div class="linha"></div>
-            <div class="linha"></div>
-            <div class="linha"></div>
+            <div><textarea name="descricao_intervencao" oninput="autoResize(this)" rows="3"></textarea></div>
         </section>
 
         <section class="os-pecas manual-area">
@@ -86,59 +85,58 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td><input type="number" class="input_qnt"></td>
+                        <td><input type="text" class="input_txt"></td>
+                        <td><input type="number" class="input_qnt"></td>
+                        <td><input type="text" class="input_txt"></td>
                     </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+
                 </tbody>
             </table>
         </section>
 
         <section class="os-detalhes manual-area">
-            <div><strong>Cód. Sintoma:</strong> ____________________________</div>
-            <div><strong>Cód. Causa:</strong> ____________________________</div>
-            <div><strong>Cód. Intervenção:</strong> ____________________________</div>
+            <div><strong>Cód. Sintoma:</strong> <input name="sintoma" type="number" class="linha_bottom tamanho_cod">
+            </div>
+            <div><strong>Cód. Causa:</strong> <input name="causa" type="number" class="linha_bottom tamanho_cod"></div>
+            <div><strong>Cód. Intervenção:</strong> <input name="intervencao" type="number"
+                    class="linha_bottom tamanho_cod"> </div>
         </section>
 
         <section class="os-tempo manual-area">
-            <div><strong>Data Início:</strong> ____/____/______</div>
-            <div><strong>Hora Início:</strong> ________</div>
-            <div><strong>Data Fim:</strong> ____/____/______</div>
-            <div><strong>Hora Fim:</strong> ________</div>
+            <div><strong>Data Início:</strong> <input name="data_inicio" type="date" class="linha_bottom tamanho_data">
+            </div>
+            <div><strong>Hora Início:</strong> <input name="hr_inicio" type="time" class="linha_bottom tamanho_time">
+            </div>
+            <div><strong>Data Fim:</strong> <input name="data_fim" type="date" class="linha_bottom tamanho_data"></div>
+            <div><strong>Hora Fim:</strong> <input name="hr_fim" type="time" class="linha_bottom tamanho_time"></div>
         </section>
 
         <section class="os-responsavel manual-area">
-            <div><strong>Responsável:</strong> ____________________________</div>
-            <div><strong>Visto Solicitante:</strong> ____________________________</div>
+            <div><strong>Responsável:</strong> <input name="ass_responsavel" type="text"
+                    class="linha_bottom tamanho_ass"></div>
+            <div><strong>Visto Solicitante:</strong> <input name="ass_solicitante" type="text"
+                    class="linha_bottom tamanho_ass"></div>
         </section>
 
         <section class="os-observacoes manual-area">
             <h3>Observações</h3>
-            <div class="linha"></div>
-            <div class="linha"></div>
-            <div class="linha"></div>
+            <div><textarea name="descricao_intervencao" oninput="autoResize(this)" rows="3"></textarea></div>
         </section>
 
+        <footer>
+            <div class="acoes-impressao">
+                <button class="btn-print" type="button" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
+                <form method="post" action="{% url 'exportar_os_docx' os.pk %}">
+                    {% csrf_token %}
+                    <button class="btn-print" type="submit">📝 Salvar DOCX</button>
+                </form>
+            </div>
+        </footer>
     </div>
+
 </body>
+
+<script src="{% static 'js/script_impressao_os.js' %}"></script>
 
 </html>
