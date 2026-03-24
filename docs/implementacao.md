@@ -208,7 +208,7 @@ sudo certbot --nginx -d app.seudominio.com
 
 ---
 
-## 6) Checklist de go-live (SaaS profissional)
+## 6) Checklist de go-live 
 
 - [ ] `DEBUG=False`
 - [ ] `SECRET_KEY` em variável de ambiente
