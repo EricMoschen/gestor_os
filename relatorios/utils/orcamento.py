@@ -1,22 +1,11 @@
-import os
-from django.conf import settings
-
-SEQ_PATH = os.path.join(settings.BASE_DIR, "controle_orcamento.txt")
-
+from relatorios.models import SequenciaOrcamento
 
 def ler_numero_orcamento():
-    """Lê número atual do arquivo sem incrementar"""
-    if not os.path.exists(SEQ_PATH):
-        with open(SEQ_PATH, "w") as f:
-            f.write("1")
-    with open(SEQ_PATH, "r") as f:
-        numero = int(f.read().strip())
-    return numero
-
+    """Lê número sem incrementar."""
+    sequencia = SequenciaOrcamento.objects.filter(chave = "orcamento_global").first()
+    return sequencia.ultimo_numero if sequencia else 0
 
 def gerar_proximo_orcamento():
-    """Lê e incrementa o número do orçamento"""
-    numero = ler_numero_orcamento()
-    with open(SEQ_PATH, "w") as f:
-        f.write(str(numero + 1))
-    return numero
+    """Retorna e persiste o próximo número do orçamento em banco de dados"""
+    return SequenciaOrcamento.proximo_numero()
+

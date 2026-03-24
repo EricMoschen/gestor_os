@@ -4,7 +4,8 @@ BASE_DIR = Path(__file__).resolve().parents[2]
 
 SECRET_KEY = "django-insecure-ew@5e7badi5^wq#)bzyrz!j%ea9rx*+9@2a8z(^7_+fd1@f2b7"
 DEBUG = False
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+# ALLOWED_HOSTS = ["localhost", "127.0.0.1", "gestor-os-90c6.onrender.com"]
+ALLOWED_HOSTS = ["gestor-os-90c6.onrender.com"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -81,6 +82,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://127.0.0.1:8000",
     "https://localhost:8080",
     "http://127.0.0.1:8080",
+    "https://gestor-os-90c6.onrender.com",
 ]
 
 LOGIN_URL = "login"
