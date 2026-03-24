@@ -33,19 +33,17 @@
             <div class="situacao_equipamento">
                 <strong>Situação do Equipamento:</strong>
                 <select name="situacao" id="situacao" class="select-situacao destaque">
-                    <option value="INICIAL" {% if os.situacao=="INICIAL" %}selected{% endif %}>
+                    <option value="INICIAL" {% if os.situacao == "INICIAL" %}selected{% endif %}>
                         ------------------------------</option>
-                    <option value="MAQUINA PARADA" {% if os.situacao=="MAQUINA PARADA" %}selected{% endif %}>Máquina
+                    <option value="MAQUINA PARADA" {% if os.situacao == "MAQUINA PARADA" %}selected{% endif %}>Máquina
                         Parada</option>
-                    <option value="OPERANDO COM DEFEITO" {% if os.situacao=="OPERANDO COM DEFEITO" %}selected{% endif
-                        %}>Operando Com Defeito </option>
-                    <option value="OPERANDO PROGRAMADA" {% if os.situacao=="OPERANDO PROGRAMADA" %}selected{% endif %}>
+                    <option value="OPERANDO COM DEFEITO" {% if os.situacao == "OPERANDO COM DEFEITO" %}selected{% endif%}>Operando Com Defeito </option>
+                    <option value="OPERANDO PROGRAMADA" {% if os.situacao == "OPERANDO PROGRAMADA" %}selected{% endif %}>
                         Operando Programada</option>
-                    <option value="MAQUINA PARADA MELHORIA" {% if os.situacao=="MAQUINA PARADA MELHORIA"
-                        %}selected{%endif %}>Máquina Parada Melhoria</option>
-                    <option value="OPERANDO MELHORIA" {% if os.situacao=="OPERANDO MELHORIA" %}selected{% endif %}>
+                    <option value="MAQUINA PARADA MELHORIA" {% if os.situacao == "MAQUINA PARADA MELHORIA"%}selected{%endif %}>Máquina Parada Melhoria</option>
+                    <option value="OPERANDO MELHORIA" {% if os.situacao == "OPERANDO MELHORIA" %}selected{% endif %}>
                         Operando Melhoria</option>
-                    <option value="OUTROS" {% if os.situacao=="OUTROS" %}selected{% endif %}>Outros</option>
+                    <option value="OUTROS" {% if os.situacao == "OUTROS" %}selected{% endif %}>Outros</option>
                 </select>
             </div>
             <div><strong>Motivo da Intervenção:</strong> <span class="destaque">{{ os.motivo_intervencao }}</span></div>

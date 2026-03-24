@@ -11,8 +11,7 @@ User:FABRICA / Senha:FAB@123456
 ## 🔴 Bugs
 
 
-
-# Resolvido parcialmente, ainda avaliar
+* Resolvido parcialmente, ainda avaliar
 - [/] mensages estao aparecendo no dashboard e não estão sumindo
 
 ## 🟡 Melhorias
@@ -20,9 +19,10 @@ User:FABRICA / Senha:FAB@123456
 - [ ] incluir uma lista suspensa onde mostra todas as OS e horarios trabalhados em cadas OS ao clicar no colaborador na aba de relatórios.
 
 - [ ] Atualizar layout do finalizar OS.
-- [ ] Atualizar impressão da OS para estilo a um Word editavel, para enviar por meio digital e poder efetuar as anotações.
+- [ ] Atualizar impressão da OS para estilo a um Word edit
+avel, para enviar por meio digital e poder efetuar as anotações.
 
-- [ ] Atualizar layout do cadastro de centros de custos.
+
 
 
 
@@ -41,6 +41,10 @@ User:FABRICA / Senha:FAB@123456
 - [x] criar os grupos de acessos ao sistema( permissões, PCM, ADM, SUPERVISOR, ALMOXARIFE)
 - [x] no Ajuste de horas adicionar um seletor para selecionar o mes dos ajustes, começando do dia 21 do mes anterior até o dia 20 do mes atual, EX: Mes de Março Retorna o intervalo dos dias de (21/02 até 20/03).
 - [X] incluir funcionalidade para poder excluir registro no ajuste de horas.
+- [X] Atualizar layout do cadastro de centros de custos.
+
+
+
 
 
 ## Bugs Corrigidos
