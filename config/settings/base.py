@@ -1,4 +1,6 @@
 from pathlib import Path
+import dj_database_url
+import os
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 
@@ -58,6 +60,7 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
