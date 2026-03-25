@@ -9,7 +9,7 @@ def login_view(request):
     ensure_roles_exist()
 
     if request.user.is_authenticated:
-        return redirect("deshboard")
+        return redirect("dashboard")
     
     error_messsage = None
 
