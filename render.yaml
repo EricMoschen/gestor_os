@@ -13,3 +13,7 @@ services:
         sync: false
       - key: DATABASE_URL
         sync: false
+      - key: DJANGO_SUPERUSER_USERNAME
+        value: admin
+      - key: DJANGO_SUPERUSER_PASSWORD
+        value: adminadmin
