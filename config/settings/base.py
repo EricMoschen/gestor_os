@@ -2,7 +2,7 @@ from pathlib import Path
 import dj_database_url
 import os
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parents[2]
 
 SECRET_KEY = os.getenv(
     "DJANGO_SECRET_KEY",
