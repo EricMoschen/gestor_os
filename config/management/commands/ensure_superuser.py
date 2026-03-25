@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 
 
 class Command(BaseCommand):
-    help = "Garante a criação de um superusuário a partir de variáveis de ambiente."
+    help = "Cria ou atualiza o superusuário a partir das variáveis de ambiente."
 
     def handle(self, *args, **options):
         username = os.getenv("DJANGO_SUPERUSER_USERNAME")
@@ -24,27 +24,28 @@ class Command(BaseCommand):
 
         user_model = get_user_model()
 
-        if user_model.objects.filter(username=username).exists():
-            self.stdout.write(
-                self.style.SUCCESS(
-                    f"Superusuário '{username}' já existe. Nenhuma ação necessária."
-                )
-            )
-            return
-
         try:
             validate_password(password)
         except ValidationError as exc:
             self.stdout.write(
                 self.style.WARNING(
-                    "Superusuário não criado: senha inválida (" + "; ".join(exc.messages) + ")."
+                    "Senha de superusuário inválida (" + "; ".join(exc.messages) + ")."
                 )
             )
             return
 
-        user_model.objects.create_superuser(
-            username=username,
-            password=password,
-            email=email,
-        )
-        self.stdout.write(self.style.SUCCESS(f"Superusuário '{username}' criado com sucesso."))
+        user, created = user_model.objects.get_or_create(username=username, defaults={
+            "email": email,
+        })
+
+        # Atualiza senha e email mesmo se já existir
+        user.set_password(password)
+        user.email = email
+        user.is_superuser = True
+        user.is_staff = True
+        user.save()
+
+        if created:
+            self.stdout.write(self.style.SUCCESS(f"Superusuário '{username}' criado com sucesso."))
+        else:
+            self.stdout.write(self.style.SUCCESS(f"Superusuário '{username}' já existia, senha e email atualizados."))
