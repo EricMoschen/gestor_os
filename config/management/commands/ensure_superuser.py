@@ -3,7 +3,6 @@ import os
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.core.management.base import BaseCommand
-from django.core.management.base import CommandError
 from django.core.exceptions import ValidationError
 
 
@@ -36,9 +35,12 @@ class Command(BaseCommand):
         try:
             validate_password(password)
         except ValidationError as exc:
-            raise CommandError(
-                "Senha de superusuário inválida: " + "; ".join(exc.messages)
-            ) from exc
+            self.stdout.write(
+                self.style.WARNING(
+                    "Superusuário não criado: senha inválida (" + "; ".join(exc.messages) + ")."
+                )
+            )
+            return
 
         user_model.objects.create_superuser(
             username=username,
