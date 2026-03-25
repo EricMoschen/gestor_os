@@ -4,10 +4,17 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 
-SECRET_KEY = "django-insecure-ew@5e7badi5^wq#)bzyrz!j%ea9rx*+9@2a8z(^7_+fd1@f2b7"
+SECRET_KEY = os.getenv(
+    "DJANGO_SECRET_KEY",
+    "django-insecure-ew@5e7badi5^wq#)bzyrz!j%ea9rx*+9@2a8z(^7_+fd1@f2b7",
+)
+
+
 DEBUG = False
-# ALLOWED_HOSTS = ["localhost", "127.0.0.1", "gestor-os-90c6.onrender.com"]
-ALLOWED_HOSTS = ["gestor-os-90c6.onrender.com"]
+
+
+allowed_hosts_env = os.getenv("DJANGO_ALLOWED_HOSTS", "gestor-os-90c6.onrender.com")
+ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(",") if host.strip()]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -26,6 +33,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -61,7 +69,6 @@ DATABASES = {
     }
 }
 
-
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -76,6 +83,7 @@ USE_TZ = True
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = "/static/"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8000",
