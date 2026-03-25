@@ -1,6 +1,13 @@
 services:
   - type: web
-    name: meu-django-app
+    name: gestor-os
     env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn meu_projeto.wsgi:application --bind 0.0.0.0:$PORT"
+    buildCommand: "pip install -r requirements.txt && python manage.py migrate"
+    startCommand: "gunicorn config.wsgi:application --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings
+      - key: SECRET_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
