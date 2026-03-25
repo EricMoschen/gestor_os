@@ -20,6 +20,6 @@ services:
       - key: DJANGO_SUPERUSER_USERNAME
         value: admin
       - key: DJANGO_SUPERUSER_PASSWORD
-        value: admin
+        value: ADM@123654
       - key: DJANGO_SUPERUSER_EMAIL
         value: admin@example.com

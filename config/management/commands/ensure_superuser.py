@@ -36,9 +36,12 @@ class Command(BaseCommand):
         try:
             validate_password(password)
         except ValidationError as exc:
-            raise CommandError(
-                "Senha de superusuário inválida: " + "; ".join(exc.messages)
-            ) from exc
+             self.stdout.write(
+                self.style.WARNING(
+                    "Superusuário não criado: senha inválida (" + "; ".join(exc.messages) + ")."
+                )
+            )
+            return
 
         user_model.objects.create_superuser(
             username=username,
