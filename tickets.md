@@ -11,6 +11,8 @@ User:FABRICA / Senha:FAB@123456
 ## 🔴 Bugs
 
 
+- Verificar pq não esta exibindo o numero do cógigo no campo da intervenção 
+
 * Resolvido parcialmente, ainda avaliar
 - [/] mensages estao aparecendo no dashboard e não estão sumindo
 
@@ -71,3 +73,40 @@ avel, para enviar por meio digital e poder efetuar as anotações.
 - [X] retorno das Intervenções que já estão em uso 
 - [x] tratamento erro ao excluir um Centro Pai que possui centros Filhos.
 - [x] tratamento de erro ao excluir quando o centro de custo já esta em uso em alguma OS .
+
+
+
+
+
+
+
+
+
+## Novas funcionalidades
+
+-> Tela de Finalização de OS:
+   -> Incluir campos a baixo salvos em Banco de dados:
+      -> Descrição Técnica da Avaria
+      -> Descrição da Intervenção
+      -> Peças Aplicadas
+            -> Quantidade 
+            -> Descrição
+      -> Descrição do Sintoma
+      -> Causa
+      -> Data com Hora de Inicio 
+      -> Data com Hora de Fim
+      -> Observações 
+
+
+-> Tela de Cadastro de Centros de Custos:
+      -> Modificar o campo Centro de Custos Atual para "Tag"
+      -> Adicionar o campo para o centro de Custo 
+      -> Mudar o nome do card de "Centro de Custo" para "Cadastro de Ativos"
+
+- verificar para colocar imagem na OS puchando do Sharepoint 
+
+
+
+## Concluidos
+
+-[x] definir as tabelas fatos e Dimensão 

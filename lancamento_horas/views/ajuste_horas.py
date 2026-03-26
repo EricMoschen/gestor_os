@@ -200,7 +200,7 @@ def ajuste_horas(request):
     ).order_by("-data_inicio")
     colaboradores_ativos = Colaborador.objects.filter(ativo=True).order_by("nome").only("matricula", "nome")
 
-    context = {
+    context = { 
         "apontamentos": apontamentos,
         "colaboradores_ativos": colaboradores_ativos,
         "competencias": competencia,
