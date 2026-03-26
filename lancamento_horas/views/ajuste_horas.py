@@ -29,9 +29,9 @@ def _ajustar_fim_virada_dia(inicio: datetime, fim: datetime):
         return fim + timedelta(days=1), True
     return fim, False
 
-def _intervalo_competencia(competencia: str | None):
+def _intervalo_competencia(competencia: str | None, data_padrao: date | None = None):
     hoje = timezone.localdate()
-    competencia_valida = competencia or hoje.strftime("%Y-%m")
+    competencia_valida = competencia or (data_padrao.strftime("%Y-%m") if data_padrao else hoje.strftime("%Y-%m"))
 
     try:
         ano, mes = map(int, competencia_valida.split("-"))
@@ -183,6 +183,10 @@ def ajuste_horas(request):
     competencia_selecionada, periodo_inicio, periodo_fim =  _intervalo_competencia(competencia_raw)
 
     apontamentos_base = ApontamentoHoras.objects.select_related("colaborador", "ordem_servico")
+    competencia_raw = request.GET.get("competencia")
+    ultima_data = apontamentos_base.order_by("-data_inicio").values_list("data_inicio", flat=True).first()
+    data_padrao = ultima_data.date() if ultima_data else None
+    competencia_selecionada, periodo_inicio, periodo_fim = _intervalo_competencia(competencia_raw, data_padrao=data_padrao)
     competencia = _gerar_competencias(apontamentos_base)
     apontamentos = apontamentos_base.filter(
         data_inicio__date__gte=periodo_inicio,
