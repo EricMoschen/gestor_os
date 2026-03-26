@@ -224,7 +224,14 @@
 
                     <div class="form__group">
                         <label>Mátricula do Colaborador</label>
-                        <input type="text" id="nova-matricula" name="matricula" class="input" required>
+                        <select id="nova-matricula" name="matricula" class="input" required>
+                            <option value="">Selecione um colaborador</option>
+                            {% for colaborador in colaboradores_ativos %}
+                            <option value="{{ colaborador.matricula }}" data-nome="{{ colaborador.nome }}">
+                                {{ colaborador.matricula }} — {{ colaborador.nome }}
+                            </option>
+                            {% endfor %}
+                        </select>
                     </div>
 
                     <div class="form__group">

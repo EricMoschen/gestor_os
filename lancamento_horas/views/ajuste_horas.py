@@ -188,9 +188,11 @@ def ajuste_horas(request):
         data_inicio__date__gte=periodo_inicio,
         data_inicio__date__lte=periodo_fim,
     ).order_by("-data_inicio")
+     colaboradores_ativos = Colaborador.objects.filter(ativo=True).order_by("nome").only("matricula", "nome")
 
     context = {
         "apontamentos": apontamentos,
+        "colaboradores_ativos": colaboradores_ativos,
         "competencias": competencia,
         "competencia_selecionada": competencia_selecionada,
         "periodo_inicio": periodo_inicio,

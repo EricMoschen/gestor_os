@@ -64,13 +64,21 @@
     }
 
     async function buscaColaborador() {
-        const matricula = matriculaInput?.value.trim().toUpperCase();
+        const matricula = matriculaInput?.value?.trim().toUpperCase();
         const baseUrl = formNovo?.dataset.colaboradorUrlBase;
+        const opcaoSelecionada = matriculaInput?.selectedOptions?.[0];
 
-        if (!matricula || !baseUrl || !nomeInput) {
+        if (!nomeInput || !matricula) {
             if (nomeInput) nomeInput.value = '';
             return;
         }
+
+        if (opcaoSelecionada?.dataset?.nome) {
+            nomeInput.value = opcaoSelecionada.dataset.nome;
+            return;
+        }
+
+        if (!baseUrl) return;
 
         nomeInput.value = 'Buscando...';
 
@@ -124,7 +132,7 @@
     btnAbrirNovo?.addEventListener('click', abrirModalNovo);
     btnCancelarNovo?.addEventListener('click', fecharModalNovo);
 
-    matriculaInput?.addEventListener('blur', buscaColaborador);
+    matriculaInput?.addEventListener('change', buscaColaborador);
     numeroOsInput?.addEventListener('blur', buscarOS);
 
     modalAjuste?.addEventListener('click', (e) => {
