@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, time, timedelta
 
 from django.contrib import messages
 from django.conf import settings
@@ -23,6 +23,11 @@ def _parse_datetime_local(value):
     
     return datahora
 
+def _make_aware_if_needed(datahora: datetime):
+    if settings.USE_TZ and timezone.is_naive(datahora):
+        return timezone.make_aware(datahora)
+    return datahora
+
 def _ajustar_fim_virada_dia(inicio: datetime, fim: datetime):
     """Quando o Fim é menor ou igual ao inicio, considera virada de dia."""
     if fim <= inicio:
@@ -32,7 +37,7 @@ def _ajustar_fim_virada_dia(inicio: datetime, fim: datetime):
 def _intervalo_competencia(competencia: str | None, data_padrao: date | None = None):
     hoje = timezone.localdate()
     competencia_valida = competencia or (data_padrao.strftime("%Y-%m") if data_padrao else hoje.strftime("%Y-%m"))
-
+    
     try:
         ano, mes = map(int, competencia_valida.split("-"))
         data_referencia = date(ano, mes, 1)
@@ -179,8 +184,6 @@ def ajuste_horas(request):
         messages.success(request, f"Apontamento da OS {apontamento.ordem_servico.numero_os} atualizado.")
         return redirect("lancamento_horas:ajuste_horas")
 
-    competencia_raw =  request.GET.get("competencia")
-    competencia_selecionada, periodo_inicio, periodo_fim =  _intervalo_competencia(competencia_raw)
 
     apontamentos_base = ApontamentoHoras.objects.select_related("colaborador", "ordem_servico")
     competencia_raw = request.GET.get("competencia")
@@ -188,9 +191,12 @@ def ajuste_horas(request):
     data_padrao = ultima_data.date() if ultima_data else None
     competencia_selecionada, periodo_inicio, periodo_fim = _intervalo_competencia(competencia_raw, data_padrao=data_padrao)
     competencia = _gerar_competencias(apontamentos_base)
+    inicio_periodo = _make_aware_if_needed(datetime.combine(periodo_inicio, time.min))
+    fim_periodo_exclusivo = _make_aware_if_needed(datetime.combine(periodo_fim + timedelta(days=1), time.min))
+
     apontamentos = apontamentos_base.filter(
-        data_inicio__date__gte=periodo_inicio,
-        data_inicio__date__lte=periodo_fim,
+        data_inicio__gte=inicio_periodo,
+        data_inicio__lt=fim_periodo_exclusivo,
     ).order_by("-data_inicio")
     colaboradores_ativos = Colaborador.objects.filter(ativo=True).order_by("nome").only("matricula", "nome")
 
