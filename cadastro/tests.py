@@ -2,10 +2,17 @@ from django.test import TestCase
 
 from cadastro.forms import CentroCustoForm
 from cadastro.models import CentroCusto
-from cadastro.services.centro_custo_service import atualizar_centro_custo
+from cadastro.services.centro_custo_service import atualizar_centro_custo, criar_centro_custo
 
 
 class CentroCustoServiceTests(TestCase):
+    def test_deve_gerar_cod_centro_quando_nao_informado(self):
+        CentroCusto.objects.create(cod_centro=1, descricao="Existente")
+
+        centro = criar_centro_custo(descricao="Novo")
+
+        self.assertEqual(centro.cod_centro, 2)
+
     def test_deve_atualizar_tag_pai(self):
         raiz = CentroCusto.objects.create(cod_centro=1, descricao="Raiz", cod_tag=100)
         folha = CentroCusto.objects.create(cod_centro=2, descricao="Folha", cod_tag=101)

@@ -8,7 +8,11 @@ from cadastro.validators.centro_custo_validator import validar_hierarquia_circul
 
 
 def criar_centro_custo(**dados):
-    dados.setdefault("tenait_id", "default")
+    if not dados.get("cod_centro"):
+        ultimo_codigo = CentroCusto.objects.order_by("-cod_centro").values_list("cod_centro", flat=True).first()
+        dados["cod_centro"] = (ultimo_codigo or 0) + 1
+
+    dados.setdefault("tenant_id", "default")
     centro = CentroCusto(**dados)
 
     validar_hierarquia_circular(centro)
