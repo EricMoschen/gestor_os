@@ -1,38 +1,34 @@
+from django.test import TestCase
+
+from cadastro.forms import CentroCustoForm
 from cadastro.models import CentroCusto
 from cadastro.services.centro_custo_service import atualizar_centro_custo
 
-class CentroCustoServiceTest(TestCase):
 
-    def test_deve_atualizar_codigo_e_reapontar_subcentros(self):
-        pai = CentroCusto.objects.create(cod_centro=10, descicao="Pai")
-        filho = CentroCusto.objects.create(cod_centro=11, descricao="Filho", centro_pai=pai)
+class CentroCustoServiceTests(TestCase):
+    def test_deve_atualizar_tag_pai(self):
+        raiz = CentroCusto.objects.create(cod_centro=1, descricao="Raiz", cod_tag=100)
+        folha = CentroCusto.objects.create(cod_centro=2, descricao="Folha", cod_tag=101)
 
-        centro_atualizado = atualizar_centro_custo(
-            pai,
-            cod_centro=100,
-            descricao="Pai Atualizado",
-            centro_pai=None,
-        )
-
-        self.assertFalse(CentroCusto.objects.filter(cod_centro=10).exists())
-        self.assertTrue(CentroCusto.objects.filter(cod_centro=100).exists())
-        self.assertEqual(centro_atualizado.descricao, "Pai Atualizado")
-
-        filho.refresh_from_db()
-        self.assertEqual(filho.centro_pai_id, 100)
-
-    def test_deve_permitir_alterar_centro_pai_para_qualquer_nivel(self):
-
-        raiz = CentroCusto.objects.create(cod_centro=1, descricao="Raiz")
-        intermediario = CentroCusto.objects.create(cod_centro=2, descricao="Intermediário", centro_pai=raiz)
-        folha = CentroCusto.objects.create(cod_centro=3, descricao="Folha", centro_pai=intermediario)
-
-        atualizar_centro_custo(
-            folha,
-            cod_centro=3,
-            descricao="Folha",
-            centro_pai=raiz,
-        )
+        atualizar_centro_custo(folha, tag_pai=raiz, descricao="Folha")
 
         folha.refresh_from_db()
-        self.assertEqual(folha.centro_pai_id, raiz.cod_centro)
+        self.assertEqual(folha.tag_pai_id, raiz.pk)
+
+
+class CentroCustoFormTests(TestCase):
+    def test_deve_exigir_codigos_para_tag_filha(self):
+        pai = CentroCusto.objects.create(cod_centro=10, descricao="Pai")
+
+        form = CentroCustoForm(
+            data={
+                "descricao": "Filho",
+                "tag_pai": pai.pk,
+                "cod_tag": "",
+                "cod_do_ativo": "",
+            }
+        )
+
+        self.assertFalse(form.is_valid())
+        self.assertIn("cod_tag", form.errors)
+        self.assertIn("cod_do_ativo", form.errors)

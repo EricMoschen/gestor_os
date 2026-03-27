@@ -98,6 +98,30 @@ avel, para enviar por meio digital e poder efetuar as anotações.
       -> Observações 
 
 
+
+========
+# Prompt:
+
+Na tela de finalizar OS adicione os capos de:
+-> Descrição Técnica da Avaria (Obrigatório)
+-> Descrição da Intervenção (Obrigatório)
+-> Peças Aplicadas
+      -> Quantidade 
+      -> Descrição
+-> Descrição do Sintoma (Obrigatório)
+-> Causa (Obrigatório)
+-> Data com Hora de Inicio (Obrigatório)
+-> Data com Hora de Fim (Obrigatório)
+-> Observações 
+
+todos devem ser salvo em banco para ficar como registro,
+ele deve mudar o status da OS para Finalizado(como já esta fazendo)
+
+Crie a extrutura limpa bem organizada e de facil entendimento e com boas praticas a nivel Senior, uma ectrutura a nivel de SAAS
+
+
+========
+
 -> Tela de Cadastro de Centros de Custos:
       -> [ ] Modificar o campo Centro de Custos Atual para "Tag"
       -> [ ] Adicionar o campo para o centro de Custo 

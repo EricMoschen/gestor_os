@@ -1,31 +1,25 @@
 from cadastro.models import CentroCusto
 
 
-def listar_centros_ativos():
-    return CentroCusto.objects.filter(ativo=True)
+def listar_centros_ativos(tenant_id="default"):
+    return CentroCusto.objects.filter(ativo=True, tenant_id=tenant_id)
 
 
-def listar_subcentros(centro):
-    return centro.subcentros.filter(ativo=True)
+def listar_subcentros(tag):
+    return tag.subtags.filter(ativo=True)
 
 
-def obter_caminho_hierarquico(centro):
-
-    caminho = [centro.descricao]
-    pai = centro.centro_pai
+def obter_caminho_hierarquico(tag):
+    caminho = [tag.descricao]
+    pai = tag.tag_pai
 
     while pai:
         caminho.append(pai.descricao)
-        pai = pai.centro_pai
+        pai = pai.tag_pai
 
     return " -> ".join(reversed(caminho))
 
-
-
-def listar_centros_raiz():
-
+def listar_centros_raiz(tenant_id="default"):
     return (
-        CentroCusto.objects
-        .filter(centro_pai__isnull=True)
-        .prefetch_related("subcentros__subcentros")
+        CentroCusto.objects.filter(tag_pai__isnull=True, tenant_id=tenant_id).prefetch_related("subtags__subtags")
     )

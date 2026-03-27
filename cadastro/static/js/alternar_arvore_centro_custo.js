@@ -20,9 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputId = document.getElementById('centro_id');
     const inputAcao = document.getElementById('acao');
     const inputConfirmarExclusaoFilhos = document.getElementById('confirmar_exclusao_filhos');
-    const inputCod = document.getElementById('id_cod_centro');
+    const inputCodTag = document.getElementById('id_cod_tag');
     const inputDescricao = document.getElementById('id_descricao');
-    const inputPai = document.getElementById('id_centro_pai');
+    const inputTagPai = document.getElementById('id_tag_pai');
+    const inputCodAtivo = document.getElementById('id_cod_do_ativo');
     const submitBtn = document.getElementById('submitBtn');
     const btnExcluir = document.getElementById('btnExcluir');
     const btnCancelarEdicao = document.getElementById('btnCancelarEdicao');
@@ -48,8 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
             inputConfirmarExclusaoFilhos.value = '0';
         }
         submitBtn.textContent = 'Cadastrar';
-        formTitle.textContent = 'Cadastrar Centro de Custo';
-        formTip.textContent = 'Clique em um centro na árvore para editar.';
+        formTitle.textContent = 'Cadastro de Ativos';
+        formTip.textContent = 'Clique em uma Tag na árvore para editar.';
         btnCancelarEdicao.classList.add('hidden');
         btnExcluir.classList.add('hidden');
         limparDestaque();
@@ -58,13 +59,14 @@ document.addEventListener('DOMContentLoaded', () => {
     editable.forEach((span) => {
         span.addEventListener('click', () => {
             inputId.value = span.dataset.id || '';
-            inputCod.value = span.dataset.cod || '';
+            inputCodTag.value = span.dataset.codTag || '';
             inputDescricao.value = span.dataset.descricao || '';
-            inputPai.value = span.dataset.pai || '';
+            inputTagPai.value = span.dataset.pai || '';
+            inputCodAtivo.value = span.dataset.codAtivo || '';
             inputAcao.value = 'salvar';
             submitBtn.textContent = 'Atualizar';
             formTitle.textContent = 'Editar Centro de Custo';
-            formTip.textContent = 'Você está editando um centro selecionado na árvore.';
+            formTip.textContent = 'Você está editando uma Tag selecionado na árvore.';
             btnCancelarEdicao.classList.remove('hidden');
             btnExcluir.classList.remove('hidden');
 
@@ -89,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const confirmou = window.confirm('Deseja realmente excluir este centro de custo?');
+        const confirmou = window.confirm('Deseja realmente excluir este Ativo?');
         if (!confirmou) {
             return;
         }
@@ -97,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const possuiFilhos = editable.some((item) => item.dataset.pai === inputId.value);
         if (possuiFilhos) {
             const confirmarTodos = window.confirm(
-                'Este é um centro pai e possui centros filhos. Deseja excluir também todos os filhos?'
+                'Este é uma tag pai e possui tags filhos. Deseja excluir também todos os filhos?'
             );
             if (!confirmarTodos) {
                 return;

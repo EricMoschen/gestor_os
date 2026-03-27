@@ -1,5 +1,5 @@
-from django.db import transaction
 from django.core.exceptions import ValidationError
+from django.db import transaction
 from django.db.models.deletion import ProtectedError
 
 from abertura_os.models import AberturaOS
@@ -8,7 +8,7 @@ from cadastro.validators.centro_custo_validator import validar_hierarquia_circul
 
 
 def criar_centro_custo(**dados):
-
+    dados.setdefault("tenait_id", "default")
     centro = CentroCusto(**dados)
 
     validar_hierarquia_circular(centro)
@@ -20,42 +20,24 @@ def criar_centro_custo(**dados):
 
 def atualizar_centro_custo(centro, **dados):
 
-    codigo_atual = centro.cod_centro
-    novo_codigo = dados.get("cod_centro", codigo_atual)
-
     for campo, valor in dados.items():
         setattr(centro, campo, valor)
 
     validar_hierarquia_circular(centro)
 
-    if novo_codigo == codigo_atual:
-        centro.save()
-        return centro
+    centro.save()
 
-    with transaction.atomic():
-        centro_atualizado = CentroCusto.objects.create(
-            cod_centro = novo_codigo,
-            descricao = centro.descricao,
-            centro_pai = centro.centro_pai,
-            ativo = centro.ativo,
-        )
-
-        CentroCusto.objects.filter(centro_pai_id=codigo_atual).update(cento_pai=centro_atualizado)
-        AberturaOS.objects.filter(centro_custo_id=codigo_atual).update(centro_custo=centro_atualizado)
-
-        centro.delete()
-    
-    return(centro_atualizado)
+    return centro
 
 
 def _listar_descendentes(centro):
     descendentes = []
-    fila = list(centro.subcentros.all())
+    fila = list(centro.subtags.all())
 
     while fila:
         atual = fila.pop(0)
         descendentes.append(atual)
-        fila.extend(atual.subcentros.all())
+        fila.extend(atual.subtags.all())
 
     return descendentes
 
@@ -65,34 +47,23 @@ def excluir_centro_custo(centro, confirmar_exclusao_filhos=False):
     centros_para_excluir = [centro, *descendentes]
 
     os_vinculadas = (
-        AberturaOS.objects
-        .filter(centro_custo__in=centros_para_excluir)
+       AberturaOS.objects.filter(centro_custo__in=centros_para_excluir)
         .values_list("centro_custo__descricao", flat=True)
         .distinct()
     )
 
     centros_com_os = list(os_vinculadas)
     if centros_com_os:
-        raise ValidationError(
-            "Não é possível excluir. O centro de custo está em uso em alguma OS: "
-            + ", ".join(centros_com_os)
-            + "."
+       raise ValidationError(
+            "Não é possível excluir. O ativo está em uso em alguma OS: " + ", ".join(centros_com_os) + "."
         )
     
-    # Mantemos o parâmetro de confirmação por compatibilidade com o front-end,
-    # porém a exclusão efetiva não depende dele para evitar bloqueios.
-
-    # O vínculo centro_pai usa PROTECT; portanto a exclusão em lote pode tentar
-    # remover o pai antes dos filhos e falhar. Excluímos do nível mais profundo
-    # para o mais alto para garantir que centros pais também possam ser removidos.
     try:
         with transaction.atomic():
             for descendente in reversed(descendentes):
                 descendente.delete()
             centro.delete()
     except ProtectedError:
-        raise ValidationError(
-            "Não é possível excluir. O centro de custo está em uso em alguma OS."
-        )
+        raise ValidationError("Não é possível excluir. O ativo está em uso em alguma OS.")
 
     return descendentes

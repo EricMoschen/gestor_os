@@ -57,23 +57,23 @@
                         {% for pai in pais_centro_custo %}
                         <div class="dropdown__group">
 
-                            <div class="dropdown__item dropdown__item--parent" data-cod="{{ pai.cod_centro }}"
+                            <div class="dropdown__item dropdown__item--parent" data-cod="{{ pai.pk }}"
                                 data-label="{{ pai.descricao }}">
 
 
                                 <button type="button" class="dropdown__toggle" aria-label="Expandir {{ pai.descricao}}"
-                                    data-target="children-{{pai.cod_centro}}">
+                                    data-target="children-{{pai.pk}}">
                                     <span class="arrow">▶</span>
                                 </button>
                                 {{ pai.descricao }}
 
                             </div>
 
-                            <div class="dropdown__children hidden" id="children-{{ pai.cod_centro }}">
+                            <div class="dropdown__children hidden" id="children-{{ pai.pk }}">
 
-                                {% for filho in pai.subcentros.all %}
+                                {% for filho in pai.subtags.all %}
                                 <div class="dropdown__item dropdown__item--child" data-cod="{{ filho.cod_centro }}"
-                                    data-label="{{ filho.descricao }}">
+                                    data-label="{{ filho.pk }}">
                                     {{ filho.descricao }}
                                 </div>
                                 {% endfor %}

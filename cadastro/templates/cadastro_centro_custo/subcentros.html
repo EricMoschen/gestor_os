@@ -3,20 +3,22 @@
     <li>
         {% if sub.filhos %}
         <span class="tree-toggle">
-            <span class="editable" data-id="{{ sub.centro.pk }}" data-cod="{{ sub.centro.cod_centro }}"
-            data-pai="{% if sub.centro.centro_pai_id %}{{sub.centro.centro_pai_id}}{% endif %}"
+            <span class="editable" data-id="{{ sub.centro.pk }}" data-cod-tag="{{ sub.centro.cod_tag|default:'' }}"
+                data-cod-ativo="{{ sub.centro.cod_do_ativo|default:'' }}"
+                data-pai="{% if sub.centro.tag_pai_id %}{{ sub.centro.tag_pai_id }}{% endif %}"
                 data-descricao="{{ sub.centro.descricao }}">
-                {{ sub.centro.descricao }} - {{ sub.centro.cod_centro }}
+                {{ sub.centro.descricao }} {% if sub.centro.cod_tag %}- TAG {{ sub.centro.cod_tag }}{% endif %}
             </span>
         </span>
         <ul class="nested" style="display:none;">
             {% include 'cadastro_centro_custo/subcentros.html' with subcentros=sub.filhos %}
         </ul>
         {% else %}
-        <span class="editable" data-id="{{ sub.centro.pk }}" data-cod="{{ sub.centro.cod_centro }}"
-            data-pai="{% if sub.centro.centro_pai_id %}{{sub.centro.centro_pai_id}}{% endif %}"
+        <span class="editable" data-id="{{ sub.centro.pk }}" data-cod-tag="{{ sub.centro.cod_tag|default:'' }}"
+            data-cod-ativo="{{ sub.centro.cod_do_ativo|default:'' }}"
+            data-pai="{% if sub.centro.tag_pai_id %}{{ sub.centro.tag_pai_id }}{% endif %}"
             data-descricao="{{ sub.centro.descricao }}">
-            {{ sub.centro.descricao }} - {{ sub.centro.cod_centro }}
+            {{ sub.centro.descricao }} {% if sub.centro.cod_tag %}- TAG {{ sub.centro.cod_tag }}{% endif %}
         </span>
         {% endif %}
     </li>

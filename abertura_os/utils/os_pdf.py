@@ -128,7 +128,7 @@ def gerar_pdf_imprimir_os(ordem_servico) -> bytes:
     _draw_label_value(pdf, "Nº da Solicitação:", str(ordem_servico.ssm), left_x, current_y)
     _draw_label_value(pdf, "Solicitante:", str(username), right_x, current_y)
     current_y -= LINE_HEIGHT
-    _draw_label_value(pdf, "Centro Custo:", str(getattr(centro_custo, "cod_centro", "-")), left_x, current_y)
+    _draw_label_value(pdf, "Centro Custo:", str(getattr(centro_custo, "cod_tag", "-")), left_x, current_y)
     _draw_label_value(pdf, "Equipamento:", str(getattr(centro_custo, "descricao", "-")), right_x, current_y)
     current_y -= LINE_HEIGHT
     _draw_label_value(pdf, "Cliente:", str(cliente or "-"), left_x, current_y)

@@ -6,6 +6,7 @@
 {% endblock head %}
 
 {% block body %}
+
 <!-- Botão voltar -->
 {% block button_voltar %}
 {% include 'components/_btn_voltar.html' %}
@@ -28,7 +29,7 @@
 
         <!-- FORMULÁRIO -->
         <div class="card form-card">
-            <h2 id="formTitle">Cadastrar Centro de Custo</h2>
+            <h2 id="formTitle">Cadastro de Ativos</h2>
             <form action="{% url 'cadastrar_centro_custo' %}" method="POST" id="centroCustoForm">
                 {% csrf_token %}
                 <input type="hidden" name="centro_id" id="centro_id" value="">
@@ -36,41 +37,46 @@
                 <input type="hidden" name="confirmar_exclusao_filhos" id="confirmar_exclusao_filhos" value="0">
 
                 <div class="form-group">
-                    <label>Tag do Ativo</label>
-                    {{ form.cod_centro }}
+                    <label>Código Tag</label>
+                    {{ form.cod_tag }}
                 </div>
 
                 <div class="form-group">
-                    <label>Descrição do Ativo</label>
+                    <label>Descrição</label>
                     {{ form.descricao }}
                 </div>
 
                 <div class="form-group">
-                    <label>Tag Pai (opcional)</label>
-                    {{ form.centro_pai }}
+                    <label>Tag Pai</label>
+                    {{ form.tag_pai }}
                 </div>
 
                 <div class="form-group">
-                    <label>Cód do Ativo</label>
+                    <label>Código do Ativo</label>
                     {{form.cod_do_ativo}}
 
                 </div>
+
+                {% if form.non_field_erros %}
+                <div class="form-error">
+                    {{form.non_field_erros}}
+                </div>
+                {% endif %}
 
 
                 <div class="form-actions">
                     <button type="submit" class="btn-primary" id="submitBtn">Cadastrar</button>
                     <button type="button" class="btn-secondary hidden" id="btnCancelarEdicao">Cancelar edição</button>
-                    <button type="submit" name="acao" value="excluir" class="btn-secondary hidden"
-                        id="btnExcluir">Excluir</button>
+                    <button type="submit" name="acao" value="excluir" class="btn-secondary hidden" id="btnExcluir">Excluir</button>
                 </div>
-                <p class="form-tip" id="formTip">Clique em um centro na árvore para editar.</p>
+                <p class="form-tip" id="formTip">Clique em uma tag na árvore para editar.</p>
 
             </form>
         </div>
 
         <!-- ÁRVORE DE CENTROS -->
         <div class="card tree-card">
-            <h2>Centros de Custo</h2>
+            <h2>Ativos Cadastrados</h2>
             <div class="tree-scroll">
                 {% for item in hierarquia %}
                 <ul class="tree">
@@ -78,21 +84,22 @@
                         {% if item.filhos %}
                         <span class="tree-toggle">
 
-                            <span class="editable" data-id="{{ item.centro.pk }}"
-                                data-cod="{{ item.centro.cod_centro }}"
-                                data-pai="{% if item.centro.centro_pai_id %}{{item.centro.centro_pai_id}}{% endif %}"
+                            <span class="editable" data-id="{{ item.centro.pk }}" data-cod-tag="{{ item.centro.cod_tag|default:'' }}"
+                                data-cod-ativo="{{ item.centro.cod_do_ativo|default:'' }}"
+                                data-pai="{% if item.centro.tag_pai_id %}{{ item.centro.tag_pai_id }}{% endif %}"
                                 data-descricao="{{ item.centro.descricao }}">
-                                {{ item.centro.descricao }} - {{ item.centro.cod_centro }}
+                                {{ item.centro.descricao }} {% if item.centro.cod_tag %}- TAG {{ item.centro.cod_tag }}{% endif %}
                             </span>
                         </span>
                         <ul class="nested" style="display:none;">
                             {% include 'cadastro_centro_custo/subcentros.html' with subcentros=item.filhos %}
                         </ul>
                         {% else %}
-                        <span class="editable" data-id="{{ item.centro.pk }}" data-cod="{{ item.centro.cod_centro }}"
-                            data-pai="{% if item.centro.centro_pai_id %}{{item.centro.centro_pai_id}}{% endif %}"
+                        <span class="editable" data-id="{{ item.centro.pk }}" data-cod-tag="{{ item.centro.cod_tag|default:'' }}"
+                            data-cod-ativo="{{ item.centro.cod_do_ativo|default:'' }}"
+                            data-pai="{% if item.centro.tag_pai_id %}{{ item.centro.tag_pai_id }}{% endif %}"
                             data-descricao="{{ item.centro.descricao }}">
-                            {{ item.centro.descricao }} - {{ item.centro.cod_centro }}
+                            {{ item.centro.descricao }} {% if item.centro.cod_tag %}- TAG {{ item.centro.cod_tag }}{% endif %}
                         </span>
                         {% endif %}
                     </li>
