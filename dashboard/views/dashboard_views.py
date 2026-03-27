@@ -51,7 +51,7 @@ def dashboard(request):
             "nome": "Cadastros",
             "cards": [
                 {
-                    "title": "Centro de Custos",
+                    "title": "Cadastro de Ativos",
                     "url": "cadastrar_centro_custo",
                     "color": "color-pink",
                     "roles": [ROLE_ADM, ROLE_PCM, ROLE_ALMOXARIFE],

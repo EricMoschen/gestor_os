@@ -36,18 +36,24 @@
                 <input type="hidden" name="confirmar_exclusao_filhos" id="confirmar_exclusao_filhos" value="0">
 
                 <div class="form-group">
-                    <label>Código do Centro de Custo</label>
+                    <label>Tag do Ativo</label>
                     {{ form.cod_centro }}
                 </div>
 
                 <div class="form-group">
-                    <label>Descrição do Centro de Custo</label>
+                    <label>Descrição do Ativo</label>
                     {{ form.descricao }}
                 </div>
 
                 <div class="form-group">
-                    <label>Centro Pai (opcional)</label>
+                    <label>Tag Pai (opcional)</label>
                     {{ form.centro_pai }}
+                </div>
+
+                <div class="form-group">
+                    <label>Cód do Ativo</label>
+                    {{form.cod_do_ativo}}
+
                 </div>
 
 

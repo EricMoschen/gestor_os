@@ -99,9 +99,9 @@ avel, para enviar por meio digital e poder efetuar as anotações.
 
 
 -> Tela de Cadastro de Centros de Custos:
-      -> Modificar o campo Centro de Custos Atual para "Tag"
-      -> Adicionar o campo para o centro de Custo 
-      -> Mudar o nome do card de "Centro de Custo" para "Cadastro de Ativos"
+      -> [ ] Modificar o campo Centro de Custos Atual para "Tag"
+      -> [ ] Adicionar o campo para o centro de Custo 
+      -> [X] Mudar o nome do card de "Centro de Custo" para "Cadastro de Ativos"
 
 - verificar para colocar imagem na OS puchando do Sharepoint 
 

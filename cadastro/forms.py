@@ -5,18 +5,18 @@ from .models import  CentroCusto, Intervencao, Colaborador
 class CentroCustoForm(forms.ModelForm):
     class Meta:
         model = CentroCusto
-        fields = ['descricao', 'cod_centro', 'centro_pai']
+        fields = ['descricao', 'cod_tag', 'tag_pai', 'cod_do_ativo']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Exibe apenas os centros "pais" (aqueles que não têm pai)
-        self.fields['centro_pai'].queryset = CentroCusto.objects.filter(centro_pai__isnull=True)
+        # Exibe apenas as Tags "pais" (aqueles que não têm pai)
+        self.fields['tag_pai'].queryset = CentroCusto.objects.filter(tag_pai__isnull=True)
 
         if self.instance and self.instance.pk:
-            self.fields['centro_pai'].queryset = self.fields['centro_pai'].queryset.exclude(pk=self.instance.pk)
+            self.fields['tag_pai'].queryset = self.fields['tag_pai'].queryset.exclude(pk=self.instance.pk)
 
-        self.fields['centro_pai'].label = "Centro de Custo Pai (opcional)"
-        self.fields['centro_pai'].required = False
+        self.fields['tag_pai'].label = "Centro de Custo Pai (opcional)"
+        self.fields['tag_pai'].required = False
 
 
 
