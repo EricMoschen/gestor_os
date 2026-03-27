@@ -6,194 +6,178 @@
 {% endblock head %}
 
 {% block body %}
-<div class="container">
-
-    <!-- Botão voltar para Dashboard -->
+<div class="container finalizar-os-page">
     {% block button_voltar %}
     {% include 'components/_btn_voltar.html' %}
     {% endblock %}
 
-    <!-- Painel esquerdo: Finalizar OS -->
-    <div class="panel finalizar-os">
-
-        <form method="post" action="{% url 'finalizar_os' %}" id="finalizarForm">
+    <section class="panel finalizar-os">
+        <form method="post" action="{% url 'finalizar_os' %}" id="finalizarForm" novalidate>
             {% csrf_token %}
 
-            <h1 class="panel-title">Finalizar Ordem de Serviço</h1>
+            <header class="panel-header">
+                <h1 class="panel-title">Finalizar Ordem de Serviço</h1>
+                <p class="panel-subtitle">Preencha os dados técnicos e finalize a OS com segurança.</p>
+            </header>
 
-            <!-- Número da OS -->
-            <div class="form-group">
-                <label for="numero_os">Número da OS</label>
-                <input type="text" id="numero_os" name="numero_os" class="input-field" required autocomplete="off"
-                    placeholder="Ex.: 001-26">
-                <small class="field-help">Digite o numero da OS ou selecione uma linha na tabela ao lado.</small>
+            <div class="os-resumo">
+                <article class="resumo-card">
+                    <span class="resumo-label">Total de OS abertas</span>
+                    <strong id="totalAbertas">0</strong>
+                </article>
+                <article class="resumo-card">
+                    <span class="resumo-label">Total de OS finalizadas</span>
+                    <strong id="totalFinalizadas">0</strong>
+                </article>
+                <article class="resumo-card resumo-card--dica">
+                    <span class="resumo-label">Dica</span>
+                    <p>Digite o número da OS e os campos serão preenchidos automaticamente.</p>
+                </article>
             </div>
-            <div id="statusOS" class="status-message hidden" role="status" aria-live="polite"></div>
 
-            <!-- Dados da OS -->
-            <div id="dados-os">
-
+            <div class="form-grid form-grid--top">
                 <div class="form-group">
-                    <label>Descrição</label>
-                    <textarea id="descricao_os" class="input-field" readonly rows="2"></textarea>
+                    <label for="numero_os">Número da OS</label>
+                    <input type="text" id="numero_os" name="numero_os" class="input-field" required autocomplete="off"
+                        placeholder="Ex.: 001-26" list="ordensDisponiveis">
+                    <datalist id="ordensDisponiveis">
+                        {% for o in ordens %}
+                        <option value="{{ o.numero_os }}"></option>
+                        {% endfor %}
+                    </datalist>
                 </div>
 
                 <div class="form-group">
-                    <label>Situação Atual</label>
+                    <label for="situacao_os">Situação atual</label>
                     <input type="text" id="situacao_os" class="input-field" readonly>
                 </div>
 
-                <!-- Observações -->
-                <div class="form-group">
-                    <label for="{{ finalizacao_form.descricao_tecnica_avaria.id_for_label }}">Descrição Técnica da Avaria *</label>
-                    {{ finalizacao_form.descricao_tecnica_avaria }}
-                    {{ finalizacao_form.descricao_tecnica_avaria.errors }}
-                    </div>
-                    
+                <div class="form-group form-group--full">
+                    <label for="descricao_os">Descrição da OS</label>
+                    <textarea id="descricao_os" class="input-field" readonly rows="2"></textarea>
+                </div>
+            </div>
+
+            <div id="statusOS" class="status-message hidden" role="status" aria-live="polite"></div>
+
+            <section class="bloco-formulario">
+                <h2>Detalhamento técnico</h2>
+
+                <div class="form-grid">
                     <div class="form-group">
-                        <label for="{{ finalizacao_form.descricao_intervencao.id_for_label }}">Descrição da Intervenção *</label>
+                        <label for="{{ finalizacao_form.descricao_tecnica_avaria.id_for_label }}">Descrição Técnica da
+                            Avaria *</label>
+                        {{ finalizacao_form.descricao_tecnica_avaria }}
+                        {{ finalizacao_form.descricao_tecnica_avaria.errors }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ finalizacao_form.descricao_intervencao.id_for_label }}">Descrição da Intervenção
+                            *</label>
                         {{ finalizacao_form.descricao_intervencao }}
                         {{ finalizacao_form.descricao_intervencao.errors }}
                     </div>
-                    
-                    <fieldset class="form-group pecas-fieldset">
-                        <legend>Peças Aplicadas</legend>
-                        {{ pecas_formset.management_form }}
-                        <div id="pecasContainer">
-                            {% for peca_form in pecas_formset %}
-                            <div class="peca-item" data-form-index="{{ forloop.counter0 }}">
-                                <div class="peca-grid">
-                                    <div>
-                                        <label>Quantidade</label>
-                                        {{ peca_form.quantidade }}
-                                        {{ peca_form.quantidade.errors }}
-                                    </div>
-                                    <div>
-                                        <label>Descrição</label>
-                                        {{ peca_form.descricao }}
-                                        {{ peca_form.descricao.errors }}
-                                    </div>
-                                </div>
-                                {{ peca_form.id }}
-                                {% if peca_form.DELETE %}
-                                <div class="hidden-delete">{{ peca_form.DELETE }}</div>
-                                {% endif %}
-                                <button type="button" class="remove-piece-btn">Remover peça</button>
-                            </div>
-                            {% endfor %}
-                        </div>
-                        <button type="button" id="addPieceBtn" class="save-btn save-btn--secondary">Adicionar peça</button>
-                    </fieldset>
-                    
-                    <template id="pecaEmptyFormTemplate">
-                        <div class="peca-item" data-form-index="__prefix__">
-                            <div class="peca-grid">
-                                <div>
-                                    <label>Quantidade</label>
-                                    {{ pecas_formset.empty_form.quantidade }}
-                                </div>
-                                <div>
-                                    <label>Descrição</label>
-                                    {{ pecas_formset.empty_form.descricao }}
-                                </div>
-                            </div>
-                            {{ pecas_formset.empty_form.id }}
-                            <div class="hidden-delete">{{ pecas_formset.empty_form.DELETE }}</div>
-                            <button type="button" class="remove-piece-btn">Remover peça</button>
-                        </div>
-                    </template>
-                    
+
                     <div class="form-group">
-                        <label for="{{ finalizacao_form.descricao_sintoma.id_for_label }}">Descrição do Sintoma *</label>
+                        <label for="{{ finalizacao_form.descricao_sintoma.id_for_label }}">Descrição do Sintoma
+                            *</label>
                         {{ finalizacao_form.descricao_sintoma }}
                         {{ finalizacao_form.descricao_sintoma.errors }}
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="{{ finalizacao_form.causa.id_for_label }}">Causa *</label>
                         {{ finalizacao_form.causa }}
                         {{ finalizacao_form.causa.errors }}
                     </div>
-                    
+
                     <div class="form-group">
-                        <label for="{{ finalizacao_form.data_hora_inicio.id_for_label }}">Data com Hora de Início *</label>
+                        <label for="{{ finalizacao_form.data_hora_inicio.id_for_label }}">Data/Hora de Início *</label>
                         {{ finalizacao_form.data_hora_inicio }}
                         {{ finalizacao_form.data_hora_inicio.errors }}
                     </div>
-                    
+
                     <div class="form-group">
-                        <label for="{{ finalizacao_form.data_hora_fim.id_for_label }}">Data com Hora de Fim *</label>
+                        <label for="{{ finalizacao_form.data_hora_fim.id_for_label }}">Data/Hora de Fim *</label>
                         {{ finalizacao_form.data_hora_fim }}
                         {{ finalizacao_form.data_hora_fim.errors }}
                     </div>
-                    
-                    <div class="form-group">
+
+                    <div class="form-group form-group--full">
                         <label for="{{ finalizacao_form.observacoes.id_for_label }}">Observações</label>
                         {{ finalizacao_form.observacoes }}
                         {{ finalizacao_form.observacoes.errors }}
+                    </div>
+                </div>
+            </section>
+
+            <section class="bloco-formulario">
+                <h2>Peças aplicadas</h2>
+                {{ pecas_formset.management_form }}
+
+                <div id="pecasContainer" class="pecas-container">
+                    {% for peca_form in pecas_formset %}
+                    <div class="peca-item" data-form-index="{{ forloop.counter0 }}">
+                        <div class="peca-grid">
+                            <div>
+                                <label>Quantidade</label>
+                                {{ peca_form.quantidade }}
+                                {{ peca_form.quantidade.errors }}
+                            </div>
+                            <div>
+                                <label>Descrição</label>
+                                {{ peca_form.descricao }}
+                                {{ peca_form.descricao.errors }}
+                            </div>
+                        </div>
+                        {{ peca_form.id }}
+                        {% if peca_form.DELETE %}
+                        <div class="hidden-delete">{{ peca_form.DELETE }}</div>
+                        {% endif %}
+                        <button type="button" class="remove-piece-btn">Remover peça</button>
+                    </div>
+                    {% endfor %}
                 </div>
 
-                {% if erro %}
-                <p class="field-error">{{ erro }}</p>
-                {% endif %}
+                <button type="button" id="addPieceBtn" class="save-btn save-btn--secondary">Adicionar peça</button>
+            </section>
 
-                <input type="hidden" name="numero_os_hidden" id="numero_os_hidden">
+            <template id="pecaEmptyFormTemplate">
+                <div class="peca-item" data-form-index="__prefix__">
+                    <div class="peca-grid">
+                        <div>
+                            <label>Quantidade</label>
+                            {{ pecas_formset.empty_form.quantidade }}
+                        </div>
+                        <div>
+                            <label>Descrição</label>
+                            {{ pecas_formset.empty_form.descricao }}
+                        </div>
+                    </div>
+                    {{ pecas_formset.empty_form.id }}
+                    <div class="hidden-delete">{{ pecas_formset.empty_form.DELETE }}</div>
+                    <button type="button" class="remove-piece-btn">Remover peça</button>
+                </div>
+            </template>
 
-                <!-- Botão finalizar -->
-                <button type="submit" class="save-btn">Finalizar OS</button>
-
-            </div>
-
-        </form>
-
-    </div>
-
-    <!-- Painel direito: Lista de OS -->
-    <div class="panel tabela-os">
-        <h2>Ordens em Aberto</h2>
-
-        <!-- Campo de busca -->
-        <input type="text" id="buscarTabela" class="input-field search-input"
-            placeholder="Buscar por número, descrição, cliente ou situação...">
-
-        <div class="os-table-container">
-            {% if ordens %}
-            <table class="os-table" id="tabelaOs">
-                <thead>
-                    <tr>
-                        <th>Nº OS</th>
-                        <th>Descrição</th>
-                        <th>Centro Custo</th>
-                        <th>Cliente</th>
-                        <th>Situação</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for o in ordens %}
-                    <tr class="linha-os {% if o.situacao == 'FI' %}os-finalizada{% else %}os-aberta{% endif %}"
-                        data-numero="{{ o.numero_os }}" data-descricao="{{ o.descricao_os }}"
-                        data-situacao="{{ o.get_situacao_display }}" data-situacao-codigo="{{o.situacao}}"
-                        data-observacoes="{{o.observacoes|default:''}}">
-                        <td>{{ o.numero_os }}</td>
-                        <td>{{ o.descricao_os }}</td>
-                        <td>{{ o.centro_custo.descricao }}</td>
-                        <td>{{ o.cliente }}</td>
-                        <td>
-                            <span
-                                class="status-badge {% if o.situacao == 'FI' %}status--finalizada{% else %}status--aberta{% endif %}">
-                                {{ o.get_situacao_display }}
-                            </span>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            {% else %}
-            <p>Nenhuma OS encontrada.</p>
+            {% if erro %}
+            <p class="field-error">{{ erro }}</p>
             {% endif %}
-        </div>
-    </div>
 
+            <input type="hidden" name="numero_os_hidden" id="numero_os_hidden">
+
+            <div class="form-actions">
+                <button type="submit" class="save-btn">Finalizar OS</button>
+            </div>
+        </form>
+    </section>
+
+    <div class="hidden" aria-hidden="true" id="ordensCache">
+        {% for o in ordens %}
+        <span class="ordem-cache-item" data-numero="{{ o.numero_os }}" data-descricao="{{ o.descricao_os }}"
+            data-situacao="{{ o.get_situacao_display }}" data-situacao-codigo="{{ o.situacao }}"></span>
+        {% endfor %}
+    </div>
 </div>
 
 <script src="{% static 'js/finalizar_os.js' %}"></script>

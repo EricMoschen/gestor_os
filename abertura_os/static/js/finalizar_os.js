@@ -1,69 +1,37 @@
+
 document.addEventListener("DOMContentLoaded", () => {
     const numeroInput = document.getElementById("numero_os");
     const descricaoInput = document.getElementById("descricao_os");
     const situacaoInput = document.getElementById("situacao_os");
     const hiddenInput = document.getElementById("numero_os_hidden");
-    const observacoesInput = document.getElementById("observacoes");
-    const contadorObservacoes = document.getElementById("contadorObservacoes");
-    const erroObs = document.getElementById("erroObservacoes");
     const form = document.getElementById("finalizarForm");
-    const buscarTabela = document.getElementById("buscarTabela");
     const msgStatus = document.getElementById("statusOS");
     const totalAbertas = document.getElementById("totalAbertas");
     const totalFinalizadas = document.getElementById("totalFinalizadas");
 
+    const addPieceBtn = document.getElementById("addPieceBtn");
+    const pecasContainer = document.getElementById("pecasContainer");
+    const pecaEmptyTemplate = document.getElementById("pecaEmptyFormTemplate");
+    const totalFormsInput = document.querySelector("#id_pecas-TOTAL_FORMS");
+
     const cacheOS = {};
-    const linhas = document.querySelectorAll(".linha-os");
-
-    function limparSelecaoTabela() {
-        document.querySelectorAll(".linha-os.is-selected").forEach((row) => {
-            row.classList.remove("is-selected");
-        });
-    }
-
-    function selecionarLinha(numero) {
-        limparSelecaoTabela();
-
-        const linhaSelecionada = document.querySelector(`.linha-os[data-numero="${CSS.escape(numero)}"]`);
-
-        if (linhaSelecionada) {
-            linhaSelecionada.classList.add("is-selected");
-            linhaSelecionada.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        }
-    }
-
-    function limparCampos() {
-        descricaoInput.value = "";
-        situacaoInput.value = "";
-        observacoesInput.value = "";
-        hiddenInput.value = "";
-        limparSelecaoTabela();
-        atualizarContadorObservacoes();
-    }
+    const cacheItems = document.querySelectorAll(".ordem-cache-item");
 
     function mostrarMensagem(texto, tipo = "info") {
         if (!msgStatus) return;
 
         msgStatus.textContent = texto;
         msgStatus.className = `status-message ${tipo}`;
-
-        if (texto) {
-            msgStatus.classList.remove("hidden");
-        } else {
-            msgStatus.classList.add("hidden");
-        }
+        msgStatus.classList.toggle("hidden", !texto);
     }
 
-    function preencherCampos(data, numero) {
-        descricaoInput.value = data.descricao || "";
-        situacaoInput.value = data.situacao || "";
-        observacoesInput.value = data.observacoes || "";
-        hiddenInput.value = numero;
-        atualizarContadorObservacoes();
-        selecionarLinha(numero);
+    function limparCamposOS() {
+        descricaoInput.value = "";
+        situacaoInput.value = "";
+        hiddenInput.value = "";
     }
 
-    function atualizarContadoresResumo() {
+    function atualizarResumo() {
         let abertas = 0;
         let finalizadas = 0;
 
@@ -79,16 +47,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (totalFinalizadas) totalFinalizadas.textContent = finalizadas;
     }
 
-    function atualizarContadorObservacoes() {
-        if (!contadorObservacoes || !observacoesInput) return;
+    function carregarOS(numeroDigitado) {
+        const numero = numeroDigitado.trim().toUpperCase();
 
-        const quantidade = observacoesInput.value.trim().length;
-        contadorObservacoes.textContent = `${quantidade} caractere${quantidade === 1 ? "" : "s"}`;
-    }
-
-    function carregarDaTabela(numero) {
         if (!numero) {
-            limparCampos();
+            limparCamposOS();
             mostrarMensagem("");
             return;
         }
@@ -96,117 +59,102 @@ document.addEventListener("DOMContentLoaded", () => {
         const os = cacheOS[numero];
 
         if (!os) {
-            limparCampos();
-            mostrarMensagem(`OS ${numero} não encontrada na lista de ordens`, "erro");
+            limparCamposOS();
+            mostrarMensagem(`OS ${numero} não encontrada.`, "erro");
             return;
         }
 
-        preencherCampos(os, numero);
+        descricaoInput.value = os.descricao || "";
+        situacaoInput.value = os.situacao || "";
+        hiddenInput.value = numero;
 
         if (os.situacaoCodigo === "FI") {
             mostrarMensagem("Atenção: esta OS já está finalizada.", "aviso");
             return;
         }
 
-        mostrarMensagem("OS carregada. Revise os dados e finalize quando estiver pronto.", "sucesso");
+        mostrarMensagem("OS carregada com sucesso. Continue o preenchimento.", "sucesso");
     }
 
-    linhas.forEach((row) => {
-        const numero = row.dataset.numero;
+    function marcarParaExcluir(item) {
+        const deleteCheckbox = item.querySelector('input[type="checkbox"][name$="-DELETE"]');
+
+        if (deleteCheckbox) {
+            deleteCheckbox.checked = true;
+            item.style.display = "none";
+            return;
+        }
+
+        item.remove();
+    }
+
+    function vincularEventoRemover(botao) {
+        botao.addEventListener("click", () => {
+            const item = botao.closest(".peca-item");
+            if (item) {
+                marcarParaExcluir(item);
+            }
+        });
+    }
+
+    cacheItems.forEach((item) => {
+        const numero = (item.dataset.numero || "").toUpperCase();
 
         cacheOS[numero] = {
-            descricao: row.dataset.descricao || "",
-            situacao: row.dataset.situacao || "",
-            situacaoCodigo: row.dataset.situacaoCodigo || "",
-            observacoes: row.dataset.observacoes || ""
+            descricao: item.dataset.descricao || "",
+            situacao: item.dataset.situacao || "",
+            situacaoCodigo: item.dataset.situacaoCodigo || ""
         };
-
-        row.addEventListener("click", () => {
-            numeroInput.value = numero;
-            carregarDaTabela(numero);
-        });
     });
 
-    atualizarContadoresResumo();
-    atualizarContadorObservacoes();
+    document.querySelectorAll(".remove-piece-btn").forEach(vincularEventoRemover);
 
-    numeroInput.addEventListener("input", () => {
-        const numero = numeroInput.value.trim();
-        carregarDaTabela(numero);
-    });
+    addPieceBtn?.addEventListener("click", () => {
+        if (!pecaEmptyTemplate || !pecasContainer || !totalFormsInput) return;
 
-    observacoesInput.addEventListener("input", () => {
-        atualizarContadorObservacoes();
+        const index = Number(totalFormsInput.value);
+        const html = pecaEmptyTemplate.innerHTML.replaceAll("__prefix__", String(index));
+        pecasContainer.insertAdjacentHTML("beforeend", html);
 
-        if (observacoesInput.value.trim()) {
-            erroObs.style.display = "none";
+        totalFormsInput.value = String(index + 1);
+
+        const novoItem = pecasContainer.lastElementChild;
+        const removeBtn = novoItem?.querySelector(".remove-piece-btn");
+        if (removeBtn) {
+            vincularEventoRemover(removeBtn);
         }
     });
 
-    form.addEventListener("submit", (e) => {
-        const numero = numeroInput.value.trim();
-        const observacoes = observacoesInput.value.trim();
+    numeroInput?.addEventListener("input", () => {
+        numeroInput.value = numeroInput.value.toUpperCase();
+        carregarOS(numeroInput.value);
+    });
+
+    form?.addEventListener("submit", (event) => {
+        const numero = (numeroInput?.value || "").trim().toUpperCase();
 
         if (!numero) {
-            e.preventDefault();
-            mostrarMensagem("Informe o número da OS para finalizar.", "erro");
-            numeroInput.focus();
+            event.preventDefault();
+            mostrarMensagem("Informe o número da OS para continuar.", "erro");
+            numeroInput?.focus();
             return;
         }
 
         if (!cacheOS[numero]) {
-            e.preventDefault();
-            mostrarMensagem("Selecione uma OS válida na tabela para finalizar.", "erro");
-            numeroInput.focus();
+            event.preventDefault();
+            mostrarMensagem("Informe um número de OS válido.", "erro");
+            numeroInput?.focus();
             return;
         }
 
         if (cacheOS[numero].situacaoCodigo === "FI") {
-            e.preventDefault();
+            event.preventDefault();
             mostrarMensagem("Não é possível finalizar uma OS que já está finalizada.", "erro");
             return;
         }
 
-        if (!observacoes) {
-            e.preventDefault();
-            erroObs.style.display = "block";
-            mostrarMensagem("Preencha o campo de observações para continuar.", "erro");
-            observacoesInput.focus();
-            return;
-        }
-
-        erroObs.style.display = "none";
         hiddenInput.value = numero;
     });
 
-    buscarTabela.addEventListener("input", function () {
-        const filtro = this.value.toLowerCase();
-        let linhasVisiveis = 0;
-
-        document.querySelectorAll("#tabelaOs tbody tr").forEach((linha) => {
-            const texto = linha.innerText.toLowerCase();
-            const visivel = texto.includes(filtro);
-
-            linha.style.display = visivel ? "" : "none";
-
-            if (visivel) {
-                linhasVisiveis += 1;
-            }
-        });
-
-        if (filtro && linhasVisiveis === 0) {
-            mostrarMensagem("Nenhuma OS corresponde ao filtro informado.", "aviso");
-            return;
-        }
-
-        if (filtro && linhasVisiveis > 0) {
-            mostrarMensagem(`${linhasVisiveis} OS encontradas com o filtro aplicado.`, "info");
-            return;
-        }
-
-        mostrarMensagem("");
-    });
+    atualizarResumo();
 });
-
-
-
