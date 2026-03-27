@@ -1,136 +1,61 @@
-# 📌 Tickets do Sistema
+# 📌 Backlog do Sistema de OS
 
-# senhas e usuarios de testes
-User:ADM  / Senha:ADM@123456
-User:PCM  / Senha:PCM@123456
-User:ALMOXARIFE  / Senha:ALM@123456
-User:SUPERVISOR  / Senha:SUP@123456
-User:FABRICA / Senha:FAB@123456
+## 🔴 Bugs (Alta Prioridade)
+- [ ] Exibir corretamente o número do código no campo da intervenção  
+- [ ] Mensagens no dashboard não estão sumindo após exibição  
 
+---
 
-## 🔴 Bugs
+## 🟡 Melhorias (Média Prioridade)
+- [ ] Incluir lista suspensa com todas as OS e horários trabalhados ao clicar no colaborador na aba de relatórios  
+- [ ] Atualizar layout da tela de Finalizar OS  
+- [ ] Atualizar impressão da OS para formato editável estilo Word (para envio digital e anotações)  
+- [ ] Permitir adicionar imagem na OS puxando do SharePoint  
 
+---
 
-- Verificar pq não esta exibindo o numero do cógigo no campo da intervenção 
+## 🟢 Concluído
 
-* Resolvido parcialmente, ainda avaliar
-- [/] mensages estao aparecendo no dashboard e não estão sumindo
+### Melhorias Implementadas
+- [x] Botão de voltar na `base.html` para retorno ao dashboard  
+- [x] Estrutura de Função com valor/hora e vínculo ao colaborador  
+- [x] Ajuste de Horas: campo para lançamento, seletor de mês (21/mes anterior → 20/mes atual), exclusão de registros  
+- [x] Tela de login e grupos de acesso (ADM, PCM, SUPERVISOR, ALMOXARIFE, FABRICA)  
+- [x] Layout atualizado do cadastro de Centros de Custos  
 
-## 🟡 Melhorias
+### Bugs Corrigidos
+- [x] Orçamento Clientes puxando valor da função, total de horas por OS e função  
+- [x] Correções em apontamento de horas, abertura de OS e layout  
+- [x] Correções em edição de Centro de Custo, Clientes, Intervenção e Colaborador  
+- [x] Separação correta de horas Normais, 50% e 100% nos relatórios  
+- [x] Ajuste no orçamento de horas PDF (desconto do almoço)  
+- [x] Tratamento de erros ao excluir Centro Pai com filhos e centros em uso em OS  
+- [x] Alteração no colaborador: retirar exclusão e adicionar opção de desligar  
 
-- [ ] incluir uma lista suspensa onde mostra todas as OS e horarios trabalhados em cadas OS ao clicar no colaborador na aba de relatórios.
+---
 
-- [ ] Atualizar layout do finalizar OS.
-- [ ] Atualizar impressão da OS para estilo a um Word edit
-avel, para enviar por meio digital e poder efetuar as anotações.
+## 🆕 Novas Funcionalidades
 
+### Tela de Finalização de OS
+- [ ] Campos obrigatórios:  
+  - Descrição Técnica da Avaria  
+  - Descrição da Intervenção  
+  - Descrição do Sintoma  
+  - Causa  
+  - Data/Hora de Início  
+  - Data/Hora de Fim  
+- [ ] Campos opcionais:  
+  - Peças Aplicadas (Quantidade, Descrição)  
+  - Observações  
+- [ ] Todos os campos devem ser salvos em banco como registro  
+- [ ] Alterar status da OS para **Finalizado** (já existente)  
 
+### Cadastro de Centros de Custos
+- [x] Campo "Centro de Custos Atual" renomeado para "Tag"  
+- [x] Adicionar campo para centro de custo  
+- [x] Alterar nome do card para "Cadastro de Ativos"  
 
+---
 
-
-## 🟢  Concluído
-
-## Melhorias Implementadas
-- [x] Adicionar botão de voltar na `base.html` com retorno ao dashboard
-- [x] Alterar estrutura:
-      - [x]Remover valor da hora do cadastro de colaborador
-      - [x]Criar cadastro de Função com valor/hora
-      - [x] Relacionar apenas a Função ao Colaborador
-      - [x] Modificar o Orçamento Horas para o mesmo layout do Orçamento Cliente
-
-- [x] Na funcionalidade de Ajuste de Horas, adicionar campo para incluir lançamento
-- [x] criar tela de login 
-- [x] criar os grupos de acessos ao sistema( permissões, PCM, ADM, SUPERVISOR, ALMOXARIFE)
-- [x] no Ajuste de horas adicionar um seletor para selecionar o mes dos ajustes, começando do dia 21 do mes anterior até o dia 20 do mes atual, EX: Mes de Março Retorna o intervalo dos dias de (21/02 até 20/03).
-- [X] incluir funcionalidade para poder excluir registro no ajuste de horas.
-- [X] Atualizar layout do cadastro de centros de custos.
-
-
-
-
-
-## Bugs Corrigidos
-- [x] Corrigir o Orçamento Clientes para puxar:
-      - Valor da função
-      - Total de horas por OS
-      - Total de horas por função
-      - Manter os intervalos de horas
-
-- [x] Virificar o apontamento de Horas.
-- [x] Verificar a abertura de OS.
-- [x] Virificar layout do apontamento de Horas.
-- [x] Corrigir a opção de edição do app Cadastro:
-      - [x] Centro de Custo.
-      - [x] Clientes.
-      - [x] Intervenção.
-      - [x] Colaborador.
-
-- [x] corrigir a separação das horas Normais,50% e 100% nos relatórios.
-- [x] corrigir erro ao puchar campos no finalizar OS.
-- [X] verificar o orçamento de horas PDF, as horas estão puchando 3 horas a frente do horario normal, adicionar desconto do almoço 
-- [x] retorno das funções que já estão em uso igual ao dos clientes 
-- [x] no colaborador retirar a função de excluir e add a opção de desligar o colaborador 
-- [X] retorno das Intervenções que já estão em uso 
-- [x] tratamento erro ao excluir um Centro Pai que possui centros Filhos.
-- [x] tratamento de erro ao excluir quando o centro de custo já esta em uso em alguma OS .
-
-
-
-
-
-
-
-
-
-## Novas funcionalidades
-
--> Tela de Finalização de OS:
-   -> Incluir campos a baixo salvos em Banco de dados:
-      -> Descrição Técnica da Avaria
-      -> Descrição da Intervenção
-      -> Peças Aplicadas
-            -> Quantidade 
-            -> Descrição
-      -> Descrição do Sintoma
-      -> Causa
-      -> Data com Hora de Inicio 
-      -> Data com Hora de Fim
-      -> Observações 
-
-
-
-========
-# Prompt:
-
-Na tela de finalizar OS adicione os capos de:
--> Descrição Técnica da Avaria (Obrigatório)
--> Descrição da Intervenção (Obrigatório)
--> Peças Aplicadas
-      -> Quantidade 
-      -> Descrição
--> Descrição do Sintoma (Obrigatório)
--> Causa (Obrigatório)
--> Data com Hora de Inicio (Obrigatório)
--> Data com Hora de Fim (Obrigatório)
--> Observações 
-
-todos devem ser salvo em banco para ficar como registro,
-ele deve mudar o status da OS para Finalizado(como já esta fazendo)
-
-Crie a extrutura limpa bem organizada e de facil entendimento e com boas praticas a nivel Senior, uma ectrutura a nivel de SAAS
-
-
-========
-
--> Tela de Cadastro de Centros de Custos:
-      -> [ ] Modificar o campo Centro de Custos Atual para "Tag"
-      -> [ ] Adicionar o campo para o centro de Custo 
-      -> [X] Mudar o nome do card de "Centro de Custo" para "Cadastro de Ativos"
-
-- verificar para colocar imagem na OS puchando do Sharepoint 
-
-
-
-## Concluidos
-
--[x] definir as tabelas fatos e Dimensão 
+## 📊 Arquitetura de Dados
+- [x] Definição das tabelas Fato e Dimensão  

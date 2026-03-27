@@ -1,5 +1,7 @@
 from django import forms
-from abertura_os.models import AberturaOS
+from django.forms import inlineformset_factory
+
+from abertura_os.models import AberturaOS, FinalizacaoOS, PecaAplicada
 from cadastro.models import Cliente
 
 
@@ -73,3 +75,63 @@ class AberturaOSForm(forms.ModelForm):
             )
 
         return cleaned_data
+
+
+
+
+
+class FinalizacaoOSForm(forms.ModelForm):
+    class Meta:
+        model = FinalizacaoOS
+        fields = (
+            "descricao_tecnica_avaria",
+            "descricao_intervencao",
+            "descricao_sintoma",
+            "causa",
+            "data_hora_inicio",
+            "data_hora_fim",
+            "observacoes",
+        )
+        widgets = {
+            "descricao_tecnica_avaria": forms.Textarea(attrs={"rows": 2, "class": "input-field", "required": True}),
+            "descricao_intervencao": forms.Textarea(attrs={"rows": 2, "class": "input-field", "required": True}),
+            "descricao_sintoma": forms.Textarea(attrs={"rows": 2, "class": "input-field", "required": True}),
+            "causa": forms.Textarea(attrs={"rows": 2, "class": "input-field", "required": True}),
+            "data_hora_inicio": forms.DateTimeInput(attrs={"type": "datetime-local", "class": "input-field", "required": True}),
+            "data_hora_fim": forms.DateTimeInput(attrs={"type": "datetime-local", "class": "input-field", "required": True}),
+            "observacoes": forms.Textarea(attrs={"rows": 2, "class": "input-field"}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["data_hora_inicio"].input_formats = ["%Y-%m-%dT%H:%M"]
+        self.fields["data_hora_fim"].input_formats = ["%Y-%m-%dT%H:%M"]
+
+    def clean(self):
+        cleaned_data = super().clean()
+        inicio = cleaned_data.get("data_hora_inicio")
+        fim = cleaned_data.get("data_hora_fim")
+
+        if inicio and fim and fim < inicio:
+            self.add_error("data_hora_fim", "A data/hora de fim deve ser maior ou igual ao início.")
+
+        return cleaned_data
+
+
+class PecaAplicadaForm(forms.ModelForm):
+    class Meta:
+        model = PecaAplicada
+        fields = ("quantidade", "descricao")
+        widgets = {
+            "quantidade": forms.NumberInput(attrs={"class": "input-field", "min": 1}),
+            "descricao": forms.TextInput(attrs={"class": "input-field", "maxlength": 255}),
+        }
+
+
+PecaAplicadaFormSet = inlineformset_factory(
+    FinalizacaoOS,
+    PecaAplicada,
+    form=PecaAplicadaForm,
+    extra=1,
+    can_delete=True,
+)

@@ -45,10 +45,92 @@
 
                 <!-- Observações -->
                 <div class="form-group">
-                    <label for="observacoes">Observações</label>
-                    <textarea name="observacoes" id="observacoes" class="input-field" rows="2" required></textarea>
-                    <p class="field-error" id="erroObservacoes" style="display:none;">É obrigatório informar uma
-                        observação.</p>
+                    <label for="{{ finalizacao_form.descricao_tecnica_avaria.id_for_label }}">Descrição Técnica da Avaria *</label>
+                    {{ finalizacao_form.descricao_tecnica_avaria }}
+                    {{ finalizacao_form.descricao_tecnica_avaria.errors }}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ finalizacao_form.descricao_intervencao.id_for_label }}">Descrição da Intervenção *</label>
+                        {{ finalizacao_form.descricao_intervencao }}
+                        {{ finalizacao_form.descricao_intervencao.errors }}
+                    </div>
+                    
+                    <fieldset class="form-group pecas-fieldset">
+                        <legend>Peças Aplicadas</legend>
+                        {{ pecas_formset.management_form }}
+                        <div id="pecasContainer">
+                            {% for peca_form in pecas_formset %}
+                            <div class="peca-item" data-form-index="{{ forloop.counter0 }}">
+                                <div class="peca-grid">
+                                    <div>
+                                        <label>Quantidade</label>
+                                        {{ peca_form.quantidade }}
+                                        {{ peca_form.quantidade.errors }}
+                                    </div>
+                                    <div>
+                                        <label>Descrição</label>
+                                        {{ peca_form.descricao }}
+                                        {{ peca_form.descricao.errors }}
+                                    </div>
+                                </div>
+                                {{ peca_form.id }}
+                                {% if peca_form.DELETE %}
+                                <div class="hidden-delete">{{ peca_form.DELETE }}</div>
+                                {% endif %}
+                                <button type="button" class="remove-piece-btn">Remover peça</button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <button type="button" id="addPieceBtn" class="save-btn save-btn--secondary">Adicionar peça</button>
+                    </fieldset>
+                    
+                    <template id="pecaEmptyFormTemplate">
+                        <div class="peca-item" data-form-index="__prefix__">
+                            <div class="peca-grid">
+                                <div>
+                                    <label>Quantidade</label>
+                                    {{ pecas_formset.empty_form.quantidade }}
+                                </div>
+                                <div>
+                                    <label>Descrição</label>
+                                    {{ pecas_formset.empty_form.descricao }}
+                                </div>
+                            </div>
+                            {{ pecas_formset.empty_form.id }}
+                            <div class="hidden-delete">{{ pecas_formset.empty_form.DELETE }}</div>
+                            <button type="button" class="remove-piece-btn">Remover peça</button>
+                        </div>
+                    </template>
+                    
+                    <div class="form-group">
+                        <label for="{{ finalizacao_form.descricao_sintoma.id_for_label }}">Descrição do Sintoma *</label>
+                        {{ finalizacao_form.descricao_sintoma }}
+                        {{ finalizacao_form.descricao_sintoma.errors }}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ finalizacao_form.causa.id_for_label }}">Causa *</label>
+                        {{ finalizacao_form.causa }}
+                        {{ finalizacao_form.causa.errors }}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ finalizacao_form.data_hora_inicio.id_for_label }}">Data com Hora de Início *</label>
+                        {{ finalizacao_form.data_hora_inicio }}
+                        {{ finalizacao_form.data_hora_inicio.errors }}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ finalizacao_form.data_hora_fim.id_for_label }}">Data com Hora de Fim *</label>
+                        {{ finalizacao_form.data_hora_fim }}
+                        {{ finalizacao_form.data_hora_fim.errors }}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ finalizacao_form.observacoes.id_for_label }}">Observações</label>
+                        {{ finalizacao_form.observacoes }}
+                        {{ finalizacao_form.observacoes.errors }}
                 </div>
 
                 {% if erro %}
