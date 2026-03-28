@@ -111,7 +111,7 @@ body {
 
 .table-scroll {
     overflow-y: auto;
-    max-height: 70vh;
+    max-height: 100vh;
 }
 
 .data-table {
