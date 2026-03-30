@@ -23,16 +23,24 @@ def _parse_datetime_local(value):
     
     return datahora
 
+
+
 def _make_aware_if_needed(datahora: datetime):
     if settings.USE_TZ and timezone.is_naive(datahora):
         return timezone.make_aware(datahora)
     return datahora
+
+
+
 
 def _ajustar_fim_virada_dia(inicio: datetime, fim: datetime):
     """Quando o Fim é menor ou igual ao inicio, considera virada de dia."""
     if fim <= inicio:
         return fim + timedelta(days=1), True
     return fim, False
+
+
+
 
 def _intervalo_competencia(competencia: str | None, data_padrao: date | None = None):
     hoje = timezone.localdate()
@@ -55,6 +63,9 @@ def _intervalo_competencia(competencia: str | None, data_padrao: date | None = N
     return data_referencia.strftime("%Y-%m"), data_inicio, data_fim
 
 
+
+
+
 def _gerar_competencias(apontamentos):
     meses_pt = [
         "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho",
@@ -70,10 +81,9 @@ def _gerar_competencias(apontamentos):
         
         # Noramaliza para date
         if isinstance(data_inicio, datetime):
-            data_local = data_inicio.date()
+            data_local = timezone.localdate(data_inicio) if settings.USE_TZ else data_inicio.date()
         else:
             data_local = data_inicio
-
 
         if data_local.day > 20:
             if data_local.month == 12:
@@ -97,6 +107,11 @@ def _gerar_competencias(apontamentos):
         }
         for ano, mes in competencias_ordenadas
     ]
+
+
+
+
+
 
 
 def ajuste_horas(request):
@@ -228,3 +243,5 @@ def ajuste_horas(request):
         }
     }
     return render(request, "ajuste_horas/ajuste_horas.html", context)
+
+
