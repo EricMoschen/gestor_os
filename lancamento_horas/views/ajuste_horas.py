@@ -67,14 +67,15 @@ def _gerar_competencias(apontamentos):
     for data_inicio in datas_inicio:
         if not data_inicio:
             continue
-
-        if settings.USE_TZ:
-            data_local = timezone.localdate(data_inicio)
+        
+        # Noramaliza para date
+        if isinstance(data_inicio, datetime):
+            data_local = data_inicio.date()
         else:
-            data_local = data_inicio.date() if isinstance(data_inicio, datetime) else data_inicio
+            data_local = data_inicio
 
 
-        if data_local.day >= 21:
+        if data_local.day > 20:
             if data_local.month == 12:
                 ano, mes = data_local.year + 1, 1
             else:
@@ -96,7 +97,6 @@ def _gerar_competencias(apontamentos):
         }
         for ano, mes in competencias_ordenadas
     ]
-
 
 
 def ajuste_horas(request):
