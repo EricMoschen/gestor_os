@@ -70,7 +70,7 @@
             <form method="get">
                 <select id="filtro-mes" class="input w-50" name="competencia" onchange="this.form.submit()">
                     {% for comp in competencias %}
-                    <option value="{{ comp.valor }}" {% if comp.valor == competencia_selecionada %} selected {% endif %}>
+                    <option value="{{ comp.valor }}" {% if comp.valor == competencia_selecionada %}selected{% endif %}>
                         {{ comp.label }}
                     </option>
                     {% endfor %}
