@@ -81,7 +81,11 @@ def _gerar_competencias(apontamentos):
         
         # Noramaliza para date
         if isinstance(data_inicio, datetime):
-            data_local = timezone.localdate(data_inicio) if settings.USE_TZ else data_inicio.date()
+           if settings.USE_TZ and timezone.is_naive(data_inicio):
+               data_inicio = timezone.make_aware(data_inicio)
+
+           data_local = timezone.localdate(data_inicio) if settings.USE_TZ else data_inicio
+           
         else:
             data_local = data_inicio
 
