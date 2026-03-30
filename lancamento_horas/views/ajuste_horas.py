@@ -65,7 +65,15 @@ def _gerar_competencias(apontamentos):
     competencias = set()
 
     for data_inicio in datas_inicio:
-        data_local = timezone.localtime(data_inicio) if settings.USE_TZ else data_inicio
+        if not data_inicio:
+            continue
+
+        if settings.USE_TZ:
+            data_local = timezone.localdate(data_inicio)
+        else:
+            data_local = data_inicio.date() if isinstance(data_inicio, datetime) else data_inicio
+
+
         if data_local.day >= 21:
             if data_local.month == 12:
                 ano, mes = data_local.year + 1, 1
@@ -188,7 +196,12 @@ def ajuste_horas(request):
     apontamentos_base = ApontamentoHoras.objects.select_related("colaborador", "ordem_servico")
     competencia_raw = request.GET.get("competencia")
     ultima_data = apontamentos_base.order_by("-data_inicio").values_list("data_inicio", flat=True).first()
-    data_padrao = ultima_data.date() if ultima_data else None
+
+    if ultima_data:
+        data_padrao = timezone.localdate(ultima_data) if settings.USE_TZ else ultima_data.date()
+    else:
+        data_padrao = None
+        
     competencia_selecionada, periodo_inicio, periodo_fim = _intervalo_competencia(competencia_raw, data_padrao=data_padrao)
     competencia = _gerar_competencias(apontamentos_base)
     inicio_periodo = _make_aware_if_needed(datetime.combine(periodo_inicio, time.min))

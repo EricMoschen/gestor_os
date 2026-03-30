@@ -59,3 +59,10 @@
 
 ## 📊 Arquitetura de Dados
 - [x] Definição das tabelas Fato e Dimensão  
+
+
+
+- verificar servidor da IMA
+- verivicar disponibilidade de rodar local
+- alinhamento nas sextas as 13:30
+7
