@@ -1,6 +1,6 @@
 # Desenho de Pastas (SaaS)
 
-```text
+
 gestor_os/
 ├── manage.py
 ├── requirements.txt
