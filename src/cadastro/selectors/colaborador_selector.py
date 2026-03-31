@@ -6,7 +6,7 @@ from src.cadastro.models import Colaborador, Funcao_colab
 def listar_colaboradores_com_os():
     return (
         Colaborador.objects
-        .annotate(os_count=Count('apontamentohoras'))
+        .annotate(os_count=Count('apontamentos_lancamento'))
         .order_by('nome')
     )
 
