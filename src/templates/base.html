@@ -2,27 +2,48 @@
 
 <!DOCTYPE html>
 <html lang="pt-br" class="h-full">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gestor OS</title>
 
-    <!-- Tailwind CSS via CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon" />
-    <link rel="stylesheet" href="{% static 'css/theme.css' %}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestor OS</title>
 
-    <!-- Estilos e scripts adicionais -->
-    {% block head %}
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon" />
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}">
 
-    {% endblock %}
-  </head>
-  <body class="h-full min-h-screen antialiased">
-    <!-- Bloco principal de conteúdo -->
-    {% block body %}
+  <!-- Estilos e scripts adicionais -->
+  {% block head %}
 
-    {% endblock %}
+  {% endblock %}
+</head>
 
-    <!-- Scripts globais -->
-  </body>
+<body class="h-full min-h-screen antialiased">
+  {% if user.is_authenticated and session_timeout_config %}
+  <div id="session-timeout-config" data-logout-url="{% url 'logout' %}"
+    data-uses-idle-timeout="{{ session_timeout_config.uses_idle_timeout|yesno:'true,false' }}"
+    data-idle-timeout-seconds="{{ session_timeout_config.idle_timeout_seconds }}"
+    data-warning-threshold-seconds="{{ session_timeout_config.warning_threshold_seconds }}"></div>
+
+  <div id="session-timeout-warning"
+    class="hidden fixed right-4 bottom-4 z-50 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900 shadow-lg"
+    role="status" aria-live="polite">
+    Sua sessão será encerrada em
+    <strong data-countdown>02:00</strong>
+    por inatividade.
+  </div>
+  {% endif %}
+  <!-- Bloco principal de conteúdo -->
+  {% if user.is_authenticated and session_timeout_config %}
+  <script src="{% static 'js/session_timeout.js' %}"></script>
+  {% endif %}
+  {% block body %}
+
+  {% endblock %}
+
+  <!-- Scripts globais -->
+
+</body>
+
 </html>

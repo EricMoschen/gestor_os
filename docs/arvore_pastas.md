@@ -1,5 +1,6 @@
 📂gestor_os
 ┃
+┃ 📜README.md
 ┃ 📜manage.py    
 ┃ 📜requirements.txt
 ┃ 📜render.yaml
@@ -11,7 +12,6 @@
 ┃ ┣ 📜arvore_pastas.md
 ┃ ┣ 📜documentacao_tecnica.md
 ┃ ┣ 📜implementacao.md
-┃ ┣ 📜README.md
 ┃ ┗ 📜usabilidade_usuario.md
 ┃
 ┃ 📦src

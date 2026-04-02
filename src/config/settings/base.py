@@ -41,6 +41,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "src.config.middleware.SessionTimeoutMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -57,6 +58,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "src.config.context_processors.session_timeout_config",
             ],
         },
     },
@@ -114,5 +116,7 @@ CSRF_TRUSTED_ORIGINS = [
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "login"
+SESSION_IDLE_TIMEOUT_MINUTES = 10
+SESSION_FABRICA_ABSOLUTE_TIMEOUT_HOURS = 12
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

@@ -174,6 +174,21 @@ Padrão efetivo do projeto:
 
 ---
 
+## 3.7 Gestão de sessão e segurança (timeout)
+
+### Regras implementadas
+- **Todos os usuários (exceto grupo `Fabrica`)**: logout automático após **10 minutos sem interação**.
+- **Aviso visual de expiração**: contador regressivo aparece quando faltam **2 minutos** para encerrar a sessão por inatividade.
+- **Grupo `Fabrica`**: exceção de política, com sessão de **8 horas contínuas** (timeout absoluto), sem corte por inatividade de 10 minutos.
+
+### Componentes técnicos
+- `config/session_policy.py`: centraliza constantes e políticas de sessão.
+- `config/middleware.py` (`SessionTimeoutMiddleware`): valida timeout por request autenticada e encerra sessão quando aplicável.
+- `config/context_processors.py`: injeta configuração de timeout no template.
+- `templates/base.html` + `config/static/js/session_timeout.js`: exibição do banner e cronômetro regressivo no frontend.
+- `config/auth_views.py`: inicializa timestamps de sessão no login e exibe mensagens claras na tela de autenticação ao expirar.
+
+---
 ## 4) Guia de manutenção (passo a passo dinâmico)
 
 ## 4.1 Setup local rápido
