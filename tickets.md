@@ -7,7 +7,6 @@
 ---
 
 ## 🟡 Melhorias (Média Prioridade)
-- [ ] Incluir lista suspensa com todas as OS e horários trabalhados ao clicar no colaborador na aba de relatórios  
 - [ ] Atualizar layout da tela de Finalizar OS  
 - [ ] Atualizar impressão da OS para formato editável estilo Word (para envio digital e anotações)  
 - [ ] Permitir adicionar imagem na OS puxando do SharePoint  
@@ -37,18 +36,18 @@
 ## 🆕 Novas Funcionalidades
 
 ### Tela de Finalização de OS
-- [ ] Campos obrigatórios:  
+- [x] Campos obrigatórios:  
   - Descrição Técnica da Avaria  
   - Descrição da Intervenção  
   - Descrição do Sintoma  
   - Causa  
   - Data/Hora de Início  
   - Data/Hora de Fim  
-- [ ] Campos opcionais:  
+- [x] Campos opcionais:  
   - Peças Aplicadas (Quantidade, Descrição)  
   - Observações  
-- [ ] Todos os campos devem ser salvos em banco como registro  
-- [ ] Alterar status da OS para **Finalizado** (já existente)  
+- [x] Todos os campos devem ser salvos em banco como registro  
+- [x] Alterar status da OS para **Finalizado** (já existente)  
 
 ### Cadastro de Centros de Custos
 - [x] Campo "Centro de Custos Atual" renomeado para "Tag"  
@@ -64,5 +63,5 @@
 
 - verificar servidor da IMA
 - verivicar disponibilidade de rodar local
-- alinhamento nas sextas as 13:30
-7
+- alinhamento todas as sextas as 13:30
+-
