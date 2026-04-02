@@ -6,7 +6,9 @@ Sistema web para gestão de ordens de serviço, apontamento de horas, cadastros 
 
 A documentação completa (instalação, módulos, ações, manutenção e usabilidade) está em:
 
-- [`docs/DOCUMENTACAO_SAAS.md`](docs/DOCUMENTACAO_SAAS.md)
+- [`docs/documentacao_tecnica.md`](docs/documentacao_tecnica.md)
+- [`docs/usabilidade_usuario.md`](docs/usabilidade_usuario.md)
+- [`docs/implementacao.md`](docs/implementacao.md)
 
 ## Execução rápida
 
