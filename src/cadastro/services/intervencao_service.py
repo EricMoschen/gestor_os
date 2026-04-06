@@ -5,7 +5,6 @@ from src.cadastro.models import Intervencao
 
 
 @transaction.atomic
-@transaction.atomic
 def salvar_intervencao(*, intervencao_id=None, descricao):
 
     descricao = descricao.strip()

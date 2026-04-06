@@ -14,5 +14,5 @@ def validar_codigo_unico(codigo, cliente_id=None):
     if existe:
         raise ValidationError(
             f"Já existe um Cliente com o Código informado: "
-            f"{codigo} - {existe.nome_cliente}."
+            f"{codigo} - {existe.nome}."
         )

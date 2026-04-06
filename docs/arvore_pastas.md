@@ -10,6 +10,7 @@
 ┃ ┃ ┣ 📜definicao_tabelas.md
 ┃ ┃ ┗ 📜Tabelas_visual.png
 ┃ ┣ 📜arvore_pastas.md
+┃ ┣ 📜documentacao_tecnica_detalhada.md
 ┃ ┣ 📜documentacao_tecnica.md
 ┃ ┣ 📜implementacao.md
 ┃ ┗ 📜usabilidade_usuario.md

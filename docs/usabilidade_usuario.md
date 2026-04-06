@@ -19,8 +19,6 @@ O sistema controla as telas por perfil. Em termos práticos:
 - **Supervisor:** foco em apontamento, ajuste de horas e relatórios.
 - **Fábrica:** foco em apontamento de horas.
 
-> Dica de governança SaaS: mantenha cada usuário com o menor nível de privilégio necessário (princípio do menor privilégio).
-
 ---
 
 ## 3) Primeiros passos (onboarding rápido)
@@ -195,18 +193,7 @@ Com uma OS válida em tela, use:
 
 ---
 
-## 10) Padrão de qualidade SaaS (nível profissional)
-
-Para operação madura e escalável:
-- mantenha cadastros limpos e padronizados;
-- adote rotina diária de fechamento operacional;
-- use relatórios como base para decisão (não percepção);
-- formalize responsáveis por abertura, ajustes e finalização;
-- revise perfis e acessos periodicamente.
-
----
-
-## 11) Checklist rápido (1 minuto)
+## 10) Checklist rápido (1 minuto)
 
 Antes de encerrar o dia, confirme:
 - [ ] não há apontamentos críticos em aberto;
@@ -216,7 +203,7 @@ Antes de encerrar o dia, confirme:
 
 ---
 
-## 12) Resumo executivo
+## 11) Resumo executivo
 Se sua equipe seguir este fluxo:
 **Cadastrar base → Abrir OS → Apontar/Encerrar horas → Ajustar quando necessário → Finalizar OS → Emitir relatório**,
 você terá operação mais previsível, rastreável e com qualidade de dados para gestão.

@@ -11,7 +11,7 @@ from src.abertura_os.queries.centro_custo_queries import get_centros_pais
 
 def abrir_os(request):
 
-    # Preview do próximo número (não salva ainda)
+    
     preview_numero = AberturaOS.gerar_proximo_numero_os()
 
     if request.method == "POST":
@@ -34,7 +34,7 @@ def abrir_os(request):
 
     context = {
         "form": form,
-        "proximo_numero": preview_numero,  # Somente para mostrar na tela
+        "proximo_numero": preview_numero, 
         "ordens": AberturaOSService.listar_ordens(),
         "pais_centro_custo": get_centros_pais(),
         "modo_edicao": False,

@@ -1,7 +1,5 @@
 # Documentação de Implementação do Sistema 
 
-> **Objetivo:** disponibilizar o `gestor_os` com padrão profissional de implantação, configuração e operação, com foco em previsibilidade, segurança e escalabilidade.
-
 ---
 
 ## 1) Visão executiva
