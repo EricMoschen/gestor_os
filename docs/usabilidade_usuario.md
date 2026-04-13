@@ -118,6 +118,7 @@ Use esta sequência para reduzir erros e retrabalho:
 - tabela com OS já cadastradas;
 - atalho ✏️ para edição;
 - atalho 🖨️ para impressão da OS.
+- nos campos de seleção (ex.: Centro de Custo, Cliente e Motivo da Intervenção), com o campo em foco, digite letras ou números para filtrar as opções no próprio campo.
 
 ### 6.2 Apontar Horas (início/fim da execução)
 1. Acesse **Ordens de Serviço > Apontar Horas**.
