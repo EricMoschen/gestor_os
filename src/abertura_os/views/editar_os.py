@@ -39,7 +39,7 @@ def editar_os(request, pk):
         "modo_edicao": True,
         "os_id": os_instance.id,
         "selected_centro_label": (
-            os_instance.centro_custo.descricao
+            f"{os_instance.centro_custo.descricao} - {os_instance.centro_custo.cod_centro}"
             if os_instance.centro_custo else ""
         ),
     }

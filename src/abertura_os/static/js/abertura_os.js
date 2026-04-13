@@ -50,7 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   dropdown.list.addEventListener('click', (e) => {
     const toggleButton = e.target.closest('.dropdown__toggle');
-    const parent = e.target.closest('.dropdown__item--parent');
     const child = e.target.closest('.dropdown__item--child');
 
     // Abrir / fechar filhos
@@ -70,10 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Selecionar item
-    if (!parent && !child) return;
+    if (!child) return;
 
-    const targetItem = child || parent;
-    dropdown.set(targetItem.dataset.cod, targetItem.dataset.label);
+    dropdown.set(child.dataset.cod, child.textContent.trim());
     dropdown.close();
   });
 });

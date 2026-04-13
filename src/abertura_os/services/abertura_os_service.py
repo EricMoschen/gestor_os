@@ -7,12 +7,16 @@ class AberturaOSService:
     @staticmethod
     def _obter_centro_custo(centro_id):
         if not centro_id:
-            raise ValueError("Selecione um centro de custo válido.")
+            raise ValueError("Selecione um ativo válido.")
         
         try:
-            return CentroCusto.objects.get(pk=centro_id)
+            centro_custo = CentroCusto.objects.get(pk=centro_id)
         except CentroCusto.DoesNotExist as exc:
-            raise ValueError("Centro de custo inválido.") from exc
+            raise ValueError("ativo inválido.") from exc
+        if centro_custo.tag_pai_id is None:
+            raise ValueError("Selecione uma subtag de ativo válida.")
+
+        return centro_custo
 
     @staticmethod
     def criar_os(form, centro_id):
