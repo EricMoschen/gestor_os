@@ -362,10 +362,29 @@ input[readonly] {
         flex-direction: column;
     }
 
-    .table th,
-    .table td {
-        font-size: .85rem;
-        padding: 10px;
-    }
+   .table thead {
+       display: none;
+   }
+
+   .table tbody tr {
+       display: block;
+       margin-bottom: 14px;
+       background: var(--bg-hover);
+       border-radius: 10px;
+       padding: 10px;
+   }
+
+   .table tbody td {
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       border: none;
+       padding: 6px 0;
+       font-size: .85rem;
+   }
+
+   .table__actions {
+       justify-content: flex-end;
+   }
 }
 
