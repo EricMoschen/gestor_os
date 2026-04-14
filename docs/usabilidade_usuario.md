@@ -137,6 +137,7 @@ Use esta sequência para reduzir erros e retrabalho:
 4. Altere data/hora início/fim e salve.
 5. Se necessário, exclua o apontamento indevido.
 6. Para lançamento retroativo, use **+ Incluir Lançamento**.
+7. No mobile, a listagem é exibida em cartões por apontamento (Matrícula, Colaborador, OS, Início, Fim, Status e ação **Ajustar**) para manter o mesmo padrão visual das demais telas,o modal **+ Incluir Lançamento** abre em formato de folha inferior, com rolagem interna e botões de ação fixados no rodapé para facilitar o preenchimento.
 
 **Governança recomendada:**
 - ajuste somente com justificativa interna;

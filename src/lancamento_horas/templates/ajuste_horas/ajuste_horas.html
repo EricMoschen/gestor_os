@@ -116,13 +116,13 @@
                         data-inicio="{{ ap.data_inicio|date:'Y-m-d\\TH:i' }}"
                         data-fim="{% if ap.data_fim %}{{ ap.data_fim|date:'Y-m-d\\TH:i' }}{% endif %}">
 
-                        <td>{{ ap.colaborador.matricula }}</td>
-                        <td>{{ ap.colaborador.nome }}</td>
-                        <td>{{ ap.ordem_servico.numero_os }}</td>
-                        <td>{{ ap.data_inicio|date:"d/m/Y H:i" }}</td>
-                        <td>{% if ap.data_fim %}{{ ap.data_fim|date:"d/m/Y H:i" }}{% else %}—{% endif %}</td>
-
-                        <td>
+                        <td data-label="Matrícula">{{ ap.colaborador.matricula }}</td>
+                        <td data-label="Colaborador">{{ ap.colaborador.nome }}</td>
+                        <td data-label="OS">{{ ap.ordem_servico.numero_os }}</td>
+                        <td data-label="Início">{{ ap.data_inicio|date:"d/m/Y H:i" }}</td>
+                        <td data-label="Fim">{% if ap.data_fim %}{{ ap.data_fim|date:"d/m/Y H:i" }}{% else %}—{% endif %}</td>
+                        
+                        <td data-label="Status">
                             <span class="status
                                 {% if ap.data_fim %}
                                     status--success
@@ -134,7 +134,7 @@
                             </span>
                         </td>
 
-                        <td>
+                        <td data-label="Ações" class="table__actions-cell">
                             <button class="btn btn--primary" data-open-modal>
                                 Ajustar
                             </button>
