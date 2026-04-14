@@ -157,7 +157,53 @@ body {
         width: 100%;
     }
 
+    .table-box {
+        padding: 0;
+        overflow: visible;
+        background: transparent;
+        border: 0;
+    }
+
     .tabela {
-        min-width: 560px;
+        min-width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+    }
+
+    .tabela thead,
+    .tabela tfoot {
+        display: none;
+    }
+
+    .tabela tr {
+        display: block;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+    }
+
+    .tabela td {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(148, 163, 184, .12);
+        text-align: right;
+    }
+
+    .tabela td:last-child {
+        border-bottom: 0;
+    }
+
+    .tabela td::before {
+        content: attr(data-label);
+        font-size: .78rem;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        color: var(--text-muted);
+        font-weight: 600;
+        text-align: left;
     }
 }

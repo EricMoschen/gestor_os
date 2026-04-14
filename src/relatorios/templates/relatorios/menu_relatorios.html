@@ -98,12 +98,12 @@
             <tbody>
                 {% for r in relatorio %}
                 <tr>
-                    <td>{{ r.matricula }}</td>
-                    <td>{{ r.nome }}</td>
-                    <td>{{ r.horas_normais_fmt }}</td>
-                    <td>{{ r.horas_50_fmt }}</td>
-                    <td>{{ r.horas_100_fmt }}</td>
-                    <td class="total">{{ r.total_fmt }}</td>
+                    <td data-label="Matrícula">{{ r.matricula }}</td>
+                    <td data-label="Colaborador">{{ r.nome }}</td>
+                    <td data-label="Horas Normais">{{ r.horas_normais_fmt }}</td>
+                    <td data-label="Horas 50%">{{ r.horas_50_fmt }}</td>
+                    <td data-label="Horas 100%">{{ r.horas_100_fmt }}</td>
+                    <td data-label="Total Geral" class="total">{{ r.total_fmt }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
