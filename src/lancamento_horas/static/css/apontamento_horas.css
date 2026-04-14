@@ -249,15 +249,80 @@
 
     .layout {
         padding: 16px;
+        gap: 16px;
+    }
+
+    .card {
+        padding: 16px;
+    }
+
+    .card__header {
+        margin-bottom: 14px;
+    }
+
+    .card__header h2 {
+        font-size: 1.1rem;
+    }
+
+    .form {
+        gap: 12px;
     }
 
     .form__actions {
         flex-direction: column;
     }
 
-    .table th,
+    .btn {
+        width: 100%;
+    }
+
+    .filter {
+        margin-bottom: 12px;
+    }
+
+    .table-wrapper {
+        max-height: none;
+        overflow: visible;
+    }
+
+    .table thead {
+        display: none;
+    }
+
+    .table,
+    .table tbody,
+    .table tr,
     .table td {
-        font-size: .85rem;
+        display: block;
+        width: 100%;
+    }
+
+    .table tr {
+        background: var(--bg-hover);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        margin-bottom: 12px;
         padding: 10px;
+    }
+
+    .table td {
+        border: none;
+        padding: 6px 0;
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: flex-start;
+        font-size: .9rem;
+    }
+
+    .table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--text-muted);
+        flex-shrink: 0;
+    }
+
+    .table td .status {
+        margin-left: auto;
     }
 }

@@ -205,6 +205,7 @@ Módulo de dados mestre, base para quase todos os outros fluxos:
 - Bloqueio com OS finalizada.
 - Cenário de apontamento já aberto.
 - Conferência de horas (normal, 50%, 100%).
+- Validar responsividade mobile da tela de apontamento (formulário e listagem de OS em cards).
 
 ---
 
