@@ -134,3 +134,30 @@ body {
 .alert {
     color: #fca5a5;
 }
+
+@media (max-width: 900px) {
+    .filtro-box {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .container {
+        padding: 14px;
+        gap: 14px;
+    }
+
+    .filtro-box {
+        grid-template-columns: 1fr;
+        padding: 12px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+    }
+
+    .tabela {
+        min-width: 560px;
+    }
+}

@@ -25,6 +25,7 @@ body {
     background: var(--bg-main-gradient);
     color: var(--text-main);
     font-family: "Inter", system-ui, -apple-system, sans-serif;
+    min-height: 100dvh;
 }
 
 input,
@@ -98,4 +99,41 @@ button {
 .btn-secondary:hover,
 .btn-danger:hover {
     transform: translateY(-1px);
+}
+
+img,
+svg,
+canvas,
+video {
+    max-width: 100%;
+    height: auto;
+}
+
+.table-wrapper,
+.table-scroll,
+.table-box {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 900px) {
+    .app-back-button {
+        top: .85rem;
+        right: .85rem;
+        padding: .5rem .85rem;
+        font-size: .88rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .card {
+        border-radius: 14px;
+    }
+
+    .btn-primary,
+    .btn-secondary,
+    .btn-danger {
+        width: 100%;
+    }
 }
