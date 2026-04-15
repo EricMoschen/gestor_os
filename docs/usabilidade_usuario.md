@@ -47,6 +47,16 @@ Após login, você verá o **Painel de Gestão** com cards por categoria:
 > Dica: ao ver o cronômetro, mova o mouse, use teclado ou clique na tela para manter a sessão ativa (quando aplicável ao seu perfil).
 
 ---
+## 3.2) Preferência de tema (Claro/Escuro)
+
+- O tema é configurado por **usuário** e fica salvo para os próximos acessos.
+- O seletor **Tema** fica no canto superior esquerdo após o login.
+- **Escuro** mantém o visual original do sistema.
+- **Claro** aplica paleta otimizada para leitura em ambientes iluminados.
+
+> Ao trocar o tema, a tela é recarregada automaticamente para aplicar o estilo em todos os módulos.
+
+---
 
 ## 4) Fluxo operacional recomendado (padrão de alta eficiência)
 

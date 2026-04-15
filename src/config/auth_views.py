@@ -4,8 +4,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.views.decorators.http import require_POST
 
 from .access_control import ensure_roles_exist
+from .models import UserThemePreference
 from .session_policy import (
     SESSION_LAST_ACTIVITY_KEY,
     SESSION_LOGIN_AT_KEY,
@@ -54,6 +56,38 @@ def login_view(request):
 
     return render(request, "auth/login.html", {"error_message": error_message})
 
+
+'''@login_required
+@require_POST
+def update_theme_view(request):
+    selected_theme = request.POST.get("theme", UserThemePreference.THEME_DARK)
+
+    available_themes = {choice for choice, _ in UserThemePreference.THEME_CHOICES}
+
+    if selected_theme in available_themes:
+        UserThemePreference.objects.update_or_create(
+            user=request.user,
+            defaults={"theme": selected_theme},
+        )
+
+    next_url = request.POST.get("next") or request.META.get("HTTP_REFERER")
+    return redirect(next_url or "dashboard")'''
+
+
+@login_required
+@require_POST
+def update_theme_view(request):
+    selected_theme = request.POST.get("theme", UserThemePreference.THEME_DARK)
+    available_themes = {choice for choice, _ in UserThemePreference.THEME_CHOICES}
+
+    if selected_theme in available_themes:
+        UserThemePreference.objects.update_or_create(
+            user=request.user,
+            defaults={"theme": selected_theme},
+        )
+
+    next_url = request.POST.get("next") or request.META.get("HTTP_REFERER")
+    return redirect(next_url or "dashboard")
 
 @login_required
 def logout_view(request):

@@ -12,7 +12,25 @@
 
     <div class="dashboard-topbar">
         <span class="user-chip">Olá, {{user.username}}</span>
-        <a href="{% url 'logout' %}" class="logout-link">Sair</a>
+
+        <div class="dashboard-actions">
+            <form action="{% url 'update_theme' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                {% if active_theme == 'light' %}
+                <input type="hidden" name="theme" value="dark">
+                <button type="submit" class="theme-icon-btn" aria-label="Ativar tema escuro" title="Ativar tema escuro">
+                    <span aria-hidden="true">🌙</span>
+                </button>
+                {% else %}
+                <input type="hidden" name="theme" value="light">
+                <button type="submit" class="theme-icon-btn" aria-label="Ativar tema claro" title="Ativar tema claro">
+                    <span aria-hidden="true">☀️</span>
+                </button>
+                {% endif %}
+            </form>
+            <a href="{% url 'logout' %}" class="logout-link">Sair</a>
+        </div>
     </div>
     <header>
         <h1 class="dashboard-title">Painel de Gestão</h1>

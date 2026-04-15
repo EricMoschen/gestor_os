@@ -2,7 +2,7 @@
    DESIGN TOKENS
 ===================================== */
 
-:root {
+:root[data-theme="dark"] {
 
     --bg-main: #0f172a;
     --bg-card: #1e293b;
@@ -28,7 +28,7 @@
 ===================================== */
 
 body {
-    background: var(--bg-main);
+    background: var(--bg-main-gradient);
     color: var(--text-main);
     font-family: system-ui, sans-serif;
 }
@@ -137,7 +137,7 @@ select,
     padding: 11px 12px;
     border-radius: 8px;
     border: 1px solid var(--border);
-    background: var(--bg-main);
+    background: var(--bg-main-gradient);
     color: var(--text-main);
     resize: none;
     transition: var(--transition);

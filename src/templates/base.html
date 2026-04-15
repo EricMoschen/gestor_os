@@ -1,7 +1,7 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="pt-br" class="h-full">
+<html lang="pt-br" class="h-full" data-theme="{{active_theme|default:'dark'}}">
 
 <head>
   <meta charset="UTF-8" />
@@ -20,6 +20,7 @@
 </head>
 
 <body class="h-full min-h-screen antialiased">
+
   {% if user.is_authenticated and session_timeout_config %}
   <div id="session-timeout-config" data-logout-url="{% url 'logout' %}"
     data-uses-idle-timeout="{{ session_timeout_config.uses_idle_timeout|yesno:'true,false' }}"

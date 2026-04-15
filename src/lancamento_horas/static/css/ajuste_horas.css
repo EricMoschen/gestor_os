@@ -2,7 +2,7 @@
    DESIGN SYSTEM
 ================================ */
 
-:root {
+:root[data-theme="dark"] {
 
     --bg-main: #0f172a;
     --bg-card: rgba(30, 41, 59, .75);
@@ -38,7 +38,7 @@
 }
 
 body {
-    background: radial-gradient(circle at top, #1e293b, #020617);
+    background:var(--bg-man-gradient);
     color: var(--text-main);
     font-family: "Inter", system-ui;
 }

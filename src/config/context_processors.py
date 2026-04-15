@@ -1,3 +1,4 @@
+from .models import UserThemePreference
 from .session_policy import (
     SESSION_POLICY_DEFAULT,
     SESSION_POLICY_FABRICA,
@@ -19,3 +20,23 @@ def session_timeout_config(request):
             **get_session_config(policy),
         }
     }
+
+def user_theme(request):
+    default_theme = UserThemePreference.THEME_DARK
+
+    if not request.user.is_authenticated:
+        return {"active_theme": default_theme}
+    
+    preference = (
+        UserThemePreference.objects
+        .filter(user=request.user)
+        .values_list("theme", flat=True)
+        .first()
+    )
+
+    valid_choices = dict(UserThemePreference.THEME_CHOICES).keys()
+
+    if preference not in valid_choices:
+        preference = default_theme
+
+    return {"active_theme": preference}

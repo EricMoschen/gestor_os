@@ -5,9 +5,9 @@
 }
 
 body {
-    background: #0f172a;
+    background: var(--input-bg);
     font-family: "Inter", sans-serif;
-    color: #e2e8f0;
+    color: var(--text-main);
 }
 
 /* LAYOUT */
@@ -23,7 +23,7 @@ body {
 /* CARD */
 
 .card {
-    background: #1e293b;
+    background: var(--bg-card);
     border-radius: 18px;
     padding: 1.8rem;
     box-shadow: 0 12px 30px rgba(0,0,0,0.35);
@@ -43,17 +43,17 @@ body {
 
 .form-group label {
     font-size: 0.85rem;
-    color: #94a3b8;
+    color: var(--text-muted);
 }
 
 .form-group input,
 .form-group select {
     width: 100%;
     padding: 10px;
-    background: #0f172a;
-    border: 1px solid #334155;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
     border-radius: 10px;
-    color: white;
+    color: var(--text-main);
 }
 
 .form-group input:focus,
@@ -92,7 +92,7 @@ body {
     border-radius: 12px;
     background: linear-gradient(135deg,#6366f1,#4f46e5);
     border: none;
-    color: white;
+    color: var(--text-main);
     font-weight: 600;
     cursor: pointer;
 }
@@ -101,8 +101,8 @@ body {
     flex: 1;
     padding: 12px;
     border-radius: 12px;
-    background: #334155;
-    color: white;
+    background: var(--bg-hover);
+    color: var(--text-main);
     text-decoration: none;
     text-align: center;
 }
@@ -122,14 +122,14 @@ body {
 .data-table th {
     position: sticky;
     top: 0;
-    background: #334155;
+    background: var(--bg-hover);
     padding: 12px;
     text-align: left;
 }
 
 .data-table td {
     padding: 12px;
-    border-bottom: 1px solid #334155;
+    border-bottom: 1px solid var(--border);
 }
 
 .data-table tr:hover {
@@ -165,7 +165,7 @@ body {
     margin: 15vh auto;
     padding: 2rem;
     border-radius: 16px;
-    background: #1e293b;
+    background: var(--bg-card);
     text-align: center;
 }
 
@@ -181,7 +181,7 @@ body {
     border: none;
     padding: 10px;
     border-radius: 10px;
-    color: white;
+    color: #fff;
 }
 
 /* RESPONSIVO */
@@ -208,7 +208,7 @@ body {
 
     .data-table tr {
         display: block;
-        background: #334155;
+        background: var(--bg-hover);
         margin-bottom: 12px;
         border-radius: 10px;
         padding: 10px;
