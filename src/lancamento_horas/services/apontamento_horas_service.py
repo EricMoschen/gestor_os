@@ -174,6 +174,7 @@ class ApontamentoHorasService:
             ))
 
         return intervalos_pausa
+    
     @staticmethod
     def _calcular_fim_turno_para_inicio(inicio, turno_inicio, turno_fim):
         if not turno_inicio or not turno_fim:
