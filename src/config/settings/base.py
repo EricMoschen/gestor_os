@@ -1,8 +1,11 @@
 from pathlib import Path
 import dj_database_url
 import os
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parents[2]
+
+load_dotenv(BASE_DIR / ".env")
 
 SECRET_KEY = os.getenv(
     "DJANGO_SECRET_KEY",
@@ -85,6 +88,29 @@ else:
             "NAME": BASE_DIR / "db.sqlite3",
         }
 }
+    
+#DATABASE_URL = os.getenv("DATABASE_URL")
+
+#if DATABASE_URL:
+#    DATABASES = {
+#        "default": dj_database_url.parse(
+#            DATABASE_URL,
+#            conn_max_age=600,
+#            ssl_require=os.getenv("DB_SSL_REQUIRE", "False") == "True",
+#        )
+#    }
+#else:
+#    DATABASES = {
+#        "default": {
+#            "ENGINE": "django.db.backends.postgresql",
+#            "NAME": os.getenv("POSTGRES_DB", "gestor_os"),
+#            "USER": os.getenv("POSTGRES_USER", "gestor_os_user"),
+#            "PASSWORD": os.getenv("POSTGRES_PASSWORD", ""),
+#            "HOST": os.getenv("POSTGRES_HOST", "localhost"),
+#            "PORT": os.getenv("POSTGRES_PORT", "5432"),
+#            "CONN_MAX_AGE": 600,
+#        }
+#    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},

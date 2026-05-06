@@ -38,7 +38,7 @@
 }
 
 body {
-    background:var(--bg-man-gradient);
+    background: var(--bg-main-gradient, var(--bg-main));
     color: var(--text-main);
     font-family: "Inter", system-ui;
 }

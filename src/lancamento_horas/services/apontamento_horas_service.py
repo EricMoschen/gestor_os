@@ -5,6 +5,8 @@ from ..utils.feriados import eh_feriado_ou_domingo, eh_sabado
 
 class ApontamentoHorasService:
 
+    TOLERANCIA_APONTAMENTO = timedelta(minutes=5)
+
     @staticmethod
     def _duracao_em_horas(inicio, fim):
         if fim <= inicio:
@@ -30,6 +32,82 @@ class ApontamentoHorasService:
         if timezone.is_naive(referencia) and timezone.is_aware(datahora):
             return timezone.make_naive(datahora)
         return datahora
+
+    @staticmethod
+    def _arredondar_horas(valor):
+        return round(valor, 10)
+
+    @staticmethod
+    def _apontamento_cobre_pausa(inicio, fim, inicio_pausa, fim_pausa):
+        return inicio <= inicio_pausa and fim > fim_pausa
+
+    @staticmethod
+    def _esta_dentro_da_tolerancia(datahora, limite):
+        return abs(datahora - limite) <= ApontamentoHorasService.TOLERANCIA_APONTAMENTO
+
+    @staticmethod
+    def _limites_intervalos_no_dia(colaborador, data_referencia, referencia_timezone):
+        inicios = []
+        fins = []
+
+        for inicio_turno, fim_turno in ApontamentoHorasService._obter_intervalos_normais_no_dia(
+            colaborador,
+            data_referencia,
+            referencia_timezone,
+        ):
+            if inicio_turno.date() == data_referencia:
+                inicios.append(inicio_turno)
+            if fim_turno.date() == data_referencia:
+                fins.append(fim_turno)
+
+        return inicios, fins
+
+    @staticmethod
+    def _ajustar_inicio_por_tolerancia(colaborador, inicio):
+        if ApontamentoHorasService.classificar_tipo_dia(inicio.date()) != "Dia Normal":
+            return inicio
+
+        inicios_turno, _ = ApontamentoHorasService._limites_intervalos_no_dia(
+            colaborador,
+            inicio.date(),
+            inicio,
+        )
+
+        for limite in inicios_turno:
+            if ApontamentoHorasService._esta_dentro_da_tolerancia(inicio, limite):
+                return limite
+
+        return inicio
+
+    @staticmethod
+    def _ajustar_fim_por_tolerancia(colaborador, fim):
+        if ApontamentoHorasService.classificar_tipo_dia(fim.date()) != "Dia Normal":
+            return fim
+
+        _, fins_turno = ApontamentoHorasService._limites_intervalos_no_dia(
+            colaborador,
+            fim.date(),
+            fim,
+        )
+
+        for limite in fins_turno:
+            if ApontamentoHorasService._esta_dentro_da_tolerancia(fim, limite):
+                return limite
+
+        return fim
+
+    @staticmethod
+    def _aplicar_tolerancia_apontamento(colaborador, inicio, fim):
+        inicio_ajustado = ApontamentoHorasService._ajustar_inicio_por_tolerancia(colaborador, inicio)
+        fim_ajustado = ApontamentoHorasService._ajustar_fim_por_tolerancia(colaborador, fim)
+        return inicio_ajustado, fim_ajustado
+
+    @staticmethod
+    def _turno_cruza_meia_noite(colaborador):
+        return any(
+            entrada and saida and entrada > saida
+            for entrada, saida in ApontamentoHorasService.obter_intervalos_turno(colaborador)
+        )
 
     @staticmethod
     def obter_intervalos_turno(colaborador):
@@ -63,6 +141,11 @@ class ApontamentoHorasService:
 
         inicio = ApontamentoHorasService._normalizar_datahora(apontamento.data_inicio)
         fim = ApontamentoHorasService._normalizar_datahora(apontamento.data_fim)
+        inicio, fim = ApontamentoHorasService._aplicar_tolerancia_apontamento(
+            apontamento.colaborador,
+            inicio,
+            fim,
+        )
         if fim <= inicio:
             return 0, 0, 0
 
@@ -70,49 +153,113 @@ class ApontamentoHorasService:
         cursor = inicio
 
         while cursor < fim:
-                inicio_dia = datetime.combine(cursor.date(), time.min)
-                fim_dia = inicio_dia + timedelta(days=1)
+            inicio_dia = datetime.combine(cursor.date(), time.min)
+            fim_dia = inicio_dia + timedelta(days=1)
 
-                inicio_dia = ApontamentoHorasService._ajustar_para_referencia(inicio_dia, inicio)
-                fim_dia = ApontamentoHorasService._ajustar_para_referencia(fim_dia, inicio)
+            inicio_dia = ApontamentoHorasService._ajustar_para_referencia(inicio_dia, inicio)
+            fim_dia = ApontamentoHorasService._ajustar_para_referencia(fim_dia, inicio)
 
-                bloco_inicio = cursor
-                bloco_fim = min(fim, fim_dia)
-                
-                tipo_dia = ApontamentoHorasService.classificar_tipo_dia(bloco_inicio.date())
-                horas_bloco =  ApontamentoHorasService._duracao_em_horas(bloco_inicio, bloco_fim)
+            bloco_inicio = cursor
+            bloco_fim = min(fim, fim_dia)
 
-                if tipo_dia == "Dom/Feriado":
-                    horas_100 += horas_bloco
-                elif tipo_dia == "Sábado":
-                    horas_50 += horas_bloco
-                else:
-                    horas_normais_no_bloco = 0
-                    for ini_turno, fim_turno in ApontamentoHorasService._obter_intervalos_normais_no_dia(
+            tipo_dia = ApontamentoHorasService.classificar_tipo_dia(bloco_inicio.date())
+            horas_bloco = ApontamentoHorasService._duracao_em_horas(bloco_inicio, bloco_fim)
+
+            if tipo_dia == "Dom/Feriado":
+                horas_100 += horas_bloco
+            elif tipo_dia == "Sábado":
+                horas_50_bloco, horas_100_bloco = ApontamentoHorasService._classificar_horas_sabado(
+                    apontamento.colaborador,
+                    bloco_inicio,
+                    bloco_fim,
+                    inicio,
+                )
+                horas_50 += horas_50_bloco
+                horas_100 += horas_100_bloco
+            else:
+                horas_normais_no_bloco = 0
+                for ini_turno, fim_turno in ApontamentoHorasService._obter_intervalos_normais_no_dia(
+                    apontamento.colaborador,
+                    bloco_inicio.date(),
+                    inicio,
+                ):
+                    inter_inicio = max(bloco_inicio, ini_turno)
+                    inter_fim = min(bloco_fim, fim_turno)
+                    horas_normais_no_bloco += ApontamentoHorasService._duracao_em_horas(inter_inicio, inter_fim)
+
+                horas_pausadas_no_bloco = 0
+                for ini_pausa, fim_pausa in ApontamentoHorasService._obter_intervalos_pausa_no_dia(
+                    apontamento.colaborador,
+                    bloco_inicio.date(),
+                    inicio,
+                ):
+                    inter_inicio = max(bloco_inicio, ini_pausa)
+                    inter_fim = min(bloco_fim, fim_pausa)
+                    horas_pausa = ApontamentoHorasService._duracao_em_horas(inter_inicio, inter_fim)
+                    if horas_pausa <= 0:
+                        continue
+
+                    if ApontamentoHorasService._deve_contar_pausa_como_normal(
                         apontamento.colaborador,
-                        bloco_inicio.date(),
                         inicio,
+                        fim,
+                        bloco_fim,
+                        ini_pausa,
+                        fim_pausa,
                     ):
-                        inter_inicio = max(bloco_inicio, ini_turno)
-                        inter_fim = min(bloco_fim, fim_turno)
-                        horas_normais_no_bloco += ApontamentoHorasService._duracao_em_horas(inter_inicio, inter_fim)
+                        horas_normais_no_bloco += horas_pausa
+                    elif ApontamentoHorasService._apontamento_cobre_pausa(inicio, fim, ini_pausa, fim_pausa):
+                        horas_pausadas_no_bloco += horas_pausa
 
-                    horas_pausadas_no_bloco = 0
-                    for ini_pausa, fim_pausa  in ApontamentoHorasService._obter_intervalos_pausa_no_dia(
-                        apontamento.colaborador,
-                        bloco_inicio.date(),
-                        inicio,
-                    ):
-                        inter_inicio = max(bloco_inicio, ini_pausa)
-                        inter_fim = min(bloco_fim, fim_pausa)
-                        horas_pausadas_no_bloco += ApontamentoHorasService._duracao_em_horas(inter_inicio, inter_fim)
+                horas_normais += max(horas_normais_no_bloco, 0)
+                horas_50 += max(horas_bloco - horas_normais_no_bloco - horas_pausadas_no_bloco, 0)
 
-                    horas_normais += max(horas_normais_no_bloco, 0)
-                    horas_50 += max(horas_bloco - horas_normais_no_bloco - horas_pausadas_no_bloco,0)
+            cursor = bloco_fim
 
-                cursor = bloco_fim
+        return (
+            ApontamentoHorasService._arredondar_horas(horas_normais),
+            ApontamentoHorasService._arredondar_horas(horas_50),
+            ApontamentoHorasService._arredondar_horas(horas_100),
+        )
+    
 
-        return horas_normais, horas_50, horas_100
+    @staticmethod
+    def _deve_contar_pausa_como_normal(
+        colaborador,
+        inicio_apontamento,
+        fim_apontamento,
+        fim_bloco,
+        inicio_pausa,
+        fim_pausa,
+    ):
+        proximo_dia = fim_bloco.date()
+        return (
+            ApontamentoHorasService._turno_cruza_meia_noite(colaborador)
+            and fim_bloco < fim_apontamento
+            and ApontamentoHorasService.classificar_tipo_dia(proximo_dia) == "Sábado"
+            and ApontamentoHorasService._apontamento_cobre_pausa(
+                inicio_apontamento,
+                fim_apontamento,
+                inicio_pausa,
+                fim_pausa,
+            )
+        )
+
+    @staticmethod
+    def _classificar_horas_sabado(colaborador, bloco_inicio, bloco_fim, inicio_apontamento):
+        horas_bloco = ApontamentoHorasService._duracao_em_horas(bloco_inicio, bloco_fim)
+        if horas_bloco <= 0:
+            return 0, 0
+
+        if (
+            ApontamentoHorasService._turno_cruza_meia_noite(colaborador)
+            and bloco_inicio.date() > inicio_apontamento.date()
+            and ApontamentoHorasService.classificar_tipo_dia(inicio_apontamento.date()) == "Dia Normal"
+        ):
+            horas_50 = min(horas_bloco, 1)
+            return horas_50, max(horas_bloco - horas_50, 0)
+
+        return horas_bloco, 0
     
 
     @staticmethod

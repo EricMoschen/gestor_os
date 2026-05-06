@@ -11,7 +11,7 @@ class AberturaOS(models.Model):
         FINALIZADA = "FI", "Finalizada"
 
     numero_os = models.CharField(
-        max_length=8,
+        max_length=9,
         unique=True,
         editable=False,
         verbose_name="Número da OS"
@@ -80,7 +80,7 @@ class AberturaOS(models.Model):
         else:
             sequencial = 1
 
-        return f"{sequencial:03d}-{ano}"
+        return f"{sequencial:04d}-{ano}"
 
     def save(self, *args, **kwargs):
 
