@@ -1,313 +1,308 @@
-# Documentação Técnica Completa — Gestor OS
+# Documentação Técnica — Gestor OS
+
+Atualizada com base na estrutura e nas regras presentes no código-fonte atual.
 
 ---
 
-## 1) Visão geral do produto
+## 1) Visão geral
 
-O **Gestor OS** é um sistema web Django para gestão de manutenção/operação industrial, cobrindo o fluxo completo de:
+O **Gestor OS** é um monólito modular em Django para operação de manutenção. O sistema cobre:
 
-1. **Cadastros mestre** (cliente, centro de custo, intervenção, colaborador, função).
-2. **Abertura e ciclo de vida de OS**.
-3. **Lançamento de horas por colaborador e OS**.
-4. **Relatórios e orçamentos em PDF**.
-5. **Acesso por perfil e dashboard por permissões**.
+1. cadastro de dados mestre;
+2. abertura, edição, impressão, exclusão e finalização de ordens de serviço;
+3. apontamento e ajuste de horas por colaborador e OS;
+4. consolidação de horas, logs e orçamentos;
+5. autenticação, sessão, tema visual e acesso por papéis.
 
-Em arquitetura, trata-se de um **monólito modular** (apps Django separados por domínio), com templates server-side e regras de negócio distribuídas em views/forms/services/utils.
-
----
-
-## 2) Tecnologias e stack
-
-### Backend
-- **Python**
-- **Django** (aplicação principal)
-- ORM nativo Django
-
-### Banco de dados
-- **SQLite** em desenvolvimento local (padrão atual).
-- Recomendado em produção: **PostgreSQL**.
-
-### Frontend
-- Django Templates
-- JavaScript e CSS por módulo
-
-### Geração de documentos
-- Relatórios/orçamentos em PDF (com utilitários e templates específicos)
+A aplicação usa templates Django renderizados no servidor, com arquivos CSS/JS separados por módulo.
 
 ---
 
-## 3) Estrutura de diretórios (visão para manutenção)
+## 2) Stack e configuração
+
+### 2.1 Tecnologias
+
+- **Python** e **Django 6**.
+- **SQLite** quando `DATABASE_URL` não está configurada.
+- **Banco externo via `DATABASE_URL`** em produção, usando `dj-database-url` com SSL obrigatório nos settings de produção.
+- **WhiteNoise** para servir estáticos coletados.
+- **Gunicorn** como servidor WSGI no deploy.
+- Bibliotecas de PDF/documentos presentes nas dependências: `weasyprint`, `reportlab`, `pydyf`, `pypandoc`, `python-docx`.
+
+### 2.2 Settings por ambiente
+
+O módulo de settings é `src.config.settings` e escolhe o arquivo conforme `DJANGO_ENV`:
+
+- `development` (padrão): `DEBUG=True` e `ALLOWED_HOSTS=["*"]`.
+- `production`: `DEBUG=False`, banco por `DATABASE_URL`, HTTPS/secure cookies e `SECURE_SSL_REDIRECT=True`.
+- `test`: `DEBUG=False` e hasher MD5 para acelerar testes.
+
+Variáveis relevantes:
+
+| Variável | Uso |
+| --- | --- |
+| `DJANGO_ENV` | Seleciona `development`, `production` ou `test`. |
+| `DJANGO_SECRET_KEY` / `SECRET_KEY` | Chave secreta. |
+| `DJANGO_ALLOWED_HOSTS` | Lista separada por vírgula. |
+| `DATABASE_URL` | Banco de dados externo. |
+| `DJANGO_SUPERUSER_USERNAME` | Usuário para `ensure_superuser`. |
+| `DJANGO_SUPERUSER_PASSWORD` | Senha para `ensure_superuser`. |
+| `DJANGO_SUPERUSER_EMAIL` | E-mail opcional do superusuário. |
+
+---
+
+## 3) Estrutura de diretórios
 
 ```text
 manage.py
+render.yaml
+requirements.txt
 src/
-  config/               # Configurações globais, urls raiz, auth, middleware, RBAC
-  dashboard/            # Página inicial pós-login
-  cadastro/             # Entidades mestre e seus fluxos de cadastro
-  abertura_os/          # Fluxo operacional da ordem de serviço
-  lancamento_horas/     # Apontamento e cálculo de horas
-  relatorios/           # Consolidação de dados e PDFs
-  templates/            # Base compartilhada da UI
+  config/               # settings, URLs raiz, autenticação, RBAC, sessão, tema
+  dashboard/            # tela inicial pós-login
+  cadastro/             # dados mestre e validações de domínio
+  abertura_os/          # ciclo de vida da ordem de serviço
+  lancamento_horas/     # apontamento, APIs e ajuste de horas
+  relatorios/           # relatórios, logs e orçamentos
+  templates/            # base e componentes compartilhados
 
 docs/
   documentacao_tecnica.md
+  documentacao_tecnica_detalhada.md
   implementacao.md
   usabilidade_usuario.md
-  matriz_impacto_modulo.md
+  arquitetura_tabelas/
 ```
 
 ---
 
-## 4) Arquitetura lógica e responsabilidades
+## 4) Roteamento HTTP
 
-## 4.1 Roteamento principal
-O ponto de entrada HTTP é o roteamento global em `config/urls.py`, que delega as rotas para cada app.
+### 4.1 Rotas raiz (`src.config.urls`)
 
-## 4.2 Padrão de separação de responsabilidades
-No estado atual do projeto, o padrão recomendado para evoluções é:
+| Caminho | Destino |
+| --- | --- |
+| `/login/` | Login customizado. |
+| `/logout/` | Logout customizado. |
+| `/preferencias/tema/` | Atualização de tema visual do usuário. |
+| `/admin/` | Admin Django. |
+| `/` | Dashboard. |
+| `/cadastro/` | URLs do módulo de cadastro. |
+| `/abertura_os/` | URLs do módulo de OS. |
+| `/lancamento_horas/` | URLs de apontamento/ajuste. |
+| `/relatorios/` | URLs de relatórios. |
 
-- **Views:** orquestram request/response, mensagens e redirecionamentos.
-- **Forms:** validação de entrada e regras de consistência de formulário.
-- **Services:** regras de negócio reutilizáveis e processamento principal.
-- **Models:** entidades persistidas e regras essenciais da entidade.
-- **Selectors/Utils/Validators:** consultas especializadas, cálculos e validações de domínio.
+### 4.2 Permissões por módulo
 
-Esse padrão reduz acoplamento, facilita teste e evita “engordar” views.
+Papéis existentes: `ADM`, `PCM`, `Supervisor`, `Almoxarife`, `Fabrica`.
 
----
+| Área | Papéis com acesso |
+| --- | --- |
+| Centro de custo/ativos | `ADM`, `PCM`, `Almoxarife` |
+| Clientes | `ADM`, `Almoxarife` |
+| Intervenções | `ADM`, `PCM`, `Almoxarife` |
+| Colaboradores | `ADM`, `Supervisor`, `Almoxarife` |
+| Funções | `ADM`, `Supervisor`, `Almoxarife` |
+| Abertura/edição/exclusão/finalização/impressão de OS | `ADM`, `PCM`, `Almoxarife` |
+| Apontar horas e APIs auxiliares | `ADM`, `Supervisor`, `Almoxarife`, `Fabrica` |
+| Ajustar horas | `ADM`, `Supervisor`, `Almoxarife` |
+| Relatórios e PDFs | `ADM`, `Supervisor`, `Almoxarife` |
 
-## 5) Módulos do sistema (detalhado)
-
-## 5.1 `config` (núcleo da aplicação)
-
-### Responsabilidade
-- Configuração global do Django.
-- Autenticação de usuário e sessão.
-- Controle de acesso baseado em papéis.
-
-### Pontos importantes
-- Define políticas de sessão (incluindo timeout e comportamento por perfil).
-- Mantém papéis de acesso (ex.: `ADM`, `PCM`, `Supervisor`, `Almoxarife`, `Fabrica`) via utilitário de controle de acesso.
-- Concentra middleware/context processors relevantes ao funcionamento global.
-
-### Riscos comuns de manutenção
-- Alterações em middleware podem afetar todo o sistema.
-- Mudanças em RBAC podem ocultar menus/rotas sem erro explícito de backend.
-
-### Checklist ao alterar
-- Validar login/logout.
-- Validar acesso por perfil em ao menos 1 rota por domínio.
-- Validar timeout de sessão.
+Superusuários passam por todas as verificações de papel.
 
 ---
 
-## 5.2 `dashboard`
+## 5) Núcleo `config`
 
-### Responsabilidade
-- Tela inicial após autenticação.
-- Exibir atalhos/cards conforme permissão.
+### 5.1 Autenticação e bootstrap de grupos
 
-### Riscos comuns
-- Divergência entre card exibido e permissão real da rota.
-- Quebra de navegação por nome de rota incorreto.
+- O login garante a criação dos grupos padrão antes de autenticar.
+- Usuário já autenticado é redirecionado ao dashboard.
+- Credenciais inválidas exibem mensagem de erro.
+- O logout aceita motivo de timeout para exibir mensagem amigável na tela de login.
 
-### Checklist ao alterar
-- Conferir renderização por perfil.
-- Conferir redirecionamentos e nomes de URL.
+### 5.2 Sessão
 
----
+Políticas atuais:
 
-## 5.3 `cadastro`
+| Política | Usuários | Inatividade | Aviso | Timeout absoluto |
+| --- | --- | --- | --- | --- |
+| `default` | Demais perfis | 10 minutos | 2 minutos antes | Não configurado no código atual |
+| `fabrica` | Grupo `Fabrica` | Sem timeout idle | Não aplicável | 12 horas |
 
-### Responsabilidade
-Módulo de dados mestre, base para quase todos os outros fluxos:
-- Centro de custo
-- Cliente
-- Intervenção
-- Colaborador
-- Função de colaborador
+O middleware ignora usuários anônimos e as rotas de login/logout, aplica timeout absoluto quando configurado e atualiza `last_activity_ts` a cada request autenticada válida.
 
-### Componentes importantes
-- `models/`: entidades e relacionamentos.
-- `forms.py`: validações de entrada.
-- `validators/`: regras específicas de domínio.
-- `selectors/`: consultas reutilizáveis.
-- `views/`: fluxo de telas e operações.
+### 5.3 Tema visual
 
-### Regras de negócio típicas
-- Unicidade de códigos/matrículas.
-- Controle de ativos/inativos.
-- Integridade de relacionamento entre entidades.
+O projeto possui contexto `user_theme` e rota `/preferencias/tema/` para persistir preferência visual do usuário autenticado.
 
-### Riscos comuns
-- Mudança em cadastro impacta abertura de OS, horas e relatórios.
-- Quebra de FK/relacionamentos gera erros em cascata.
+### 5.4 Comando operacional
 
-### Checklist ao alterar
-- Executar CRUD completo da entidade alterada.
-- Testar comportamento com registro inativo.
-- Testar impacto em fluxo que consome essa entidade.
+`python manage.py ensure_superuser` cria ou atualiza um superusuário usando variáveis de ambiente. Em produção, ausência de usuário/senha ou senha inválida gera erro; fora de produção, gera aviso.
 
 ---
 
-## 5.4 `abertura_os`
+## 6) Módulo `cadastro`
 
-### Responsabilidade
-- Abrir, editar, finalizar, excluir e imprimir ordens de serviço.
-- Controlar o ciclo de vida da OS.
+### 6.1 Entidades
 
-### Componentes importantes
-- Model de OS e regras de numeração/status.
-- Form com validações de consistência.
-- Service para regra de negócio de criação/finalização.
+- `CentroCusto`: ativo/centro hierárquico com `cod_centro` como chave primária, `tenant_id`, `cod_tag`, descrição, pai opcional, código do ativo e status ativo. Há unicidade condicional de `cod_tag` por tenant.
+- `Cliente`: código único, nome, timestamps e status ativo.
+- `Intervencao`: código numérico único e descrição única.
+- `Funcao_colab`: descrição única e valor-hora.
+- `Colaborador`: matrícula única de 4 caracteres, nome, status, função protegida, turno e horários customizados.
 
-### Regras críticas
-- Numeração de OS (incremental por padrão vigente).
-- Bloqueio/validação de ações quando OS está finalizada.
+### 6.2 Regras e serviços
 
-### Riscos comuns
-- Qualquer mudança de status da OS impacta apontamento de horas.
-- Mudanças de numeração afetam rastreabilidade e auditoria.
-
-### Checklist ao alterar
-- Criar OS.
-- Editar OS.
-- Finalizar OS.
-- Validar bloqueios pós-finalização.
-- Conferir impressão/exportação.
+- Centros de custo podem formar árvore pai/filho, com validação contra hierarquia circular.
+- Exclusão de centro bloqueia quando há OS vinculada ao centro ou descendentes.
+- Cliente valida código único e pode ser ativado/desativado pelo campo `ativo`.
+- Intervenção gera código incremental no serviço e bloqueia remoção quando há OS vinculada.
+- Colaborador com turno `OUTROS` exige quatro horários no formulário/modelo.
+- Colaborador não é removido fisicamente pela tela principal; o fluxo alterna `ativo`.
+- Horários padrão: turno A, B, HC e OUTROS são resolvidos por `HorarioService` e pelo serviço de apontamento.
 
 ---
 
-## 5.5 `lancamento_horas`
+## 7) Módulo `abertura_os`
 
-### Responsabilidade
-- Registrar início e fim de apontamentos por colaborador/OS.
-- Calcular distribuição de horas normais e extras.
-- Disponibilizar informações auxiliares para frontend.
+### 7.1 Modelo de OS
 
-### Componentes importantes
-- `models/apontamento_horas.py`
-- `views/apontar_horas.py`
-- serviços/utilitários de cálculo (incluindo feriados e regras de turno)
+`AberturaOS` contém:
 
-### Regras críticas
-- Não permitir apontar em OS finalizada.
-- Encerrar apontamento aberto quando necessário (regra de consistência operacional).
-- Cálculo de horas com tratamento de intervalos/turnos e tipo de dia.
+- `numero_os` único, gerado automaticamente;
+- descrição;
+- centro de custo obrigatório;
+- cliente opcional;
+- motivo de intervenção obrigatório;
+- SSM;
+- situação `AB`/`FI`;
+- data de abertura;
+- observações.
 
-### Riscos comuns
-- Erros de cálculo geram impacto financeiro direto em relatório/orçamento.
-- Erros de timezone/data podem distorcer apuração em bordas de dia/turno.
+A numeração atual usa formato `NNNN-AA`, por exemplo `0001-26`, reiniciando a sequência por ano com base no sufixo do ano.
 
-### Checklist ao alterar
-- Iniciar apontamento válido.
-- Finalizar apontamento válido.
-- Bloqueio com OS finalizada.
-- Cenário de apontamento já aberto.
-- Conferência de horas (normal, 50%, 100%).
-- Validar responsividade mobile da tela de apontamento (formulário e listagem de OS em cards).
+### 7.2 Finalização
 
----
+`FinalizacaoOS` possui vínculo um-para-um com a OS e registra avaria, intervenção, sintoma, causa, início/fim e observações. `PecaAplicada` armazena itens aplicados na finalização.
 
-## 5.6 `relatorios`
+Regras principais:
 
-### Responsabilidade
-- Consolidar dados operacionais.
-- Gerar relatórios gerenciais e documentos PDF (orçamento e log).
+- fim deve ser maior ou igual ao início;
+- OS já finalizada não deve ser finalizada novamente;
+- finalização salva formulário principal e peças em transação;
+- status da OS é alterado para `FI` após finalizar.
 
-### Componentes importantes
-- `views/relatorios.py`
-- `utils/relatorio.py`
-- `utils/orcamento.py`
-- templates e CSS de PDF
+### 7.3 Fluxos expostos
 
-### Regras críticas
-- Agregação de horas por função/período.
-- Cálculo de custo com multiplicadores (normal, 50, 100).
-- Sequência de orçamento persistida em arquivo (modelo atual).
-
-### Riscos comuns
-- Dado inconsistente no relatório = decisão operacional/financeira errada.
-- Sequência em arquivo pode ter conflito em cenários concorrentes (produção escalada).
-
-### Checklist ao alterar
-- Validar totalizadores por função.
-- Validar filtros de período.
-- Validar renderização PDF.
-- Validar consistência com lançamentos de horas.
+- abrir OS com preview do próximo número;
+- editar OS existente;
+- excluir OS;
+- buscar subcentros via AJAX;
+- finalizar OS;
+- imprimir OS comum ou editável via querystring `editavel=1`.
 
 ---
 
-## 6) Fluxos ponta a ponta mais importantes
+## 8) Módulo `lancamento_horas`
 
-## 6.1 Fluxo A — Preparação de base
-1. Cadastrar centro de custo.
-2. Cadastrar cliente.
-3. Cadastrar intervenção.
-4. Cadastrar função e colaborador.
+### 8.1 Modelo
 
-## 6.2 Fluxo B — Execução operacional
+`ApontamentoHoras` vincula colaborador e OS, com `data_inicio`, `data_fim` e `tipo_dia`.
+
+### 8.2 Apontamento
+
+A tela de apontamento e as APIs auxiliares permitem localizar colaborador por matrícula, localizar OS por número e consultar detalhes de OS.
+
+Regras relevantes:
+
+- colaborador precisa existir e estar ativo;
+- OS precisa existir;
+- OS finalizada é bloqueada para novos apontamentos;
+- apontamento aberto anterior do colaborador pode ser encerrado pelo serviço;
+- cálculo só retorna horas quando `data_fim` existe.
+
+### 8.3 Cálculo de horas
+
+O serviço classifica horas em:
+
+- horas normais;
+- horas extras 50%;
+- horas extras 100%.
+
+Regras implementadas:
+
+- domingo e feriado contam como 100%;
+- sábado conta como 50%, com regra especial para turno que cruza meia-noite;
+- dias normais comparam o intervalo apontado contra intervalos do turno;
+- pausas de turno são descontadas quando cobertas pelo apontamento;
+- tolerância de 5 minutos ajusta início/fim próximos aos limites de turno;
+- turnos A, B, HC e OUTROS são suportados;
+- datas naive/aware são normalizadas para evitar erro de comparação.
+
+### 8.4 Ajuste de horas
+
+O módulo possui rota de ajuste acessível a `ADM`, `Supervisor` e `Almoxarife`, com template e JavaScript próprios.
+
+---
+
+## 9) Módulo `relatorios`
+
+### 9.1 Funcionalidades
+
+- relatório por OS com filtros;
+- orçamento de horas;
+- consulta do próximo número de orçamento;
+- log de OS em tela de orçamento;
+- relatório/orçamento do cliente.
+
+### 9.2 Sequência de orçamento
+
+A numeração de orçamento é controlada por `SequenciaOrcamento`, em banco de dados, com incremento dentro de transação e `select_for_update()`.
+
+Observação importante: endpoints que chamam `gerar_proximo_orcamento()` consomem um número da sequência. Isso inclui geração/visualização de orçamento e consulta do próximo número.
+
+### 9.3 Cálculo financeiro
+
+Os relatórios consolidam apontamentos por colaborador/função e usam valor-hora da função para calcular totais por horas normais, 50% e 100%.
+
+---
+
+## 10) Fluxos ponta a ponta
+
+### Fluxo A — Preparação da base
+
+1. Cadastrar centros de custo/ativos.
+2. Cadastrar clientes ativos.
+3. Cadastrar intervenções.
+4. Cadastrar funções com valor-hora.
+5. Cadastrar colaboradores ativos e turnos.
+
+### Fluxo B — Execução operacional
+
 1. Abrir OS.
-2. Iniciar apontamento de horas.
-3. Finalizar apontamento.
-4. Finalizar OS.
+2. Apontar início/fim de horas.
+3. Ajustar horas quando necessário.
+4. Finalizar OS com dados técnicos e peças.
+5. Imprimir OS quando necessário.
 
-## 6.3 Fluxo C — Consolidação gerencial
-1. Filtrar período/OS no módulo de relatórios.
-2. Conferir totais de horas.
-3. Gerar orçamento/log em PDF.
+### Fluxo C — Consolidação gerencial
 
----
-
-## 7) Modelo de dados (visão funcional)
-
-Entidades centrais do domínio:
-- **Cliente**
-- **Centro de Custo**
-- **Intervenção**
-- **Colaborador**
-- **Função do colaborador**
-- **Abertura OS**
-- **Apontamento de Horas**
-
-Relacionamentos (conceitual):
-- Uma OS referencia cliente, centro de custo e intervenção.
-- Apontamentos de horas referenciam colaborador e OS.
-- Relatórios consolidam dados de apontamentos + função/valor-hora.
-
-Para visão complementar de tabelas, consultar `docs/arquitetura_tabelas/`.
+1. Filtrar OS/período em relatórios.
+2. Conferir horas e totais.
+3. Emitir orçamento/log/relatório para impressão/PDF.
 
 ---
 
-## 8) Controle de acesso e sessão
+## 11) Checklist de manutenção
 
-### RBAC (papéis)
-Os módulos e ações são protegidos por grupos/perfis. O padrão de manutenção é:
-1. Criar/ajustar papel em camada de controle de acesso.
-2. Aplicar proteção de rota/view.
-3. Ajustar dashboard/menu para refletir a permissão.
+Antes de entregar alterações, valide:
 
-### Sessão
-Há política de timeout com comportamento específico por perfil, com destaque para exceções operacionais (ex.: perfil de chão de fábrica).
-
---
-
-## 9) Qualidade e testes
-
-## 9.1 O que deve ser testado sempre
-- Login e acesso por perfil.
-- Cadastro base.
-- Abertura/finalização de OS.
-- Início/fim de apontamento.
-- Relatório com totalizadores e PDF.
-
-## 9.2 Estratégia recomendada
-- **Teste unitário:** services e utilitários de cálculo.
-- **Teste de integração:** view + model + persistência.
-- **Teste funcional:** fluxo ponta a ponta em ambiente de homologação.
-
-## 9.3 Casos de regressão prioritários
-- Cálculo de hora extra (50/100).
-- Encerramento automático de apontamento aberto.
-- Regras de bloqueio em OS finalizada.
-- Diferença de total entre tela e PDF.
+- `python manage.py check`;
+- migrações pendentes (`python manage.py makemigrations --check --dry-run` quando aplicável);
+- login/logout e timeout;
+- permissões por pelo menos um usuário de cada papel afetado;
+- CRUD ou fluxo da entidade alterada;
+- abertura/finalização de OS quando mexer em cadastro, OS ou apontamento;
+- cálculo normal/50%/100% quando mexer em horários ou feriados;
+- renderização das telas e templates de orçamento quando mexer em relatórios.

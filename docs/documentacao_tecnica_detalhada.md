@@ -60,7 +60,7 @@ Padrão dominante:
   - Demais usuários recebem política padrão (`default`).
 - `get_session_config(policy)`
   - `default`: timeout por inatividade (10 min) + aviso prévio (2 min).
-  - `fabrica`: sem timeout por inatividade e limite absoluto de 8 horas.
+  - `fabrica`: sem timeout por inatividade e limite absoluto de 12 horas.
 - `SessionTimeoutMiddleware.__call__(request)`
   - Ignora usuários anônimos e rotas login/logout.
   - Aplica timeout absoluto por tempo desde login.
@@ -71,8 +71,12 @@ Padrão dominante:
 
 - `session_timeout_config(request)` (`src/config/context_processors.py`)
   - Injeta no template os dados da política atual para o frontend mostrar contagem regressiva.
+- `user_theme(request)` (`src/config/context_processors.py`)
+  - Injeta a preferência de tema do usuário autenticado para templates globais.
+- `update_theme_view(request)` (`src/config/auth_views.py`)
+  - Persiste a preferência de tema pela rota `/preferencias/tema/`.
 - `urlpatterns` (`src/config/urls.py`)
-  - Define login/logout/admin e inclui apps de domínio.
+  - Define login/logout, atualização de tema, admin e inclui apps de domínio.
 
 ### 2.5 Comando de gestão
 

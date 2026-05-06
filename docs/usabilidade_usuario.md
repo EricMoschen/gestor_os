@@ -42,7 +42,7 @@ Após login, você verá o **Painel de Gestão** com cards por categoria:
 
 - Se você ficar **10 minutos sem interagir** com o sistema, o Gestor OS encerra sua sessão automaticamente e volta para o login.
 - Quando faltarem **2 minutos** para esse encerramento automático, um aviso com **cronômetro regressivo** aparece na tela.
-- Para usuários do grupo **Fábrica**, a sessão permanece ativa por até **8 horas** e depois é encerrada automaticamente, exigindo novo login.
+-Para usuários do grupo **Fábrica**, a sessão permanece ativa por até **12 horas** e depois é encerrada automaticamente, exigindo novo login.
 
 > Dica: ao ver o cronômetro, mova o mouse, use teclado ou clique na tela para manter a sessão ativa (quando aplicável ao seu perfil).
 
